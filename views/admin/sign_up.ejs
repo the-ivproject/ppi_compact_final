@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headerlink'); %>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+    </style>
+</head>
+<!-- ============================================================== -->
+<!-- signup form  -->
+<!-- ============================================================== -->
+
+<body>
+    <!-- ============================================================== -->
+    <!-- signup form  -->
+    <!-- ============================================================== -->
+    <form id="form_signup" class="splash-container" method="POST" action="/action/admin/sign_up" enctype="multipart/form-data">
+        <div class="card">
+            <div class="card-header">
+                <div id="message-placement"></div>
+                <h3 class="mb-1">Registrations Form</h3>
+                <p>Registrasi akun anda untuk masuk ke halaman dashboard.</p>
+            </div>
+            <div class="card-body">
+                <div class="form-group custom">
+                    <input class="form-control form-control-lg" type="text" name="first_name" required=""
+                        placeholder="First Name" autocomplete="off">
+                    <input class="form-control form-control-lg" type="text" name="last_name" required=""
+                        placeholder="Last Name" autocomplete="off">
+                </div>
+                <div class="form-group custom">
+                    <input class="form-control form-control-lg" type="text" name="institusi" required=""
+                        placeholder="Insitusi, misl. Bappeda" autocomplete="off">
+                </div>
+                <div class="form-group custom">
+                    <input class="form-control form-control-lg" type="email" name="email" required=""
+                        placeholder="Email" autocomplete="off">
+                </div>
+                <div class="form-group custom">
+                    <input class="form-control form-control-lg" type="text" name="username" required=""
+                        placeholder="User Name" autocomplete="off">
+                </div>
+                <div class="form-group custom">
+                    <input class="form-control form-control-lg" id="pass1" type="password" required="" name="password"
+                        placeholder="Password">
+                    <input class="form-control form-control-lg" id="pass2" required="" type="password"
+                        placeholder="Confirm">
+                </div>
+                <label for="inputText3" class="col-form-label" style="margin: 0 5px;">Logo</label>
+                <div class="form-group custom" >
+                   
+                    <input id="logo" class="form-control form-control-lg" type="file" name="logo"
+                        placeholder="Upload Logo" autocomplete="off">
+                </div>
+                <p class="p-group" id="pass-confirm" style="color: #ff407b;display: none;">Password tidak sama</p>
+
+                <div class="form-group custom pt-2">
+                    <button class="btn btn-block btn-primary">Register My Account</button>
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                <p class="p-group">Sudah punya akun? <a href="/admin/login" class="text-secondary">Login Here.</a></p>
+            </div>
+        </div>
+    </form>
+
+    <%- include('./partials/footerlink'); %>
+    
+    <script>
+
+        let pass1 = document.getElementById('pass1')
+        let pass2 = document.getElementById('pass2')
+        let form_signup = document.getElementById('form_signup')
+
+        form_signup.onsubmit = function () {
+            let pass_confirm = document.getElementById('pass-confirm')
+            let val1 = pass1.value
+            let val2 = pass2.value
+
+            if (val1 !== val2) {
+                pass_confirm.style.display = 'block'
+                return false;
+            } else {
+                form_signup.submit()
+            }
+        }
+
+        let message_placement = document.getElementById('message-placement')
+        message_placement.innerHTML = message
+
+        $(document).ready(function () {
+            $("#message-placement").delay(5000).slideUp(300);
+        });
+    </script>
+</body>
+
+
+</html>

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headerlink'); %>
+    <title>PPI Compact Dashboard</title>
+</head>
+
+<style>
+    #sukses-alert {
+        display: none;
+    }
+
+    .btn-right {
+        /* float: right; */
+        right: 0;
+        /* padding: 9px 16px */
+    }
+
+    .btn-right a {
+        width: 60px;
+        height: 23px;
+        padding: 5px;
+        font-size: 10px;
+        color: white;
+    }
+
+    .btn-notif {
+        font-size: 10px;
+        padding: 5px;
+    }
+
+    .btn-notif span {
+        font-size: 10px;
+
+    }
+
+    .satuan {
+        font-size: 11px;
+        /* font-style: italic; */
+    }
+
+</style>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper">
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <nav class="navbar navbar-expand-lg bg-white fixed-top">
+                <a class="navbar-brand" href="../index.html">PPI Compact</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <%- include('./partials/top_menu'); %>
+            </nav>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+        <%- include('./partials/sidebar'); %>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="container-fluid dashboard-content">
+                <!-- ============================================================== -->
+                <!-- pageheader -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="page-header">
+                            <h2 class="pageheader-title"><%= title %></h2>
+
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/admin/"
+                                            class="breadcrumb-link">mrv</a>
+                                        </li>
+                                        <li class="breadcrumb-item"><a href="<%=current_link %>"
+                                                class="breadcrumb-link"><%=page_name.replace("_"," ") %></a>
+                                        </li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end pageheader -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- accrodions -->
+                <!-- ============================================================== -->
+                <div id="sukses-alert" class="alert alert-primary" role="alert">
+                    Success
+                </div>
+
+                <div id="message-placement"></div>
+
+                <div class="row">
+                    <!-- ============================================================== -->
+                    <!-- basic table  -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">List Histori Capaian</h5>
+                            <div class="card-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="input-select">Example Select</label>
+                                        <select class="form-control" id="input-select" onchange="filterByTarget(this)">
+                                            <option value="all">All Target</option>
+                                            <%
+                                            if(target.length!=0){
+                                            var i=1;
+                                            target.forEach(function(target){
+                                            %>
+                                            <option value="<%= target.id_rincian_target %>"><%= target.rincian_target %></option>
+                                            <%  i++; }) %>
+                                            <% } else { %>
+                                                <option>No Target</option>
+                                            <% } %>   
+                                        </select>
+                                    </div>
+                                </form>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered first">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Histori Capaian</th>
+                                                <th>Rincian Target</th>
+                                                <th>Tahun Data</th>
+                                                <th>Status Verifikasi</th>
+                                                <th>Sumber Data</th>
+                                                <th>Target Tahunan</th>
+                                                <th>Aktual</th>
+                                                <th>Kinerja</th>
+                                                <th style="text-align: center;">Action</th>
+                                                <th style="text-align: center;">Style Layer</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%
+                                            if(histori_capaian.length!=0){
+                                            var i=1;
+                                            function numberWithCommas(x) {
+                                                if(x === null) {
+                                                    return x
+                                                }
+                                                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                                            }
+                                            histori_capaian.forEach(function(histori_capaian){
+                                            %>
+                                            <tr>
+                                                <td><%= histori_capaian.id_histori_capaian || '-' %></td>
+                                                <td><%= histori_capaian.rincian_target %></td>
+                                                <td><%= histori_capaian.tahun_data %></td>
+                                                <td><%= histori_capaian.status_verifikasi %></td>
+                                                <td><%= histori_capaian.sumber_data %></td>
+                                                <td><%= numberWithCommas(histori_capaian.target_tahunan) %> <span class="satuan"><%= histori_capaian.satuan %></span></td>
+                                                <td><%= numberWithCommas(histori_capaian.aktual) %><span class="satuan"> <%= histori_capaian.satuan %></span></td>
+                                                <td><%= numberWithCommas(histori_capaian.kinerja) %><span class="satuan"> <%= histori_capaian.satuan %></span></td>  
+                                                <td style="text-align: center;">
+                                                    <span class="btn-right">
+                                                        <a href="/action/admin/edit_histori_capaian/<%=histori_capaian.id_histori_capaian %>" class="btn btn-brand">Edit</a>
+                                                        <a id="<%=histori_capaian.id_histori_capaian %>" onclick="confrimDelete(this)" class="btn btn-danger" style="color: white;">Delete</a>    
+                                                    </span>
+                                                </td>
+                                                <td style="text-align: center;">
+                                                    <span class="btn-right">
+                                                        <a href="/admin/fitur_styling_layer/<%=histori_capaian.id_histori_capaian %>" class="btn btn-info">Detail</a>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <%  i++; }) %>
+                                            <% } else { %>
+                                            <tr>
+                                                <td>No data</td>
+                                                <td>No data</td>
+                                                <td>No data</td>
+                                                <td>No data</td>
+                                                <td>No data</td>
+                                                <td>No data</td>
+                                                <td>No data</td>
+                                                <td>No data</td>
+                                                <td>No data</td>
+                                                <td style="text-align: center;">No data</td>
+                                            </tr>
+                                            <% } %>   
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end basic table  -->
+                    <!-- ============================================================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper -->
+    <!-- ============================================================== -->
+
+    <%- include('./partials/footerlink'); %>
+
+    <script>
+        let message_placement = document.getElementById('message-placement')
+        message_placement.innerHTML = message
+        
+        $(document).ready(function () {
+            $("#message-placement").delay(5000).slideUp(300);
+        });
+
+        function confrimDelete(el) {
+            let id_target = el.id
+            
+            if(confirm('yakin?') == true) {
+                window.location.href = `/action/admin/delete_rincian_target/${id_target}`
+            } else {
+                return;
+            }
+        }
+
+        function filterByTarget(opt) {
+            let target_id = opt.value
+            window.location.href = `/admin/list_histori_capaian_filtered/${target_id}`
+        }
+
+        function confrimDelete(el) {
+            let id_target = el.id
+
+            ConfirmDelete(
+            'Delete Histori Capaian', 'Apakah anda yakin akan menghapus data ini?', 'Hapus', 'Batal',
+            `/action/admin/delete_histori_capaian/${id_target}`)
+        }
+    </script>
+</body>
+
+</html>

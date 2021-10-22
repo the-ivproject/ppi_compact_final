@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headerlink'); %>
+    <link rel="stylesheet" href="/admin/assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+</head>
+
+<style>
+    #map {
+        width: 100%;
+        height: 100vh;
+        z-index: 0;
+    }
+
+    .info-icon .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: #E2EDEB;
+        color: #142940;
+        text-align: center;
+        border-radius: 6px;
+        padding: 10px;
+        position: absolute;
+        z-index: 9999;
+        margin: -20px 2px;
+        /* left: 0; */
+        right: 15px;
+        font-size: 12px;
+        font-weight: normal
+    }
+
+    .info-icon:hover .tooltiptext {
+        visibility: visible;
+    }
+
+    .legend-subtitle {
+        position: relative;
+    }
+
+    .legend-subtitle .legend-item {
+        padding: 7px 0;
+    }
+
+    .get-chart {
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 12px;
+    }
+
+    .navbar-brand {
+        display: inline-block;
+        margin-right: 1rem;
+        line-height: inherit;
+        white-space: nowrap;
+        padding: 11px 20px;
+        font-size: 30px;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #367BF5;
+    }
+
+    .navbar-brand:hover {
+        color: #367BF5;
+    }
+
+    .icon-terverifikasi {
+        color: #367BF5;
+        font-size: 14px;
+    }
+
+    .icon-belum-terverifikasi {
+        color: #ACBCA3;
+        font-size: 14px;
+    }
+
+    .nested-card {
+        border: 1px solid #e4dfcf;
+        border-radius: 10px;
+        margin: 23px 0;
+    } 
+    
+    .nav_list a {
+        border: 1px solid #e4dfcf;
+        border-radius: 10px;
+    }
+
+    .kinerja-positif {
+        font-weight:bold;
+        color:#53C351
+    }
+    .kinerja-negatif {
+        font-weight:bold;
+        color:#EA3D2F
+    }
+
+    .val-count {
+        display: flex;
+    }
+
+    .val-count span {
+        line-height: 22px;
+        margin: 0 2px;
+    }
+
+    #overlay-preload-map {
+        visibility: hidden;
+    }
+
+    #overlay-preload, #overlay-preload-map {
+        position: fixed;
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 888;
+        cursor: pointer;
+    }
+
+    #overlay-preload img, #overlay-preload-map {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 9999;
+    }
+</style>
+
+<body id="body-pd">
+    <div id="overlay-preload">
+        <img src="/main/preload/loader-1.svg" alt="" srcset="" width="100">
+    </div>
+    <header class="header" id="header">
+        <a class="navbar-brand">PPI Compact</a>
+        <div class="region-form">
+            <!-- <label for="region-selection">Select Region</label> -->
+            <select id="region-selection" class="form-control">
+                <%
+                if(all_region.length!=0){
+                var i=1;
+                all_region.forEach(function(all_region){
+                %>
+                <option id="region<%= all_region.id_region%>" value="<%= all_region.id_region%>" onclick="getID(this)">
+                    <%= all_region.nama_region +', '+ all_region.provinsi %></option>
+                <%  i++; }) %>
+                <% } else { %>
+                <tr>
+                    <option>No Region</option>
+                </tr>
+                <% } %>
+            </select>
+            <button onclick="filterByRegion()" class="btn btn-success">submit</button>
+            <div class="vl"></div>
+
+            <div class="language-selection">
+                <a id="lang-selection" onclick="changeLanguage()"><%= lang.toUpperCase() %></a>
+            </div>
+        </div>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div class="legend-place">
+                <div class="nav_list">
+                    <%
+                    if(legend.length!=0){
+                    let i=1;
+                    legend.forEach(function(legend){
+                    %>
+                    <a id="target_<%= legend.id_target %>" class="nav_link" onclick="showLegend(this)">
+                        <img src='<%= legend.icon %>' width="40" style="margin: 5px auto;"></img>
+                        <span class="nav_name"><%= legend.display_name %></span>
+                    </a>
+                    <%  i++; }) %>
+                    <% } else { %>
+                    <a href="#" id="gg" class="nav_link active"> <i class='bx bxs-tree nav_icon'></i>
+                        <span class="nav_name">Belum Ada Data</span>
+                    </a>
+                    <% } %>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!--Container Main start-->
+    <div id='map'>
+        <div id="overlay-preload-map">
+            <img src="/main/preload/loader-1.svg" alt="" srcset="" width="100">
+        </div>
+    </div>
+
+    <div id="legend-placement" class="height-100 bg-light">
+
+
+    </div>
+
+    <div id="chart-placement">
+
+    </div>
+
+
+    <%- include('./partials/footerlink'); %>
+    <script src="/admin/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script>
+
+        function changeLanguage() {
+            alert('Maaf, versi Inggris belum tersedia!')
+        }
+
+        function filterByRegion() {
+            let selected = document.getElementById('region-selection')
+            window.location.href = `/main/map/${selected.value}`
+
+        }
+
+        async function getCurrent(id) {
+            let data = await document.getElementById(`region${id}`)
+            data.selected = true
+        }
+
+        // map section
+        const map = L.map('map', {
+            zoomControl: false
+        }).setView([39.74739, -105], 13);
+
+        L.control.zoom({
+            position: 'bottomright'
+        }).addTo(map);
+
+        L.tileLayer(
+            'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox/light-v9',
+                tileSize: 512,
+                zoomOffset: -1
+            }).addTo(map);
+
+       
+        let region_style = () => {
+            return {
+                weight: 1,
+                opacity: 1,
+                color: '#000',
+                fillColor: '',
+                fillOpacity: 0,
+            }
+        }
+      
+        let region_layer = JSON.stringify(<%- region.geojson %>)
+        let region_geojson = L.geoJSON(JSON.parse(region_layer),{
+            style:region_style
+        })
+
+        getCurrent(`<%- region.id_region %>`)
+        
+        map.fitBounds(region_geojson.getBounds())
+        map.addLayer(region_geojson)
+
+        // Global function
+        // grouping object by its properties
+        const groupBy = (array, key) => {
+            return array.reduce((result, currentValue) => {
+                (result[currentValue[key]] = result[currentValue[key]] || []).push(
+                    currentValue
+                );
+                return result;
+            }, {});
+        };
+        
+        // Covert 'histori capaian' to JSON object
+        let histori_object = []
+        let temp_histori_object;
+        
+        '<% histori_capaian.forEach(function(histori){ %>'
+        temp_histori_object = {}
+        '<% Object.keys(histori).forEach(function(keys){ %>'
+        if ('<%= keys %>' === 'geojson') {
+            temp_histori_object['<%= keys %>'] = `<%- histori[keys] %>`
+        } else {
+            temp_histori_object['<%= keys %>'] = `<%- histori[keys] %>`
+        }
+        '<% }) %>'
+        histori_object.push(temp_histori_object)
+        '<% }) %>'
+
+        let final_histori_object = histori_object
+
+        // Grouping by id_target
+        const historiGroupByIdTarget = groupBy(final_histori_object, 'id_target');
+      
+        // create legend
+        let createLegend = (obj) => {
+
+            let final_legend = []
+            Object.keys(obj).forEach(key => {
+                let filtered = obj[key]
+                let grouping = groupBy(filtered, 'id_rincian_target')
+
+                let nested_legend = []
+
+                Object.keys(grouping).forEach(key => {
+                    let grouped = grouping[key]
+
+                    let leg = grouped.map(g => {
+                        let p_kinerja;
+                        if(g.rule === 'under baseline') {
+                            if(parseInt(g.aktual) < parseInt(g.target_tahunan) ) {
+                                p_kinerja = `Kinerja: <span class="kinerja-positif" style="font-weight:bold;color:#53C351">+${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-positif">positif`
+                            } else {
+                                p_kinerja = `Kinerja: <span class="kinerja-negatif" style="font-weight:bold;color:#EA3D2F">${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-negatif">negatif`
+                            }   
+                        } else {
+                            if(parseInt(g.aktual) < parseInt(g.target_tahunan) ) {
+                                p_kinerja = `Kinerja: <span class="kinerja-negatif">${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-negatif">negatif `
+                            } else {
+                                p_kinerja = `Kinerja: <span class="kinerja-positif"> +${(g.kinerja +' '+ g.satuan).replace("-","")}</span> atau <span class="kinerja-positif">positif`
+                            }   
+                        }
+                       
+                        return `
+                                 <li>
+                                    <div id="list-layer" class="list-arranged" style="display: flex;">
+                                        <label class="switch">
+                                            <input class="geojson-input" id="input-${g.rincian_target.replaceAll(" ","-") +'-'+g.tahun_data}" type="checkbox" value='${JSON.stringify(g)}'>
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <div>
+                                            <p class="legend-item">
+                                                Tahun ${g.tahun_data}
+                                                <span class="icon-${g.status_verifikasi.replaceAll(" ","-")}">
+                                                    <i class="fas fa-check-circle info-icon"><span class="tooltiptext">${g.status_verifikasi}</span></i>
+                                                </span>
+                                            </p>
+                                            <p class="legend-item" style="font-weight: normal; font-size:14px;margin: 5px 0;max-width:200px;text-transform:none">
+                                               ${p_kinerja}
+                                            </p>
+                                            <p class="legend-des">
+                                                ${
+                                                    `<span>${JSON.parse(g.style).fillColor || JSON.parse(g.style).color || Object.keys(JSON.parse(g.style)).map(a => {
+                                                        return JSON.parse(g.style)[a].fillColor != '' ? JSON.parse(g.style)[a].fillColor : JSON.parse(g.style)[a].color 
+                                                    }).join(",")}</span>
+                                                    ` 
+                                                }
+                                            </p>
+                                        </div>
+                                    </div>   
+                                </li>
+                           `
+                    })
+                    let sec_legend = `
+                        <div class="legend-group">
+                            <div class="legend-subtitle">
+                                <p class="legend-item">${grouped[0].rincian_target} 
+                            </p>
+                                <button id="getchart-${grouped[0].id_rincian_target}" onclick="showChart(this)" class="btn btn-dark get-chart">Analisis </a>
+                            </div>
+                                 ${leg.join("")} 
+                        </div>
+                       `
+
+                    nested_legend.push(sec_legend)
+
+                })
+                let legend_div = `
+                        <div class="map-legend" id="${key}">
+                            <p class="legend-title"><i class="bx bxs-layer"></i> Map Legend</p>
+                                 <span id="hide-btn-legend-${key}" class="hide-legend-btn" onclick="removeLegend(this)">X</span>
+                            <p id="sub-legend" class="legend-title" style="font-size:16px;text-transform:capitalize"></p>
+                            <ul id="id-list-legend" class="legend-list">
+                                ${nested_legend.join("")}
+                            </ul>
+                        </div>
+                        `
+                final_legend.push(legend_div)
+            })
+            return final_legend.join("")
+        }
+
+        let legend_placement = document.getElementById('legend-placement')
+        legend_placement.innerHTML = createLegend(historiGroupByIdTarget)
+
+        async function showLegend(el) {
+            let legends = await document.querySelectorAll('.map-legend')
+
+            legends.forEach(async legend => {
+                legend.classList.remove('active')
+            })
+
+            let list = document.getElementById(`${el.id.replaceAll("target_","")}`)
+            let sub_title = list.querySelectorAll('p')[1]
+
+            sub_title.innerText = el.innerText
+            list.classList.add('active')
+
+        }
+
+        let getGeojsonFromInput = async (input) => {
+
+            for (let i = 0; i < input.length; i++) {
+                let raw_prop = await JSON.parse(input[i].value)
+              
+                let checkbox = await input[i]
+                let geojson = await raw_prop.geojson
+                let loader = document.getElementById('overlay-preload-map')
+                let geojson_layer = L.geoJSON()
+                
+                document.getElementById(checkbox.id).onclick = async function () {
+                    if (this.checked === true) {
+                        let geo = $.ajax({
+                            url: geojson,
+                            dataType: "json",
+                            success: console.log("County data successfully loaded."),
+                            error: function (xhr) {
+                            console.log(xhr.statusText)
+                            }
+                        })
+                        $.when(geo).done(function () {
+                           
+                            geojson_layer.addData(geo.responseJSON)
+
+                            map.addLayer(geojson_layer)
+                            setGeoJsonStyle(raw_prop, geojson_layer)
+                        })
+                        
+                    } else {
+                      map.removeLayer(geojson_layer)
+                    }
+                }
+                
+            }
+        }
+
+        let setGeoJsonStyle = (raw_prop, layer) => {
+            if (raw_prop.tipe_style === "single") {
+              
+                return layer.setStyle(JSON.parse(raw_prop.style))
+
+            } else {
+               
+                let f_prop = raw_prop.properti
+               
+                let getKategoriStyle = (feature) => {
+                    let prop = feature.properties[f_prop]
+
+                    return setKategoriStyle(prop)
+                }
+
+                let setKategoriStyle = (prop) => {
+                    let prop_used = JSON.parse(raw_prop.style)
+                    let prop_val = Object.keys(prop_used)
+             
+                    for (let i = 0; i < prop_val.length; i++) {
+                        switch (prop) {
+                            case prop_val[i]:
+                                return prop_used[prop_val[i]]
+                                break
+                        }
+                    }
+                }
+                return layer.setStyle(getKategoriStyle)
+            }
+        }
+
+        let getChart = (data, id) => {
+            let text;
+            if(data.length === 1) {
+                text = data[0].tahun_data
+            } else {
+                text = data[0].tahun_data +' - '+ data[data.length - 1].tahun_data
+            }
+
+            Highcharts.chart(`container-chart-${id}`, {
+                title: {
+                    text: `Series ${data[0].rincian_target}`,
+                    align: 'center',
+                    style: {
+                        color: '#000',
+                        fontWeight: 'bold',
+                        textTransform: 'uppercase',
+                        fontSize: 14
+                    }
+                },
+                subtitle: {
+                    text: `Periode ${text}`,
+                    align: 'center',
+                },
+                xAxis: {
+                    categories: data.map(a => {
+                        return a.tahun_data
+                    })
+                },
+                yAxis: {
+                    title: {
+                        text: data[0].satuan
+                    },
+                },
+                series: [{
+                    type: 'column',
+                    name: `Aktual`,
+                    data: data.map(a => {
+                        return parseInt(a.aktual)
+                    }),
+                    color: '#367BF5'
+                }, {
+                    type: 'spline',
+                    name: 'Target Tahunan',
+                    data: data.map(a => {
+                        return parseInt(a.target_tahunan)
+                    }),
+                    color: '#142940',
+                    marker: {
+                        lineWidth: 2,
+                        lineColor: Highcharts.getOptions().colors[3],
+                        fillColor: '#EA3D2F'
+                    }
+                }]
+            });
+        }
+
+
+        let input = document.querySelectorAll("#legend-placement .geojson-input")
+       
+        getGeojsonFromInput(input)
+
+        let createAnalisis = (obj) => {
+            let goupByIdRincianTarget = groupBy(obj, 'id_rincian_target')
+            let body = document.getElementById('body-pd')
+            let chart_value = []
+            Object.keys(goupByIdRincianTarget).forEach(async id => {
+
+                let chart_placement = document.createElement('div')
+                chart_placement.id = `chart-placement-${id}`
+                chart_placement.className = 'chart-placement'
+
+                let raw_obj = goupByIdRincianTarget[id]
+                let length = raw_obj.length - 1
+                let filteredObj = raw_obj[length]
+              
+                let aktual_data = `
+                        <div id="card-item-${id}">
+                            <span id="hide-btn-legend-${id}" class="hide-chart-btn" onclick="removeChart(this)">X</span>
+                            <div class="card-analisis">
+                                <div class="chart-title">
+                                    <img src="/main/icon/chart-icon-2.svg" width="35" alt="" srcset="">
+                                    <div class="title-text">
+                                        <p>Chart ${filteredObj['rincian_target']}</p>
+                                        <span>Satuan <strong>${filteredObj['satuan']}</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nested-card">
+                                <div class="card-analisis">
+                                    <div class="card-value">
+                                        <img src="/main/icon/chart-value-icon.svg" alt="" srcset="">
+                                        <div id="value">
+                                            <p>Target Tahunan</p>
+                                            <div class="val-count">
+                                                 <h3 class="val-count">${filteredObj['target_tahunan']} </h3><span>${filteredObj['satuan']}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-value" style="background-color: #F3A72E;">
+                                        <img src="/main/icon/chart-value-icon.svg" alt="" srcset="">
+                                        <div id="value">
+                                            <p>Aktual Per ${filteredObj['tahun_data']}</p>
+                                            <div class="val-count">
+                                                <h3 class="val-count">${filteredObj['aktual']} </h3><span>${filteredObj['satuan']}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-value" style="background-color: #367BF5;">
+                                        <img src="/main/icon/chart-value-icon.svg" alt="" srcset="">
+                                        <div id="value">
+                                            <p>Target Tahunan VS Aktual Per ${filteredObj['tahun_data']}</p>
+                                            <div class="val-count">
+                                                <h3>${filteredObj['kinerja']} </h3><span>${filteredObj['satuan']}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <div class="nested-card">
+                                <div class="card-analisis">
+                                    <figure class="highcharts-figure">
+                                        <div class="container-chart" id="container-chart-${id}"></div>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                chart_placement.innerHTML = await aktual_data
+                body.appendChild(chart_placement)
+
+                getChart(raw_obj, id)
+            })
+        }
+
+        function update_value_count(element, value) {
+            $(element).animate({
+                counter: parseInt(value)
+            }, {
+                duration: 1000,
+                easing: 'swing',
+                step: function(now) {
+                    $(this).text(Math.ceil(now));
+                },
+                complete: update_value_count
+            });
+        };
+        
+        async function showChart(el) {
+            let chart_placement = await document.querySelectorAll('#body-pd .chart-placement')
+            chart_placement.forEach(place => {
+                place.classList.remove('active')
+            })
+
+            let currentClickId = el.id.replaceAll("getchart-", "")
+            let currentCard = `chart-placement-${currentClickId}`
+
+            await document.getElementById(currentCard).classList.add('active')
+
+            let selector_count = document.querySelectorAll(`#${currentCard} h3`)
+
+            selector_count.forEach(h3 => {
+                let value = h3.innerText
+                update_value_count(h3,value);
+            })
+        }
+
+        createAnalisis(final_histori_object)
+
+        async function removeLegend(el) {
+            let id = el.id
+            let aktif_legend = document.getElementById(`${id.replaceAll("hide-btn-legend-","")}`)
+            aktif_legend.classList.remove('active')
+        }
+
+        async function removeChart(el) {
+            let id = el.id
+            let aktif_chart = document.getElementById(`${id.replaceAll("hide-btn-legend-","chart-placement-")}`)
+            aktif_chart.classList.remove('active')
+        }
+
+        let d = document.querySelectorAll('.legend-des span')
+        for(let i = 0; i < d.length; i++) {
+            let colors = d[i].innerHTML.split(",")
+            let new_el = []
+            colors.forEach(color => {
+                new_el.push(`<i class="fas fa-square" style="color:${color};margin: 2px;"></i>`)
+            })
+            d[i].innerHTML = new_el.join("")
+        }
+
+        window.addEventListener('load', function () {
+            let general_loader = document.getElementById('overlay-preload')
+            general_loader.style.visibility = 'hidden'
+        })
+
+    </script>
+</body>
+
+</html>

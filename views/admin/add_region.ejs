@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headerlink'); %>
+    <title>PPI Compact Dashboard</title>
+</head>
+
+<style>
+    #sukses-alert {
+        display: none;
+    }
+
+    .btn-right {
+        float: right;
+        right: 0;
+        padding: 9px 16px
+    }
+
+    .btn-right a {
+        width: 60px;
+        height: 23px;
+        padding: 5px;
+        font-size: 10px;
+        color: white;
+    }
+
+    .btn-notif {
+        font-size: 10px;
+        padding: 5px;
+    }
+
+    .btn-notif span {
+        font-size: 10px;
+
+    }
+
+    #add_group a {
+        cursor: pointer;
+    }
+
+    #map {
+        width: 100%;
+        height: 600px;
+    }
+
+    #add_detail_indikator {
+        cursor: pointer;
+    }
+
+    .required-start {
+        color: #ff407b;
+    }
+</style>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper">
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <nav class="navbar navbar-expand-lg bg-white fixed-top">
+                <a class="navbar-brand" href="../index.html">PPI Compact</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <%- include('./partials/top_menu'); %>
+            </nav>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+        <%- include('./partials/sidebar'); %>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="container-fluid dashboard-content">
+                <!-- ============================================================== -->
+                <!-- pageheader -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="page-header">
+                            <h2 class="pageheader-title"><%= title %></h2>
+
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/admin/"
+                                                class="breadcrumb-link">mrv</a>
+                                        </li>
+                                        <li class="breadcrumb-item"><a href="<%=current_link %>"
+                                                class="breadcrumb-link"><%=page_name.replace("_"," ") %></a>
+                                        </li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end pageheader -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- accrodions -->
+                <!-- ============================================================== -->
+                <div id="sukses-alert" class="alert alert-primary" role="alert">
+                    Success
+                </div>
+
+                <div id="message-placement"></div>
+
+                <div class="row">
+                    <!-- ============================================================== -->
+                    <!-- accrodions style one -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="section-block">
+                            <h5 class="section-title">Tambah Region</h5>
+                            <p>Tambah region PPI Compact termasuk batas administrasi dalam format geojson. </p>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <form action="/action/admin/add_region" method="POST">
+                                    <div class="form-group">
+                                        <input id="def_region" name="id_admin" class="form-control" type="hidden" placeholder="Search.." value="<%= id_admin %>" >
+
+                                        <label for="inputText3" class="col-form-label">Penanggung Jawab Region <span class="required-start">*</span></label>
+                                        <input id="inputText3" type="text" name="pj" class="form-control"
+                                            placeholder="Misl. Pokja PPH atau Bappeda" required disabled>
+                                        <label for="inputText4" class="col-form-label">Level Region <span class="required-start">*</span></label>
+                                        <div class="input-group">
+                                            <input id="level_region" type="text" name="level" class="form-control"
+                                                required disabled> 
+                                            <div class="input-group-append be-addon">
+                                                <button type="button" data-toggle="dropdown"
+                                                    class="btn btn-secondary dropdown-toggle" aria-expanded="true">Level
+                                                    Region</button>
+                                                <div id="add_group" class="dropdown-menu" x-placement="bottom-start"
+                                                    style="position: absolute; transform: translate3d(191px, 41px, 0px); top: 0px; left: 0px; will-change: transform;">
+
+                                                    <a id="provinsi" onclick="getLevelId(this)"
+                                                        class="dropdown-item">Provinsi</a>
+
+                                                    <a id="kabupaten" onclick="getLevelId(this)"
+                                                        class="dropdown-item">Kabupaten</a>
+
+                                                    <a id="kecamatan" onclick="getLevelId(this)"
+                                                        class="dropdown-item">Kecamatan</a>
+
+                                                    <a id="desa" onclick="getLevelId(this)"
+                                                        class="dropdown-item">Desa</a>
+
+                                                    <a id="lanskap" onclick="getLevelId(this)"
+                                                        class="dropdown-item">Lanskap</a>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <label for="inputText5" class="col-form-label">Nama Region <span class="required-start">*</span> </label>
+                                        <input id="inputText5" type="text" name="nama_region" class="form-control"
+                                            placeholder="Misl. kubu raya" required disabled>
+                                        <label for="inputText6" class="col-form-label">Provinsi <span class="required-start">*</span></label>
+                                        <input id="inputText5" type="text" name="provinsi" class="form-control"
+                                            placeholder="Misl. kalimantan barat" required disabled>
+
+                                        <label for="uploadFile" class="col-form-label">Upload GeoJSON <span class="required-start">*</span></label>
+                                        <input id="uploadFile" type="file" name="data_layer" class="form-control"
+                                            placeholder="Upload geojson" accept=".geojson" required disabled>
+                                        <textarea class="form-control" name="geojson" id="geojson_string" style="display: none;"></textarea>
+                                    </div>
+                                    <br>
+                                    <input type="submit" onclick="showLoading(); this.disabled = true" class="btn btn-success" disabled> 
+                                    <span id="loading-submit" class="dashboard-spinner spinner-secondary spinner-xs" style="vertical-align: middle;visibility: hidden;"></span>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end accrodions style one -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- accrodions style two -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="section-block">
+                            <h5 class="section-title">Preview Data</h5>
+                            <p>Preview data GeoJSON yang akan di-upload ke database.</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-body" style="padding:0px">
+                                <div id='map'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper -->
+    <!-- ============================================================== -->
+
+    <%- include('./partials/footerlink'); %>
+
+    <script>
+
+        let message_placement = document.getElementById('message-placement')
+        message_placement.innerHTML = message
+        
+        $(document).ready(function () {
+            $("#message-placement").delay(5000).slideUp(300);
+        });
+
+        // Set group name value
+        let level_region = document.getElementById('level_region')
+
+        let getLevelId = async (val) => {
+            level_region.value = await val.id
+        }
+
+        const map = L.map('map').setView([39.74739, -105], 13);
+
+        L.tileLayer(
+            'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox/light-v9',
+                tileSize: 512,
+                zoomOffset: -1
+            }).addTo(map);
+
+        // Read selected geojson
+        let geojson_string = document.getElementById('geojson_string')
+        const inputElement = document.getElementById("uploadFile")
+            .addEventListener('change', function () {
+                let fr = new FileReader();
+
+                fr.onload = async function () {
+                    geojson_string.innerText = ''
+
+                    let result = fr.result
+                    geojson_string.innerText = result
+
+                    let geojson = L.geoJSON(JSON.parse(result))
+                    let added = geojson.addTo(map)
+
+                    let bounds = geojson.getBounds()
+                    map.fitBounds(bounds)
+
+                }
+
+                fr.readAsText(this.files[0]);
+            });
+
+        function onlyUnique(value, index, self) {
+            return self.indexOf(value) === index;
+        }
+
+        function showLoading() {
+            let loading = document.getElementById('loading-submit')
+            let form = document.getElementById('form')
+
+            loading.style.visibility = 'visible'
+            form.submit()
+        }
+
+        window.addEventListener('load',function(){
+            let inputs = document.querySelectorAll('input')
+            inputs.forEach(input => {
+                input.disabled = false
+            })
+        })
+
+        let a = document.querySelectorAll('#navbarNav .nav-link')
+        a.forEach(a => {
+            a.removeAttribute("href")
+            a.style.color = '#71789e'
+            a.classList.add('no-hover')
+        })
+    </script>
+</body>
+
+</html>

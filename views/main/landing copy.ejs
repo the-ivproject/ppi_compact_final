@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRV PPI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Map section -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+
+    <link rel="stylesheet" href="/main/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.0.1/tailwind.min.css">
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
+
+    <!-- Highchart  -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+</head>
+
+<style>
+    #map {
+        width: 100%;
+        height: 100vh;
+        z-index: 0;
+    }
+
+    .info-icon .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: #E2EDEB;
+        color: #142940;
+        text-align: center;
+        border-radius: 6px;
+        padding: 10px;
+
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+        margin: -20px 2px;
+    }
+
+    .info-icon:hover .tooltiptext {
+        visibility: visible;
+    }
+
+    #overlay {
+        position: fixed;
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 888;
+        cursor: pointer;
+    }
+
+    .overlay-card {
+        position: absolute;
+        margin: auto;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+        color: red;
+        z-index: 9999;
+        background: #142940;
+        border-radius: 5px;
+        border: none;
+        box-shadow: rgb(60 64 67 / 30%) 0px 1px 2px 0px,
+    }
+
+    .welcome {
+        padding: 30px;
+        background-color: #142940;
+        border-radius: 10px 10px 0 0;
+        border: 1px solid #142940;
+       
+    }
+
+    .welcome p {
+        color: white;
+        font-size: 28px;
+        font-weight: bold;
+        text-align: left;
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .welcome .p-small {
+        color: white;
+        font-size: 16px;
+        font-weight: normal;
+        width: 65%;
+        margin: 5px 0;
+    }
+
+    .welcome a {
+        color: white;
+        font-size: 16px;
+        text-align: left;
+    }
+
+    .right-svg {
+        right: 0;
+        position: absolute;
+        margin: 15px 30px;
+    }
+
+    .left-svg {
+        left: 0;
+        position: absolute;
+        margin: 15px 30px;
+    }
+
+    .last-update {
+        width: 180px;
+        padding: 4px 8px;
+        background-color: #ffffff59;
+        border-radius: 7px;
+    }
+
+    .last-update p {
+        font-size: 12px;
+        vertical-align: middle;
+        font-weight: normal;
+
+        color: #000;
+    }
+
+    .last-update i {
+        color: #000;
+        vertical-align: middle;
+        font-weight: normal;
+    }
+
+    .region-card {
+        margin: 30px;
+        margin-top: 0;
+    }
+
+    .region-card .card img {
+        display: block;
+
+    }
+
+    #btn-select-region {
+        background: #2FA84F;
+        color: white;
+        display: block;
+        font-size: 12px;
+        margin-top: 10px;
+        line-height: 2;
+        margin: 20px;
+        text-align: left;
+    }
+
+    .card {
+        background-color: #fff;
+        border: none;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        width: 250px;
+        border-radius: 0;
+    }
+
+    .card h4 {
+        font-size: 14px;
+        font-weight: bold;
+        color: #142940;
+    }
+
+    .card p {
+        font-size: 12px;
+        color: #525252;
+    }
+
+    .card .btn {
+        font-size: 12px;
+        color: white;
+        background-color: #142940;
+    }
+
+    .card-header {
+        padding: 0;
+    }
+
+    .card-header img {
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 15px 15px;
+    }
+
+    .tag {
+        background-color: #53C351;
+        color: white;
+        font-size: 12px;
+        margin: 0;
+        padding: 4px 10px;
+        cursor: pointer;
+        margin-bottom: 15px;
+        border-radius: 3px;
+    }
+
+    .tag:hover {
+        background-color: #2FA84F;
+    }
+    .navbar-brand {
+    display: inline-block;
+    margin-right: 1rem;
+    line-height: inherit;
+    white-space: nowrap;
+    padding: 11px 20px;
+    font-size: 30px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #007bff;
+}
+</style>
+
+<body id="body-pd">
+    <div id="overlay"></div>
+    <div class="overlay-card">
+        <!-- <img src="/main/icon/pemda-kkr.png" alt="" srcset=""> -->
+        <div class="welcome">
+            <img class="left-svg" src="/main/icon/overlay-add-left.svg" width="100" alt="" srcset="">
+            <img class="right-svg" src="/main/icon/overlay-add-right.svg" width="100" alt="" srcset="">
+            <p style="margin-bottom: 5px;"> Welcome To </p>
+            <p class="p-small">Monitoring, Reporting, and Verification (MRV) PPI Compact</p>
+            <!-- <div class="last-update">
+                <p><i class='bx bx-time-five'></i> Last Update: <strong>April 2021</strong></p>
+            </div> -->
+
+        </div>
+        <div class="region-card">
+           
+            <!-- <p class="p-small">Pilih Compact Area</p> -->
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <img src="/main/icon/admin-kkr.svg" alt="rover" />
+                        </div>
+                        <div class="card-body">
+                            <span id="34" class="tag tag-pink" onclick="goToRegion(this)">Select Region</span>
+                            <h4>
+                                Kab. Kubu Raya
+                            </h4>
+                            <p>
+                                Provinsi Kalimantan Barat, Indonesia
+                            </p>
+                            <!-- <button onclick="filterByRegion()" class="btn">submit <i
+                                    class="bx bx-right-arrow-alt"></i></button> -->
+                            <!-- <div class="user">
+                                <img src="https://yt3.ggpht.com/a/AGF-l7-0J1G0Ue0mcZMw-99kMeVuBmRxiPjyvIYONg=s900-c-k-c0xffffffff-no-rj-mo"
+                                    alt="user" />
+                                <div class="user-info">
+                                    <h5>July Dec</h5>
+                                    <small>2h ago</small>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <img src="/main/icon/admin-ktp.svg" alt="ballons" />
+                        </div>
+                        <div class="card-body">
+                            <span id="35" class="tag tag-pink" onclick="goToRegion(this)">Select Region</span>
+                            <h4>
+                                Kab. Ketapang
+                            </h4>
+                            <p>
+                                Provinsi Kalimantan Barat, Indonesia
+                            </p>
+                            <!-- <div class="user">
+                                <img src="https://lh3.googleusercontent.com/ogw/ADGmqu8sn9zF15pW59JIYiLgx3PQ3EyZLFp5Zqao906l=s32-c-mo"
+                                    alt="user" />
+                                <div class="user-info">
+                                    <h5>Eyup Ucmaz</h5>
+                                    <small>Yesterday</small>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <header class="header" id="header">
+        <a class="navbar-brand" href="../index.html">PPI Compact</a>
+        <div class="region-form">
+            <!-- <label for="region-selection">Select Region</label> -->
+            <select id="region-selection" class="form-control">
+                <option value="35">Kab. Ketapang</option>
+                <option value="34"> Kab. Kubu Raya</option>
+            </select>
+            <button onclick="filterByRegion()" class="btn btn-success">submit </button>
+            <div class="vl"></div>
+
+            <div class="language-selection">
+                <a id="lang-selection" onclick="changeLanguage(this)">ENG</a>
+            </div>
+        </div>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div class="legend-place">
+                <div class="nav_list">
+
+                    <a id="--13" class="nav_link" onclick="showLegend(this)">
+                        <img src='/main/icon/def-icon.svg' width="40" style="margin: 5px auto;"></img>
+                        <span class="nav_name">Deforestasi, degradasi, dan emisi</span>
+                    </a>
+
+                    <a id="--15" class="nav_link" onclick="showLegend(this)">
+                        <img src='/main/icon/fire-icon.svg' width="40" style="margin: 5px auto;"></img>
+                        <span class="nav_name">Karhutla</span>
+                    </a>
+
+                    <a id="--16" class="nav_link" onclick="showLegend(this)">
+                        <img src='/main/icon/legal-icon.svg' width="40" style="margin: 5px auto;"></img>
+                        <span class="nav_name">Legal status areal konservasi</span>
+                    </a>
+
+                    <a id="--17" class="nav_link" onclick="showLegend(this)">
+                        <img src='/main/icon/sertifikat-icon.svg' width="40" style="margin: 5px auto;"></img>
+                        <span class="nav_name">Sertifikasi komoditas</span>
+                    </a>
+
+                    <a id="--18" class="nav_link" onclick="showLegend(this)">
+                        <img src='/main/icon/budidaya-icon.svg' width="40" style="margin: 5px auto;"></img>
+                        <span class="nav_name">Legalitas budidaya</span>
+                    </a>
+
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!--Container Main start-->
+    <div id='map'></div>
+
+    <div id="legend-placement" class="height-100 bg-light">
+
+
+    </div>
+
+    <div id="chart-place" class="statistic-legend" id="13">
+        <p class="legend-title"><img src="/main/icon/chart-icon.svg" width="22" alt="" srcset=""> Analisis</p>
+        <p id="sub-title-chart" class="legend-title"
+            style="font-size:16px;text-transform:capitalize;margin-bottom: 2rem;"></p>
+        <p id="hide-btn" class="hide-chart-btn">X</p>
+        <figure class="highcharts-figure">
+            <div id="container"></div>
+        </figure>
+    </div>
+    
+    <script src="/main/js/template.js"></script>
+
+    <script>
+        const map = L.map('map', {
+            zoomControl: false
+        }).setView([39.74739, -105], 13);
+
+        L.tileLayer(
+            'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox/light-v9',
+                tileSize: 512,
+                zoomOffset: -1
+            }).addTo(map);
+
+        L.control.zoom({
+            position: 'topright'
+        }).addTo(map);
+
+        function goToRegion(el) {
+            let id_region = el.id
+            window.location.href = `/main/map/${id_region}`
+        }
+
+    </script>
+</body>
+
+</html>

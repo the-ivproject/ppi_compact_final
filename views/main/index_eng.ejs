@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headerlink'); %>
+</head>
+
+<style>
+    #map {
+        width: 100%;
+        height: 91vh;
+        z-index: 0;
+    }
+
+    .info-icon .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: #ced4da;
+        color: #000;
+        text-align: center;
+        border-radius: 6px;
+        padding: 10px;
+
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+        margin: -20px 2px;
+    }
+
+    .info-icon:hover .tooltiptext {
+        visibility: visible;
+    }
+</style>
+
+<body id="body-pd">
+    <header class="header" id="header">
+        <a href="#" class="nav_logo" style="text-align: center;"> <i class='bx bx-layer nav_logo-icon'></i>
+        </a>
+        <div class="region-form">
+            <!-- <label for="region-selection">Select Region</label> -->
+            <select id="region-selection" class="form-control">
+                <option value="ketapang">Kab. Ketapang</option>
+                <option value="kubu raya"> Kab. Kubu Raya</option>
+            </select>
+            <button onclick="filterByRegion()" class="btn btn-success">submit <i
+                    class='bx bx-right-arrow-alt'></i></button>
+            <div class="vl"></div>
+
+            <div class="language-selection">
+                <a id="lang-selection" onclick="changeLanguage(this)"><%= lang.toUpperCase() %></a>
+            </div>
+        </div>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div class="legend-place">
+                <div class="nav_list">
+                    <%
+                    if(group_layer.length!=0){
+                    let i=1;
+                    group_layer.forEach(function(layer){
+                    %>
+                    <a id="--<%= layer.id_group_indikator %>" class="nav_link" onclick="showLegend(this)">
+                        <img src='/main<%= layer.icon_2 %>' width="40" style="margin: 5px auto;"></img>
+                        <span class="nav_name"><%= layer.alias %></span>
+                    </a>
+                    <%  i++; }) %>
+                    <% } else { %>
+                    <a href="#" id="gg" class="nav_link active"> <i class='bx bxs-tree nav_icon'></i>
+                        <span class="nav_name">No Layer</span>
+                    </a>
+                    <% } %>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!--Container Main start-->
+    <div id='map'></div>
+
+    <div id="legend-placement" class="height-100 bg-light">
+        
+
+    </div>
+
+    <div id="chart-place" class="statistic-legend" id="13">
+        <p class="legend-title"><i class='bx bxs-bar-chart-alt-2'></i> Analisis</p>
+        <p id="sub-title-chart" class="legend-title" style="font-size:16px;text-transform:capitalize;margin-bottom: 2rem;"></p>
+        <p id="hide-btn" class="hide-chart-btn">X</p>
+        <figure class="highcharts-figure">
+            <div id="container"></div>
+        </figure>
+
+        <%- include('./partials/footerlink'); %>
+
+        <script>
+            const map = L.map('map', {
+                zoomControl: false
+            }).setView([39.74739, -105], 13);
+
+            L.tileLayer(
+                'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                    maxZoom: 18,
+                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                    id: 'mapbox/light-v9',
+                    tileSize: 512,
+                    zoomOffset: -1
+                }).addTo(map);
+
+            L.control.zoom({
+                position: 'topright'
+            }).addTo(map);
+
+            let region_style = () => {
+                return {
+                    weight: 1,
+                    opacity: 1,
+                    color: '#000',
+                    fillOpacity: 0,
+                }
+            }
+
+            let region_layer = JSON.stringify(<%- region_layer.layer %>)
+            let region_geojson = L.geoJSON(JSON.parse(region_layer),{
+                style: function() {
+                    return {
+                        weight: 1,
+                        opacity: 1,
+                        color: '#000',
+                        fillOpacity: 0,
+                        fillColor: '#ff0000'
+                    }
+                }
+            })
+
+            map.fitBounds(region_geojson.getBounds())
+            map.addLayer(region_geojson)
+
+
+            let region = document.getElementById('region-selection')
+            
+            function filterByRegion() {
+                let lang = document.getElementById('lang-selection')
+                location.href = `/${region.value}/${lang.innerText.toLowerCase()}`
+                region.value = '<%= selected_region %>'
+            }
+
+            region.value = '<%= selected_region %>'
+
+            // Get Map
+
+            let raw_data = []
+            let kat_data = []
+
+            let layer = '<% Object.keys(data_layer).forEach(function(keys){ %>'
+
+            raw_data.push({
+                'id_layer': '<%= data_layer[keys].id_layer %>',
+                'geojson': JSON.parse('<%- data_layer[keys].data_layer %>'),
+                'tipe_style': '<%= data_layer[keys].tipe_style %>',
+                'style': JSON.parse('<%- data_layer[keys].style %>'),
+                'properti': '<%= data_layer[keys].properti %>',
+                'sub_group': '<%= data_layer[keys].sub_group %>',
+                'id_group_indikator': '<%= data_layer[keys].id_group_indikator %>',
+                'sumber_layer': '<%= data_layer[keys].sumber_layer %>',
+                'tanggal_data': new Date('<%= data_layer[keys].tanggal_data %>').toLocaleDateString()
+            })
+            '<% }) %>'
+
+            const groupBy = (array, key) => {
+                // Return the end result
+                return array.reduce((result, currentValue) => {
+                    // If an array already present for key, push it to the array. Else create an array and push the object
+                    (result[currentValue[key]] = result[currentValue[key]] || []).push(
+                        currentValue
+                    );
+                    // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+                    return result;
+                }, {}); // empty object is the initial value for result object
+            };
+
+            let setGeoJsonStyle = (geojson, layer) => {
+                if (geojson.tipe_style === "single") {
+
+                    return layer.setStyle(geojson.style)
+
+                } else {
+
+                    let f_prop = geojson.properti
+
+                    let getKategoriStyle = (feature) => {
+                        let prop = feature.properties[f_prop]
+
+                        return setKategoriStyle(prop)
+                    }
+
+                    let setKategoriStyle = (prop) => {
+                        let prop_val = Object.keys(geojson.style)
+                        for (let i = 0; i < prop_val.length; i++) {
+                            switch (prop) {
+                                case prop_val[i]:
+                                    return geojson.style[prop_val[i]]
+                                    break
+                            }
+                        }
+                    }
+                    return layer.setStyle(getKategoriStyle)
+                }
+            }
+
+            let layerById = groupBy(raw_data, 'id_layer')
+            let layerBySubGroup = groupBy(raw_data, 'sub_group')
+
+            let keysSubGroup = Object.keys(layerBySubGroup)
+
+            let final_data = []
+
+            keysSubGroup.forEach(key => {
+
+                let filter = layerBySubGroup[key]
+
+                let merge_geojson = {
+                    type: "FeatureCollection",
+                    features: filter.map(a => {
+                        return a.geojson.features
+                    }).reduce((a, b) => {
+                        return a.concat(b)
+                    })
+                }
+
+                let new_object = filter.map(a => {
+                    return {
+                        properti: a.properti,
+                        style: a.style,
+                        sub_group: a.sub_group,
+                        id_group_indikator: a.id_group_indikator,
+                        geojson: merge_geojson,
+                        sumber_layer: a.sumber_layer,
+                        tanggal_data: a.tanggal_data,
+                        'tipe_style': a.tipe_style
+                    }
+                })
+
+                final_data.push(new_object.slice(-1)[0])
+
+            })
+
+            let final_geojson = groupBy(final_data, 'id_group_indikator')
+           
+            let f = Object.keys(final_geojson).map(a => {
+                let o = {}
+                let filter = final_geojson[a]
+                let grouping = groupBy(filter, 'sub_group')
+
+                o[a] = grouping
+                return o
+            })
+
+            let filterFinalGroupingGeojson = (objs, id) => {
+                let filter = objs.map(obj => {
+                    return obj[id]
+                }).filter(a => {
+                    return a !== undefined
+                })[0]
+
+                return filter
+            }
+
+            // Free hand
+
+            async function showLegend(el) {
+                let legends = await document.querySelectorAll('.map-legend')
+
+                legends.forEach(async legend => {
+                    legend.style.display = 'none'
+                })
+
+                let list = document.getElementById(`${el.id.replaceAll("--","")}`)
+                let s = list.querySelectorAll('p')[1]
+                s.innerText = el.innerText
+                list.style.display = 'block'
+
+            }
+
+            let createLegend = (obj) => {
+                let legend_placement = document.getElementById('legend-placement')
+                let b = {}
+
+                let legend = Object.keys(obj).forEach(key => {
+
+                    let fil = Object.keys(obj[key])
+
+                    b[fil[0]] = obj[key][fil]
+
+                })
+
+                let get_key = Object.keys(b).map(key => {
+                    
+                    let fil2 = Object.keys(b[key]).map(key2 => {
+                        console.log(b[key][key2])
+                        return `
+                            <li>
+                                <div id="list-layer" class="list-arranged" style="display: flex;">
+                                    <label class="switch">
+                                        <input id="input-${b[key][key2][0].sub_group}" type="checkbox" value='${JSON.stringify(b[key][key2][0])}'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <div>
+                                        <p class="legend-item">${key2}
+                                            <span>
+                                                <i class='bx bx-info-circle info-icon'><span class="tooltiptext">${b[key][key2][0].sub_group}</span></i>
+                                            </span>
+                                        </p>
+                                        <p class="legend-des">${b[key][key2][0].sumber_layer}
+                                            <span class='info-icon'>
+                                            ${b[key][key2][0].tanggal_data}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>   
+                                <a id="${key2}" onclick="getChart(this)" class="btn btn-dark get-chart" >Analisis </a> 
+                                <a class="color-space-legend"><i class="bx bxs-square" style="color:${b[key][key2][0].style.fillColor}"></i></a>
+                            </li>
+                         `
+                    })
+
+                    let legend = `
+                            <div class="map-legend" id="${key}">
+                            
+                            <p class="legend-title"><i class='bx bxs-layer'></i> Map Legend  </p>
+                            <span id="hide-btn-legend" class="hide-chart-btn">X</span>
+                            <p id="sub-legend" class="legend-title" style="font-size:16px;text-transform:capitalize"></p>
+                            <div class="hl" style="border-top: 1px solid #ced4da;margin: 15px 0"></div>
+                            <ul id="id-list-legend" class="legend-list">
+                            ${fil2.join("")}
+                            </ul>
+                            </div>
+                            `
+
+                    return legend
+                })
+
+                legend_placement.innerHTML = get_key.join("")
+            }
+
+            let getGeojsonFromInput = async (input) => {
+                for (let i = 0; i < input.length; i++) {
+                    let raw_prop = await JSON.parse(input[i].value)
+                    let checkbox = await input[i]
+                    let geojson = await L.geoJSON(raw_prop.geojson)
+
+                    document.getElementById(checkbox.id).onclick = async function () {
+                        if (this.checked === true) {
+                            map.addLayer(geojson)
+                            setGeoJsonStyle(raw_prop, geojson)
+                        } else {
+                            map.removeLayer(geojson)
+                        }
+                    }
+                }
+            }
+
+            createLegend(f)
+            let input = document.querySelectorAll("#legend-placement input")
+            getGeojsonFromInput(input)
+
+            let getChart = (el) => {
+                let id = el.id
+                let fkey = f.map(a => {
+                    let newF = []
+                    let k1 = Object.keys(a)
+                    let k2 = Object.keys(a[k1])
+
+                    let k3 = k2.map(key => {
+                        let s = {}
+                        let new_obj = a[k1][key][0]
+
+                        new_obj['kategori'] = key
+                        s['chart_data'] = getChartValFromGeojson(new_obj.geojson)
+                        s['kategori'] = key
+                        s['title'] = `Analisis ${key} Per ${new_obj.tanggal_data}`
+                        return s
+                    })
+                    return k3
+                }).reduce((a, b) => {
+                    return a.concat(b)
+                })
+                let final_data = groupBy(fkey, 'kategori')
+
+                generateChart(final_data[el.id], el.id)
+            }
+
+            let getChartValFromGeojson = (geojson) => {
+
+                let prop = geojson.features.map(feature => {
+
+                    let empt = {}
+                    let propCheck = feature.properties
+                    if (propCheck.hasOwnProperty('lc_gbt')) {
+
+                        let y = feature.properties['tahun']
+                        let emisi = feature.properties['emisi']
+
+                        empt['emisi'] = parseInt(emisi.toFixed(2))
+                        empt['tahun'] = y
+
+                        return empt
+
+                    } else if (propCheck.hasOwnProperty('emisi')) {
+
+                        let capaian = feature.properties['capaian']
+                        let y = feature.properties['tahun']
+                        let emisi = feature.properties['emisi']
+
+                        empt['capaian'] = parseInt(capaian.toFixed(2))
+                        empt['emisi'] = parseInt(emisi.toFixed(2))
+                        empt['tahun'] = y
+                        return empt
+                    } else {
+                        let capaian = feature.properties['capaian']
+                        let y = feature.properties['tahun']
+
+                        empt['capaian'] = parseInt(capaian.toFixed(2))
+                        empt['tahun'] = y
+
+                        return empt
+                    }
+
+                })
+
+                let final_data = groupBy(prop, 'tahun')
+
+                let ff = Object.keys(final_data).map(a => {
+                    let obj = {}
+                    // console.log(final_data[a][0])
+                    final_data[a].forEach(key => {
+                        if (key.hasOwnProperty('emisi')) {
+
+                            let capaian = final_data[a].map(a => {
+                                return a.capaian
+                            }).reduce((a, b) => {
+                                return a + b
+                            })
+                            let emisi = final_data[a].map(a => {
+                                return a.emisi
+                            }).reduce((a, b) => {
+                                return a + b
+                            })
+                            obj['capaian'] = capaian
+                            obj['emisi'] = emisi
+                            obj['tahun'] = a
+                            obj['title'] = final_data[a].title
+
+
+                        } else {
+                            let capaian = final_data[a].map(a => {
+                                return a.capaian
+                            }).reduce((a, b) => {
+                                return a + b
+                            })
+
+                            obj['capaian'] = capaian
+                            obj['tahun'] = a
+                            obj['title'] = final_data[a].title
+
+                        }
+                    })
+                    return obj
+                })
+
+                return ff
+            }
+
+            let generateChart = (obj_data, selected_id) => {
+                document.getElementById('chart-place').style.display = 'block'
+
+                let chartOption = {}
+                let checkProp = obj_data[0].chart_data
+                let title_chart = document.getElementById('sub-title-chart')
+
+                chartOption['chart'] = {
+                    height: 200,
+                }
+                chartOption['yAxis'] = {
+                    title: {
+                        text: 'tes'
+                    },
+                    tickPixelInterval: 30
+                }
+
+                if (obj_data[0].kategori.toLowerCase() === 'deforestasi' || obj_data[0].kategori.toLowerCase() ===
+                    'degradasi') {
+                    checkProp.forEach(checkProp => {
+                        if (checkProp.hasOwnProperty('emisi')) {
+                            let yAxisCapaian = obj_data[0].chart_data.map(a => {
+                                return a.capaian
+                            })
+                            let yAxisEmisi = obj_data[0].chart_data.map(a => {
+                                return a.emisi
+                            })
+                            let xAxis = obj_data[0].chart_data.map(a => {
+                                return a.tahun
+                            })
+
+                            chartOption['title'] = {
+                                text: '',
+                            }
+                            chartOption['xAxis'] = {
+                                categories: xAxis
+                            }
+                            chartOption['series'] = [{
+                                type: 'column',
+                                name: selected_id,
+                                data: yAxisCapaian
+                            }, {
+                                type: 'column',
+                                name: 'emisi',
+                                data: yAxisEmisi
+                            }]
+                        }
+                    })
+                    title_chart.innerText = obj_data[0].title
+                } else {
+                    if (obj_data[0].kategori.toLowerCase() === 'dekomposisi gambut') {
+                        let yAxisCapaian = obj_data[0].chart_data.map(a => {
+                            return a.emisi
+                        })
+                        let xAxis = obj_data[0].chart_data.map(a => {
+                            return a.tahun
+                        })
+
+                        chartOption['title'] = {
+                            text: ''
+                        }
+                        chartOption['xAxis'] = {
+                            categories: xAxis
+                        }
+                        chartOption['series'] = [{
+                            type: 'column',
+                            name: selected_id,
+                            data: yAxisCapaian
+                        }]
+                        title_chart.innerText = obj_data[0].title
+                    } else {
+                        let yAxisCapaian = obj_data[0].chart_data.map(a => {
+                            return a.capaian
+                        })
+                        let xAxis = obj_data[0].chart_data.map(a => {
+                            return a.tahun
+                        })
+
+                        chartOption['title'] = {
+                            text: ''
+                        }
+                        chartOption['xAxis'] = {
+                            categories: xAxis
+                        }
+                        chartOption['series'] = [{
+                            type: 'column',
+                            name: selected_id,
+                            data: yAxisCapaian
+                        }]
+                        title_chart.innerText = obj_data[0].title
+                    }
+                }
+
+                Highcharts.chart('container', chartOption)
+
+            }
+
+            let hide_btn = document.getElementById('hide-btn')
+            let hide_btn_legend = document.getElementById('hide-btn-legend')
+
+            hide_btn.onclick = function () {
+                document.getElementById('chart-place').style.display = 'none'
+            }
+
+            hide_btn_legend.onclick = function () {
+                document.getElementById('chart-place').style.display = 'none'
+            }
+
+            // Change language
+            function changeLanguage(lang) {
+                let language = lang.innerText.toLowerCase()
+                window.location.href = `/${region.value}/${language}`
+            }
+        </script>
+</body>
+
+</html>

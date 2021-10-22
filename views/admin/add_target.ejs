@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headerlink'); %>
+    <title>PPI Compact Dashboard</title>
+</head>
+
+<style>
+    #sukses-alert {
+        display: none;
+    }
+
+    .btn-right {
+        float: right;
+        right: 0;
+        padding: 9px 16px
+    }
+
+    .btn-right a {
+        width: 60px;
+        height: 23px;
+        padding: 5px;
+        font-size: 10px;
+        color: white !important;
+    }
+
+    .btn-notif {
+        font-size: 10px;
+        padding: 5px;
+    }
+
+    .btn-notif span {
+        font-size: 10px;
+
+    }
+</style>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper">
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <nav class="navbar navbar-expand-lg bg-white fixed-top">
+                <a class="navbar-brand" href="../index.html">PPI COMPACT</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <%- include('./partials/top_menu'); %>
+            </nav>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+        <%- include('./partials/sidebar'); %>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="container-fluid dashboard-content">
+                <!-- ============================================================== -->
+                <!-- pageheader -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="page-header">
+                            <h2 class="pageheader-title"><%= title %></h2>
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/admin/"
+                                                class="breadcrumb-link">mrv</a>
+                                        </li>
+                                        <li class="breadcrumb-item"><a href="<%=current_link %>"
+                                                class="breadcrumb-link"><%=page_name.replace("_"," ") %></a>
+                                        </li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end pageheader -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- accrodions -->
+                <!-- ============================================================== -->
+                <div id="sukses-alert" class="alert alert-primary" role="alert">
+                    Success
+                </div>
+
+                <div id="message-placement"></div>
+
+                <div class="row">
+
+                    <!-- ============================================================== -->
+                    <!-- accrodions style one -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="section-block">
+                            <h5 class="section-title">Tambah Target</h5>
+                            <p>Tambah target baru PPI Compact.</p>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <form id="form" action="/action/admin/add_target" method="POST">
+                                    <input id="id_region" type="text" name="id_region" class="form-control" style="display: none;" disabled>
+                                    <div class="form-group">
+                                        <label for="inputText3" class="col-form-label">Nama Target</label>
+                                        <input id="inputText3" type="text" name="target" class="form-control"
+                                            placeholder="Misl. Deforestasi dan Degradasi" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputText4" class="col-form-label">Display Name</label>
+                                        <p>Akan digunakan untuk penamaan group pada legenda peta</p>
+                                        <input id="inputText4" type="text" name="display_name" class="form-control"
+                                            placeholder="Misl. Deforestasi, Degradasi dan Emisi" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleFormControlTextarea1">Icon Legenda</label>
+                                        <div class="input-group mb-3">
+                                          
+                                            <input id="icon" type="text" name="icon" class="form-control" required="">
+                                            <div class="input-group-append be-addon">
+                                                <button type="button" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle" aria-expanded="false">Icon</button>
+                                                <div id="add_group" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(460px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    
+                                                    <a class="dropdown-item" id="/main/icon/def-icon.svg" onclick="getPath(this)" >
+                                                        <img src="/main/icon/def-icon.svg" width="40" alt="" srcset="">
+                                                    </a>
+                                                    <a class="dropdown-item" id="/main/icon/fire-icon.svg" onclick="getPath(this)" >
+                                                        <img src="/main/icon/fire-icon.svg" width="40" alt="" srcset="">
+                                                    </a>
+                                                    <a class="dropdown-item" id="/main/icon/legal-icon.svg" onclick="getPath(this)" >
+                                                        <img src="/main/icon/legal-icon.svg" width="40" alt="" srcset="">
+                                                    </a>
+                                                    <a class="dropdown-item" id="/main/icon/sertifikat-icon.svg" onclick="getPath(this)" >
+                                                        <img src="/main/icon/sertifikat-icon.svg" width="40" alt="" srcset="">
+                                                    </a>
+                                                    <a class="dropdown-item" id="/main/icon/budidaya-icon.svg" onclick="getPath(this)" >
+                                                        <img src="/main/icon/budidaya-icon.svg" width="40" alt="" srcset="">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleFormControlTextarea1">Deskripsi</label>
+                                        <textarea class="form-control" name="deskripsi"
+                                            id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    </div>
+                                    <br>
+                                    <input type="submit" onclick="showLoading(); this.disabled = true" class="btn btn-success" disabled>
+                                    <span id="loading-submit" class="dashboard-spinner spinner-secondary spinner-xs" style="vertical-align: middle;visibility: hidden;"></span>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end accrodions style one -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- accrodions style two -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="section-block">
+                            <h5 class="section-title">List Target</h5>
+                            <p>List target PPI Compact.</p>
+                        </div>
+                        <div class="accrodion-regular">
+                            <div id="accordion">
+                                <%
+                                if(target.length!=0){
+                                var i=1;
+                                target.forEach(function(group){
+                                %>
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                        <h5 class="mb-0">
+                                            <div style="text-align:left;width: 60%;
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            text-overflow: ellipsis;" class="btn btn-link collapsed"
+                                                data-toggle="collapse" data-target="#collapseThree"
+                                                aria-expanded="false" aria-controls="collapseThree">
+
+                                                <%= group.target %>   
+                                                
+                                            </div>
+                                            <span class="btn-right">
+                                                <a href="/admin/list_rincian_target_filtered/<%=group.id_target %>" class="btn btn-info">Detail</a>
+                                                <a href="/action/admin/edit_target/<%=group.id_target %>" class="btn btn-brand">Edit</a>
+                                                <a id="<%=group.id_target %>" onclick="confrimDelete(this)" class="btn btn-danger">Delete</a>
+                                            </span>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <%  i++; }) %>
+                                <% } else { %>
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                        <h5 class="mb-0">
+                                            <button class="btn btn-link collapsed" data-toggle="collapse"
+                                                data-target="#collapseThree" aria-expanded="false"
+                                                aria-controls="collapseThree">
+                                                Belum ada target
+                                            </button>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper -->
+    <!-- ============================================================== -->
+
+    <%- include('./partials/footerlink'); %>
+
+    <script>
+        let id_region = document.getElementById('def_region').value
+        let copy_region = document.getElementById('id_region')
+        copy_region.value = id_region
+
+        let message_placement = document.getElementById('message-placement')
+        message_placement.innerHTML = message
+        
+        $(document).ready(function () {
+            $("#message-placement").delay(5000).slideUp(300);
+        });
+
+        function showLoading() {
+            let loading = document.getElementById('loading-submit')
+            let form = document.getElementById('form')
+
+            loading.style.visibility = 'visible'
+            form.submit()
+        }
+
+        window.addEventListener('load',function(){
+            let inputs = document.querySelectorAll('input')
+            inputs.forEach(input => {
+                input.disabled = false
+            })
+        })
+
+        function confrimDelete(el) {
+            let id_target = el.id
+
+            ConfirmDelete(
+            'Delete Target', '<span style="margin-bottom:5px">PENTING!</span><br> Jika dihapus, maka "Rincian Target" dan "histori capaian" yang terinduk ke "target" ini akan dikategorikan menjadi "uncategorized" dan tidak terhitung dalam capaian.', 'Hapus', 'Batal',
+            `/action/admin/delete_target/${id_target}`)
+
+        }
+
+        let icon_input = document.getElementById('icon')
+
+        function getPath(el) {
+            let id = el.id
+            icon_input.value = id
+        }
+    </script>
+</body>
+
+</html>

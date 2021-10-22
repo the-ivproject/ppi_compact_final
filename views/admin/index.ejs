@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headerlink'); %>
+    <title>PPI Compact Dashboard</title>
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper">
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <nav class="navbar navbar-expand-lg bg-white fixed-top">
+                <a class="navbar-brand" href="index.html">PPI Compact</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <%- include('./partials/top_menu'); %>
+            </nav>
+            <div class="dashboard-wrapper">
+                <div class="dashboard-influence">
+                    <div class="container-fluid dashboard-content">
+                        <!-- ============================================================== -->
+                        <!-- pageheader  -->
+                        <!-- ============================================================== -->
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="page-header">
+                                    <h3 class="mb-2"><%= title %></h3>
+                                    <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac
+                                        porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                                        <div class="page-breadcrumb">
+                                            <nav aria-label="breadcrumb">
+                                                <ol class="breadcrumb">
+                                                    <li class="breadcrumb-item"><a href="/admin/"
+                                                            class="breadcrumb-link">mrv</a>
+                                                    </li>
+                                                    <li class="breadcrumb-item"><a href="<%=current_link %>"
+                                                            class="breadcrumb-link"><%=page_name.replace("_"," ") %></a>
+                                                    </li>
+                                                </ol>
+                                            </nav>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end pageheader  -->
+                        <!-- ============================================================== -->
+                        <!-- ============================================================== -->
+                        <!-- content  -->
+                        <!-- ============================================================== -->
+                        <!-- ============================================================== -->
+                        <!-- influencer profile  -->
+                        <!-- ============================================================== -->
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="card influencer-profile-data">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-4 col-12">
+                                                <div class="text-center">
+                                                    <img src="<%= admin[0].logo.replace('public','') %>" alt="User Avatar"
+                                                        class="rounded-circle user-avatar-xxl">
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-10 col-lg-8 col-md-8 col-sm-8 col-12">
+                                                <div class="user-avatar-info">
+                                                    <div class="m-b-20">
+                                                        <div class="user-avatar-name">
+                                                            <h2 class="mb-1"><%= (admin[0].first_name +' '+ admin[0].last_name).toUpperCase() %></h2>
+                                                        </div>
+                                                        <div class="rating-star  d-inline-block">
+                                                            <!-- <i class="fa fa-fw fa-star"></i>
+                                                            <i class="fa fa-fw fa-star"></i>
+                                                            <i class="fa fa-fw fa-star"></i>
+                                                            <i class="fa fa-fw fa-star"></i>
+                                                            <i class="fa fa-fw fa-star"></i>
+                                                            <p class="d-inline-block text-dark">14 Reviews </p> -->
+                                                        </div>
+                                                    </div>
+                                                    <!--  <div class="float-right"><a href="#" class="user-avatar-email text-secondary">www.henrybarbara.com</a></div> -->
+                                                    <div class="user-avatar-address">
+                                                        <p class="border-bottom pb-3">
+                                                            <span class="d-xl-inline-block d-block mb-2"><i
+                                                                    class="fa fa-map-marker-alt mr-2 text-primary "></i>
+                                                                    <%= (admin[0].nama_region +', '+ admin[0].provinsi).toUpperCase() %></span>
+                                                            <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">Joined:
+                                                                <%= new Date(admin[0].tanggal_join).toLocaleDateString() %> </span>
+                                                            <!-- <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">
+                                                            </span>
+                                                            <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">29
+                                                                Year Old </span> -->
+                                                        </p>
+                                                        <div class="mt-3">
+                                                            <h5 class="card-header" style="padding-left:0;padding-top:0;border:none">Fokus Target</h5>
+                                                            <%
+                                                            if(target.length!=0){
+                                                            var i=1;
+                                                            target.forEach(function(target){
+                                                            %>
+                                                            <a href="#" class="badge badge-light mr-1"><%= target.display_name %></a> 
+                                                            <%  i++; }) %>
+                                                            <% } else { %>
+                                                                <a href="#" class="badge badge-light mr-1">Belum ada target</a> 
+                                                            </tr>
+                                                            <% } %>   
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="border-top user-social-box">
+                                        <!-- <div class="user-social-media d-xl-inline-block"><span
+                                                class="mr-2 twitter-color"> <i
+                                                    class="fab fa-twitter-square"></i></span><span>13,291</span></div>
+                                        <div class="user-social-media d-xl-inline-block"><span
+                                                class="mr-2  pinterest-color"> <i
+                                                    class="fab fa-pinterest-square"></i></span><span>84,019</span></div>
+                                        <div class="user-social-media d-xl-inline-block"><span
+                                                class="mr-2 instagram-color"> <i
+                                                    class="fab fa-instagram"></i></span><span>12,300</span></div>
+                                        <div class="user-social-media d-xl-inline-block"><span
+                                                class="mr-2  facebook-color"> <i
+                                                    class="fab fa-facebook-square "></i></span><span>92,920</span></div>
+                                        <div class="user-social-media d-xl-inline-block "><span
+                                                class="mr-2 medium-color"> <i
+                                                    class="fab fa-medium"></i></span><span>291</span></div>
+                                        <div class="user-social-media d-xl-inline-block"><span
+                                                class="mr-2 youtube-color"> <i
+                                                    class="fab fa-youtube"></i></span><span>1291</span></div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end influencer profile  -->
+                        <!-- ============================================================== -->
+                        <!-- ============================================================== -->
+                        <!-- widgets   -->
+                        <!-- ============================================================== -->
+                        <div class="row">
+                            <!-- ============================================================== -->
+                            <!-- four widgets   -->
+                            <!-- ============================================================== -->
+                            <!-- ============================================================== -->
+                            <!-- total views   -->
+                            <!-- ============================================================== -->
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="card">
+                                    <h5 class="card-header">Histori Capaian</h5>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered first">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID Histori Capaian</th>
+                                                        <th>Rincian Target</th>
+                                                        <th>Tahun Data</th>
+                                                        <th>Status Verifikasi</th>
+                                                        <th>Sumber Data</th>
+                                                        <th>Target Tahunan</th>
+                                                        <th>Aktual</th>
+                                                        <th>Kinerja</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <%
+                                                    if(histori_capaian.length!=0){
+                                                    var i=1;
+                                                    function numberWithCommas(x) {
+                                                        if(x === null) {
+                                                            return x
+                                                        }
+                                                        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                                                    }
+                                                    histori_capaian.forEach(function(histori_capaian){
+                                                    %>
+                                                    <tr>
+                                                        <td><%= histori_capaian.id_histori_capaian%></td>
+                                                        <td><%= histori_capaian.rincian_target %></td>
+                                                        <td><%= histori_capaian.tahun_data %></td>
+                                                        <td><%= histori_capaian.status_verifikasi %></td>
+                                                        <td><%= histori_capaian.sumber_data %></td>
+                                                        <td><%= numberWithCommas(histori_capaian.target_tahunan) %> <span class="satuan"><%= histori_capaian.satuan %></span></td>
+                                                        <td><%= numberWithCommas(histori_capaian.aktual) %><span class="satuan"> <%= histori_capaian.satuan %></span></td>
+                                                        <td><%= numberWithCommas(histori_capaian.kinerja) %><span class="satuan"> <%= histori_capaian.satuan %></span></td>  
+                                                        
+                                                    </tr>
+                                                    <%  i++; }) %>
+                                                    <% } else { %>
+                                                    <tr>
+                                                        <td>No data</td>
+                                                        <td>No data</td>
+                                                        <td>No data</td>
+                                                        <td>No data</td>
+                                                        <td>No data</td>
+                                                        <td>No data</td>
+                                                        <td>No data</td>
+                                                        <td>No data</td>
+                                                    </tr>
+                                                    <% } %>   
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ============================================================== -->
+                            <!-- end total earned   -->
+                            <!-- ============================================================== -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+        <%- include('./partials/sidebar'); %>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- end wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper  -->
+    <!-- ============================================================== -->
+
+    <%- include('./partials/footerlink'); %>
+
+</body>
+
+</html>
