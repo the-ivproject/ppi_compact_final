@@ -71,7 +71,9 @@ const storageGeojson = multer.diskStorage({
 
 const uploadGeojson = multer({
     storage: storageGeojson,
-    limits: { fieldSize: 50 * 1024 * 1024 * 1024 }
+    limits: {
+        fieldSize: 50 * 1024 * 1024 * 1024
+    }
 }).single('geojson')
 
 const uploadLogo = multer({
@@ -243,7 +245,9 @@ exports.insert_histori_capaian = async (req, res) => {
             const uploadPath = 'public/uploads/geojson/'
 
             let form = new Map()
-            let busboy = new Busboy({ headers: req.headers })
+            let busboy = new Busboy({
+                headers: req.headers
+            })
 
             busboy.on('field', (fieldname, val) => {
                 form.set(fieldname, val)
@@ -264,7 +268,7 @@ exports.insert_histori_capaian = async (req, res) => {
                         id_region: form.get('id_region'),
                         id_rincian_target: form.get('id_rincian_target'),
                         tahun_data: form.get('tahun_data'),
-                        geojson: (uploadPath + final_path).replace("public",""),
+                        geojson: (uploadPath + final_path).replace("public", ""),
                         status_verifikasi: form.get('status_verifikasi'),
                         sumber_data: form.get('sumber_data'),
                         target_tahunan: form.get('target_tahunan'),
@@ -297,5 +301,4 @@ exports.insert_histori_capaian = async (req, res) => {
         query();
     }
 }
-
 

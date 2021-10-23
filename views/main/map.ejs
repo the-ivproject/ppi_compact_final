@@ -79,20 +79,21 @@
         border: 1px solid #e4dfcf;
         border-radius: 10px;
         margin: 23px 0;
-    } 
-    
+    }
+
     .nav_list a {
         border: 1px solid #e4dfcf;
         border-radius: 10px;
     }
 
     .kinerja-positif {
-        font-weight:bold;
-        color:#53C351
+        font-weight: bold;
+        color: #53C351
     }
+
     .kinerja-negatif {
-        font-weight:bold;
-        color:#EA3D2F
+        font-weight: bold;
+        color: #EA3D2F
     }
 
     .val-count {
@@ -108,7 +109,8 @@
         visibility: hidden;
     }
 
-    #overlay-preload, #overlay-preload-map {
+    #overlay-preload,
+    #overlay-preload-map {
         position: fixed;
         display: block;
         width: 100%;
@@ -122,7 +124,8 @@
         cursor: pointer;
     }
 
-    #overlay-preload img, #overlay-preload-map {
+    #overlay-preload img,
+    #overlay-preload-map {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -155,7 +158,6 @@
             </select>
             <button onclick="filterByRegion()" class="btn btn-success">submit</button>
             <div class="vl"></div>
-
             <div class="language-selection">
                 <a id="lang-selection" onclick="changeLanguage()"><%= lang.toUpperCase() %></a>
             </div>
@@ -192,20 +194,13 @@
         </div>
     </div>
 
-    <div id="legend-placement" class="height-100 bg-light">
+    <div id="legend-placement" class="height-100 bg-light"></div>
 
-
-    </div>
-
-    <div id="chart-placement">
-
-    </div>
-
+    <div id="chart-placement"></div>
 
     <%- include('./partials/footerlink'); %>
     <script src="/admin/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script>
-
         function changeLanguage() {
             alert('Maaf, versi Inggris belum tersedia!')
         }
@@ -213,7 +208,6 @@
         function filterByRegion() {
             let selected = document.getElementById('region-selection')
             window.location.href = `/main/map/${selected.value}`
-
         }
 
         async function getCurrent(id) {
@@ -240,7 +234,7 @@
                 zoomOffset: -1
             }).addTo(map);
 
-       
+
         let region_style = () => {
             return {
                 weight: 1,
@@ -250,14 +244,14 @@
                 fillOpacity: 0,
             }
         }
-      
-        let region_layer = JSON.stringify(<%- region.geojson %>)
-        let region_geojson = L.geoJSON(JSON.parse(region_layer),{
-            style:region_style
-        })
 
-        getCurrent(`<%- region.id_region %>`)
+        let region_layer = JSON.stringify( <%- region.geojson %> )
+        let region_geojson = L.geoJSON(JSON.parse(region_layer), {
+            style: region_style
+        })
         
+        getCurrent(`<%- region.id_region %>`)
+
         map.fitBounds(region_geojson.getBounds())
         map.addLayer(region_geojson)
 
@@ -271,11 +265,11 @@
                 return result;
             }, {});
         };
-        
+
         // Covert 'histori capaian' to JSON object
         let histori_object = []
         let temp_histori_object;
-        
+
         '<% histori_capaian.forEach(function(histori){ %>'
         temp_histori_object = {}
         '<% Object.keys(histori).forEach(function(keys){ %>'
@@ -292,7 +286,7 @@
 
         // Grouping by id_target
         const historiGroupByIdTarget = groupBy(final_histori_object, 'id_target');
-      
+
         // create legend
         let createLegend = (obj) => {
 
@@ -308,20 +302,24 @@
 
                     let leg = grouped.map(g => {
                         let p_kinerja;
-                        if(g.rule === 'under baseline') {
-                            if(parseInt(g.aktual) < parseInt(g.target_tahunan) ) {
-                                p_kinerja = `Kinerja: <span class="kinerja-positif" style="font-weight:bold;color:#53C351">+${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-positif">positif`
+                        if (g.rule === 'under baseline') {
+                            if (parseInt(g.aktual) < parseInt(g.target_tahunan)) {
+                                p_kinerja =
+                                    `Kinerja: <span class="kinerja-positif" style="font-weight:bold;color:#53C351">+${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-positif">positif`
                             } else {
-                                p_kinerja = `Kinerja: <span class="kinerja-negatif" style="font-weight:bold;color:#EA3D2F">${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-negatif">negatif`
-                            }   
+                                p_kinerja =
+                                    `Kinerja: <span class="kinerja-negatif" style="font-weight:bold;color:#EA3D2F">${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-negatif">negatif`
+                            }
                         } else {
-                            if(parseInt(g.aktual) < parseInt(g.target_tahunan) ) {
-                                p_kinerja = `Kinerja: <span class="kinerja-negatif">${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-negatif">negatif `
+                            if (parseInt(g.aktual) < parseInt(g.target_tahunan)) {
+                                p_kinerja =
+                                    `Kinerja: <span class="kinerja-negatif">${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-negatif">negatif `
                             } else {
-                                p_kinerja = `Kinerja: <span class="kinerja-positif"> +${(g.kinerja +' '+ g.satuan).replace("-","")}</span> atau <span class="kinerja-positif">positif`
-                            }   
+                                p_kinerja =
+                                    `Kinerja: <span class="kinerja-positif"> +${(g.kinerja +' '+ g.satuan).replace("-","")}</span> atau <span class="kinerja-positif">positif`
+                            }
                         }
-                       
+
                         return `
                                  <li>
                                     <div id="list-layer" class="list-arranged" style="display: flex;">
@@ -400,15 +398,14 @@
         }
 
         let getGeojsonFromInput = async (input) => {
-
             for (let i = 0; i < input.length; i++) {
                 let raw_prop = await JSON.parse(input[i].value)
-              
+
                 let checkbox = await input[i]
                 let geojson = await raw_prop.geojson
                 let loader = document.getElementById('overlay-preload-map')
                 let geojson_layer = L.geoJSON()
-                
+
                 document.getElementById(checkbox.id).onclick = async function () {
                     if (this.checked === true) {
                         let geo = $.ajax({
@@ -416,44 +413,39 @@
                             dataType: "json",
                             success: console.log("County data successfully loaded."),
                             error: function (xhr) {
-                            console.log(xhr.statusText)
+                                console.log(xhr.statusText)
                             }
                         })
                         $.when(geo).done(function () {
-                           
+
                             geojson_layer.addData(geo.responseJSON)
 
                             map.addLayer(geojson_layer)
                             setGeoJsonStyle(raw_prop, geojson_layer)
                         })
-                        
                     } else {
-                      map.removeLayer(geojson_layer)
+                        map.removeLayer(geojson_layer)
                     }
                 }
-                
             }
         }
 
         let setGeoJsonStyle = (raw_prop, layer) => {
             if (raw_prop.tipe_style === "single") {
-              
                 return layer.setStyle(JSON.parse(raw_prop.style))
-
             } else {
-               
+
                 let f_prop = raw_prop.properti
-               
+
                 let getKategoriStyle = (feature) => {
                     let prop = feature.properties[f_prop]
-
                     return setKategoriStyle(prop)
                 }
 
                 let setKategoriStyle = (prop) => {
                     let prop_used = JSON.parse(raw_prop.style)
                     let prop_val = Object.keys(prop_used)
-             
+
                     for (let i = 0; i < prop_val.length; i++) {
                         switch (prop) {
                             case prop_val[i]:
@@ -468,10 +460,10 @@
 
         let getChart = (data, id) => {
             let text;
-            if(data.length === 1) {
+            if (data.length === 1) {
                 text = data[0].tahun_data
             } else {
-                text = data[0].tahun_data +' - '+ data[data.length - 1].tahun_data
+                text = data[0].tahun_data + ' - ' + data[data.length - 1].tahun_data
             }
 
             Highcharts.chart(`container-chart-${id}`, {
@@ -524,7 +516,7 @@
 
 
         let input = document.querySelectorAll("#legend-placement .geojson-input")
-       
+
         getGeojsonFromInput(input)
 
         let createAnalisis = (obj) => {
@@ -540,7 +532,7 @@
                 let raw_obj = goupByIdRincianTarget[id]
                 let length = raw_obj.length - 1
                 let filteredObj = raw_obj[length]
-              
+
                 let aktual_data = `
                         <div id="card-item-${id}">
                             <span id="hide-btn-legend-${id}" class="hide-chart-btn" onclick="removeChart(this)">X</span>
@@ -607,13 +599,13 @@
             }, {
                 duration: 1000,
                 easing: 'swing',
-                step: function(now) {
+                step: function (now) {
                     $(this).text(Math.ceil(now));
                 },
                 complete: update_value_count
             });
         };
-        
+
         async function showChart(el) {
             let chart_placement = await document.querySelectorAll('#body-pd .chart-placement')
             chart_placement.forEach(place => {
@@ -629,7 +621,7 @@
 
             selector_count.forEach(h3 => {
                 let value = h3.innerText
-                update_value_count(h3,value);
+                update_value_count(h3, value);
             })
         }
 
@@ -648,7 +640,7 @@
         }
 
         let d = document.querySelectorAll('.legend-des span')
-        for(let i = 0; i < d.length; i++) {
+        for (let i = 0; i < d.length; i++) {
             let colors = d[i].innerHTML.split(",")
             let new_el = []
             colors.forEach(color => {
@@ -661,7 +653,6 @@
             let general_loader = document.getElementById('overlay-preload')
             general_loader.style.visibility = 'hidden'
         })
-
     </script>
 </body>
 
