@@ -212,6 +212,7 @@ exports.insert_rincian_target = (req, res) => {
         rincian_target,
         baseline,
         satuan,
+        deskripsi,
         target_tahunan,
         rule
     } = req.body
@@ -222,6 +223,7 @@ exports.insert_rincian_target = (req, res) => {
         baseline,
         satuan,
         target_tahunan,
+        deskripsi,
         rule,
         last_update
     }, async (err, results) => {

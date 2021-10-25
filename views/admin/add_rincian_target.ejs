@@ -168,6 +168,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <label for="inputText4" class="col-form-label">Deskripsi</label>
+                                        <textarea id="inputText11" type="text" name="deskripsi" class="form-control"
+                                            placeholder="Data ini diperoleh dari......." disabled required></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="inputText6" class="col-form-label">Rule Kontribusi Positif</label>
@@ -243,23 +246,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- ============================================================== -->
-                    <!-- end accrodions style one -->
-                    <!-- ============================================================== -->
-                    <!-- ============================================================== -->
-                    <!-- accrodions style two -->
-                    <!-- ============================================================== -->
-                    <!-- <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                        <div class="section-block">
-                            <h5 class="section-title">Preview Data</h5>
-                            <p>Preview data GeoJSON yang akan di-upload ke database.</p>
-                        </div>
-                        <div class="card">
-                            <div class="card-body" style="padding:0px">
-                                <div id='map'></div>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -309,11 +295,13 @@
             inputs.forEach(input => {
                 input.disabled = false
             })
+
+            document.getElementById('inputText11').disabled = false
+
         })
 
         function confrimDelete(el) {
             let id_target = el.id
-
             ConfirmDelete(
             'Delete Rincian Target', 'Jika dihapus, maka "histori capaian" dari rincian target ini akan ikut terhapus.', 'Hapus', 'Batal',
             `/action/admin/delete_rincian_target/${id_target}`)

@@ -76,9 +76,10 @@
     }
 
     .nested-card {
-        border: 1px solid #e4dfcf;
-        border-radius: 10px;
-        margin: 23px 0;
+        border-bottom: 1px solid #ced4da;
+        /* border-radius: 10px; */
+        /* margin: 25px 0; */
+        padding: 12px 0;
     }
 
     .nav_list a {
@@ -138,7 +139,7 @@
         <img src="/main/preload/loader-1.svg" alt="" srcset="" width="100">
     </div>
     <header class="header" id="header">
-        <a class="navbar-brand">PPI Compact</a>
+        <a class="navbar-brand">Platform PPH</a>
         <div class="region-form">
             <!-- <label for="region-selection">Select Region</label> -->
             <select id="region-selection" class="form-control">
@@ -514,6 +515,24 @@
             });
         }
 
+        let transformToTable = (obj) => {
+            let raw1 = []
+
+            obj.forEach(o => {
+                let raw = {}
+                raw["tahun"] = `<td>${o.tahun_data}</td>`
+                raw["target_tahunan"] = `<td>${o.target_tahunan +' '+ o.satuan}</td>`
+                raw["aktual"] = `<td>${o.aktual +' '+ o.satuan}</td>`
+                raw["capaian"] = `<td>${o.target_tahunan - o.aktual +' '+ o.satuan}</td>`
+                raw1.push(raw)
+            })
+            
+            let x = []
+            let xb = raw1.map(o => {
+                return `<tr>${Object.values(o).join("")}</tr>`
+            })
+            return xb
+        }
 
         let input = document.querySelectorAll("#legend-placement .geojson-input")
 
@@ -524,29 +543,31 @@
             let body = document.getElementById('body-pd')
             let chart_value = []
             Object.keys(goupByIdRincianTarget).forEach(async id => {
-
+                
                 let chart_placement = document.createElement('div')
                 chart_placement.id = `chart-placement-${id}`
                 chart_placement.className = 'chart-placement'
 
                 let raw_obj = goupByIdRincianTarget[id]
+                console.log('raw_obj',transformToTable(raw_obj))
                 let length = raw_obj.length - 1
                 let filteredObj = raw_obj[length]
-
+                
                 let aktual_data = `
                         <div id="card-item-${id}">
                             <span id="hide-btn-legend-${id}" class="hide-chart-btn" onclick="removeChart(this)">X</span>
                             <div class="card-analisis">
                                 <div class="chart-title">
-                                    <img src="/main/icon/chart-icon-2.svg" width="35" alt="" srcset="">
                                     <div class="title-text">
-                                        <p>Chart ${filteredObj['rincian_target']}</p>
-                                        <span>Satuan <strong>${filteredObj['satuan']}</strong></span>
+                                        <span>Analisis</span>
+                                        <p style='font-size:18px;margin-bottom:10px'>${filteredObj['rincian_target']}</p>
+                                        <span>${filteredObj['deskripsi']}.</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="nested-card">
                                 <div class="card-analisis">
+                                    <p style="font-size: 14px;margin:10px 0">SUMMARY</p>
                                     <div class="card-value">
                                         <img src="/main/icon/chart-value-icon.svg" alt="" srcset="">
                                         <div id="value">
@@ -576,9 +597,23 @@
                                     </div>
                                 </div>
                             </div>
-                           
                             <div class="nested-card">
                                 <div class="card-analisis">
+                                <p style="font-size: 14px;margin:10px 0">TABULASI</p>
+                                <table class="table first" style="font-size:12px;font-family: 'Nunito'">
+                                    <tr style="border-bottom: 2px solid #369151;">
+                                        <th>Tahun</th>
+                                        <th>Target Tahunan</th>
+                                        <th>Aktual</th>
+                                        <th>Capaian</th>
+                                    </tr>
+                                  ${transformToTable(raw_obj).join("")}
+                                </table>
+                                </div>
+                            </div>
+                            <div class="nested-card">
+                                <div class="card-analisis">
+                                    <p style="font-size: 14px;margin:10px 0">CHART</p>
                                     <figure class="highcharts-figure">
                                         <div class="container-chart" id="container-chart-${id}"></div>
                                     </figure>

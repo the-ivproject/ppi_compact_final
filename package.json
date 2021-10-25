@@ -25,5 +25,14 @@
     "mysql": "^2.18.1",
     "nodemon": "^2.0.13"
   },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/the-ivproject/ppi_compact_final.git"
+  },
+  "bugs": {
+    "url": "https://github.com/the-ivproject/ppi_compact_final/issues"
+  },
+  "homepage": "https://github.com/the-ivproject/ppi_compact_final#readme",
   "description": ""
 }
