@@ -1,5 +1,6 @@
 const express = require('express')
 const db = require('../config/dbconfig.js')
+const fs = require('fs')
 
 const router = express.Router()
 
@@ -76,15 +77,6 @@ router.get('/admin', async (req, res) => {
 router.get('/admin/add_region', async (req, res) => {
     let session = await req.session.user
     let confirm = await check(session, req, res)
-
-    // res.render('admin/add_region', {
-    //     id_admin: session[0].id_admin,
-    //     title: 'Tambah Region',
-    //     menu: 'active',
-    //     page_name: 'add region',
-    //     current_link: '',
-    //     message: req.flash('message'),
-    // })
 })
 
 router.get('/admin/login', (req, res) => {
@@ -130,21 +122,29 @@ router.get('/admin/add_target', async (req, res) => {
         if (id_region === null) {
             return;
         } else {
-            db.query('SELECT * FROM 2_target WHERE id_region = ?', [id_region], (err, results) => {
+            fs.readFile('public/icon_list/fontawesome_list.txt', 'utf8' , (err, data) => {
                 if (err) {
-                    console.log(err)
-                } else {
-                    res.render('admin/add_target', {
-                        title: 'Tambah Target',
-                        menu: 'active',
-                        page_name: 'add target',
-                        current_link: '/admin/add_target',
-                        message: req.flash('message'),
-                        target: results,
-                        admin: session,
-                        id_region: id_region
-                    })
+                  console.error(err)
+                  return
                 }
+
+                db.query('SELECT * FROM 2_target WHERE id_region = ?', [id_region], (err, results) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        res.render('admin/add_target', {
+                            title: 'Tambah Target',
+                            menu: 'active',
+                            page_name: 'add target',
+                            current_link: '/admin/add_target',
+                            message: req.flash('message'),
+                            target: results,
+                            admin: session,
+                            id_region: id_region,
+                            icon_list: data.split(",")
+                        })
+                    }
+                })
             })
         }
     }

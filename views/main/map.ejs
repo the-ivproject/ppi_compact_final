@@ -9,7 +9,7 @@
 <style>
     #map {
         width: 100%;
-        height: 100vh;
+        height: 116vh;
         z-index: 0;
     }
 
@@ -17,17 +17,16 @@
         visibility: hidden;
         width: 120px;
         background-color: #E2EDEB;
-        color: #142940;
+        color: #000;
         text-align: center;
         border-radius: 6px;
         padding: 10px;
         position: absolute;
         z-index: 9999;
         margin: -20px 2px;
-        /* left: 0; */
         right: 15px;
         font-size: 12px;
-        font-weight: normal
+        font-weight: bold
     }
 
     .info-icon:hover .tooltiptext {
@@ -55,14 +54,15 @@
         line-height: inherit;
         white-space: nowrap;
         padding: 11px 20px;
-        font-size: 30px;
+        font-size: 18px;
         text-transform: uppercase;
         font-weight: bold;
-        color: #367BF5;
+        background-color: #142940;
+        color: #fff;
     }
 
     .navbar-brand:hover {
-        color: #367BF5;
+        color: #fff;
     }
 
     .icon-terverifikasi {
@@ -83,18 +83,26 @@
     }
 
     .nav_list a {
-        border: 1px solid #e4dfcf;
-        border-radius: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
     }
 
     .kinerja-positif {
         font-weight: bold;
-        color: #53C351
+        color: #53C351;
+        float: right;
+        right: 0;
+        position: absolute;
+        margin: 0 27px;
     }
 
     .kinerja-negatif {
         font-weight: bold;
-        color: #EA3D2F
+        color: #EA3D2F;
+        float: right;
+        right: 0;
+        position: absolute;
+        margin: 0 27px;
     }
 
     .val-count {
@@ -132,6 +140,90 @@
         left: 50%;
         z-index: 9999;
     }
+
+    .legend-des span {
+        float: right;
+        position: absolute;
+        right: 0;
+        margin: 0 25px;
+    }
+
+    .check-counter {
+        margin: 7px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: #EA3D2F;
+        color: white;
+        /* padding: 5px; */
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 3px;
+        width: 17px;
+        height: 17px;
+        line-height: 1.4;
+        transition-delay: 0s, 0.3s;
+    }
+
+    .map-fitur-normal {
+        position: fixed;
+        background: white;
+        z-index: 777;
+        right: 0;
+        top: 63px;
+        margin: 11px;
+        /* padding: 10px; */
+        border-radius: 3px;
+        display: block;
+        border: 1px solid #ced4da;
+        transition-property: right, visibility;
+        transition-duration: 0.3s, 0s;
+        transition-delay: 0s, 0.3s;
+    }
+
+    .icon-fitur {
+        padding: 10px;
+        border-bottom: 1px solid #ced4da;
+    }
+
+    .map-fitur-normal .icon-fitur {
+        cursor: pointer;
+    }
+
+    .map-fitur-normal .icon-fitur:hover {
+        background-color: #00000018;
+    }
+
+    .iconify {
+        color: #000;        
+    }
+
+    .map-fitur-normal.move {
+        transition-property: visibility, right;
+        transition-duration: 0s, 0.3s;
+        right: 400px;
+    }
+
+    .select-base {
+        position: absolute;
+        right: 45px;
+        top: 0px;
+        background: white;
+        padding: 10px;
+        border-radius: 3px;
+        border: 1px solid #ced4da;
+        font-size: 12px;
+    }
+
+    .select-base option {
+        border-bottom:1px solid #ced4da;
+        padding: 5px;
+    }
+
+    .select-base option:hover {
+        background-color: #00000018;
+    }
+
 </style>
 
 <body id="body-pd">
@@ -139,7 +231,7 @@
         <img src="/main/preload/loader-1.svg" alt="" srcset="" width="100">
     </div>
     <header class="header" id="header">
-        <a class="navbar-brand">Platform PPH</a>
+        <a class="navbar-brand">Green Growth  <p style="margin: 0;font-size: 12px;text-transform: capitalize;color:#FAAF02">Monitoring Platform</p></a>
         <div class="region-form">
             <!-- <label for="region-selection">Select Region</label> -->
             <select id="region-selection" class="form-control">
@@ -174,34 +266,90 @@
                     legend.forEach(function(legend){
                     %>
                     <a id="target_<%= legend.id_target %>" class="nav_link" onclick="showLegend(this)">
-                        <img src='<%= legend.icon %>' width="40" style="margin: 5px auto;"></img>
+                        <p class="check-counter" id="count-<%= legend.id_target %>">0</p>
+                        <i class="<%= legend.icon %>" style="color:#53C351;margin:10px"></i>
                         <span class="nav_name"><%= legend.display_name %></span>
                     </a>
                     <%  i++; }) %>
                     <% } else { %>
-                    <a href="#" id="gg" class="nav_link active"> <i class='bx bxs-tree nav_icon'></i>
-                        <span class="nav_name">Belum Ada Data</span>
+                        
+                    <a href="#" id="gg" class="nav_link active">
+                        <i class="fas fa-info-circle" style="color:#53C351;margin:10px"></i>
+                        <span class="nav_name">Upps! Data belum tersedia.</span>
                     </a>
                     <% } %>
                 </div>
             </div>
         </nav>
     </div>
-
+    <div id="map-fitur" class="map-fitur-normal">
+        <div class="icon-fitur" onclick="zoomIn()">
+            <a ><span class="iconify" data-icon="bi:zoom-in"></span></a>
+        </div>
+        <div class="icon-fitur" onclick="fitBounds()">
+            <a ><span class="iconify" data-icon="bi:zoom-out"></span></a>
+        </div>
+        <div class="icon-fitur" onclick="fitBounds()">
+            <a ><span class="iconify" data-icon="bi:fullscreen"></span></a>
+        </div>
+        <div class="icon-fitur" >
+            <a onclick="showBasemapList()"><span class="iconify" data-icon="bi:layers-fill"></span></a>
+            <select id="basemap-list" class="select-base" onChange="changeBasemap(this)" style="visibility: hidden;">
+                <option value="Topographic">Topographic</option>
+                <option value="Streets">Streets</option>
+                <option value="NationalGeographic">National Geographic</option>
+                <option value="Oceans">Oceans</option>
+                <option value="Gray">Gray</option>
+                <option value="DarkGray">Dark Gray</option>
+                <option value="Imagery">Imagery</option>
+                <option value="ImageryClarity">Imagery (Clarity)</option>
+                <option value="ImageryFirefly">Imagery (Firefly)</option>
+                <option value="ShadedRelief">Shaded Relief</option>
+                <option value="Physical">Physical</option>
+            </select>    
+        </div>
+        <!-- <ul>
+            <li></li>
+            <li><a onclick="zoomOut()"><span class="iconify" data-icon="bi:zoom-out"></span></a></li>
+            <li><a onclick="fitBounds()"><span class="iconify" data-icon="bi:fullscreen"></span></a></li>
+            <li><a href=""><span class="iconify" data-icon="bi:layers-fill"></span></a></li>
+        </ul> -->
+    </div>
     <!--Container Main start-->
     <div id='map'>
+        
         <div id="overlay-preload-map">
             <img src="/main/preload/loader-1.svg" alt="" srcset="" width="100">
         </div>
     </div>
 
     <div id="legend-placement" class="height-100 bg-light"></div>
-
+    
     <div id="chart-placement"></div>
-
+   
     <%- include('./partials/footerlink'); %>
     <script src="/admin/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script>
+
+        function zoomIn() {
+            map.zoomIn()
+        }
+
+        function zoomOut() {
+            map.zoomOut()
+        }
+
+        async function showBasemapList() {
+            let list = await document.getElementById('basemap-list')
+            let status = await list.style.visibility
+            if(status === 'hidden') {
+                list.style.visibility = 'visible'
+            } else {
+                list.style.visibility = 'hidden'
+            }
+           
+        }
+
         function changeLanguage() {
             alert('Maaf, versi Inggris belum tersedia!')
         }
@@ -221,19 +369,49 @@
             zoomControl: false
         }).setView([39.74739, -105], 13);
 
-        L.control.zoom({
-            position: 'bottomright'
-        }).addTo(map);
+        let general_loader = document.getElementById('overlay-preload')
+     
+        // add basemaplayer
+        var layer = L.esri.basemapLayer('Topographic').addTo(map);
 
-        L.tileLayer(
-            'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-                maxZoom: 18,
-                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                id: 'mapbox/light-v9',
-                tileSize: 512,
-                zoomOffset: -1
-            }).addTo(map);
+        var layerLabels;
+
+        function setBasemap(basemap) {
+            if (layer) {
+                map.removeLayer(layer);
+            }
+
+            layer = L.esri.basemapLayer(basemap);
+
+            map.addLayer(layer);
+
+            if (layerLabels) {
+                map.removeLayer(layerLabels);
+            }
+
+            if (basemap === 'ShadedRelief' ||
+                basemap === 'Oceans' ||
+                basemap === 'Gray' ||
+                basemap === 'DarkGray' ||
+                basemap === 'Terrain'
+            ) {
+                layerLabels = L.esri.basemapLayer(basemap + 'Labels');
+                map.addLayer(layerLabels);
+            } else if (basemap.includes('Imagery')) {
+                layerLabels = L.esri.basemapLayer('ImageryLabels');
+                map.addLayer(layerLabels);
+            }
+        }
+
+        function changeBasemap(basemaps) {
+            var basemap = basemaps.value;
+            setBasemap(basemap);
+        }
+
+        function changeBasemap(basemaps) {
+        var basemap = basemaps.value;
+        setBasemap(basemap);
+        }
 
 
         let region_style = () => {
@@ -250,6 +428,10 @@
         let region_geojson = L.geoJSON(JSON.parse(region_layer), {
             style: region_style
         })
+        
+        function fitBounds() {
+            map.fitBounds(region_geojson.getBounds())
+        }
         
         getCurrent(`<%- region.id_region %>`)
 
@@ -306,28 +488,25 @@
                         if (g.rule === 'under baseline') {
                             if (parseInt(g.aktual) < parseInt(g.target_tahunan)) {
                                 p_kinerja =
-                                    `Kinerja: <span class="kinerja-positif" style="font-weight:bold;color:#53C351">+${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-positif">positif`
+                                    `Kinerja <span class="kinerja-positif" style="font-weight:bold;color:#53C351">+${g.kinerja +' '+ g.satuan}</span> `
                             } else {
                                 p_kinerja =
-                                    `Kinerja: <span class="kinerja-negatif" style="font-weight:bold;color:#EA3D2F">${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-negatif">negatif`
+                                    `Kinerja <span class="kinerja-negatif" style="font-weight:bold;color:#EA3D2F">${g.kinerja +' '+ g.satuan}</span> `
                             }
                         } else {
                             if (parseInt(g.aktual) < parseInt(g.target_tahunan)) {
                                 p_kinerja =
-                                    `Kinerja: <span class="kinerja-negatif">${g.kinerja +' '+ g.satuan}</span> atau <span class="kinerja-negatif">negatif `
+                                    `Kinerja <span class="kinerja-negatif">${g.kinerja +' '+ g.satuan}</span> `
                             } else {
                                 p_kinerja =
-                                    `Kinerja: <span class="kinerja-positif"> +${(g.kinerja +' '+ g.satuan).replace("-","")}</span> atau <span class="kinerja-positif">positif`
+                                    `Kinerja <span class="kinerja-positif"> +${(g.kinerja +' '+ g.satuan).replace("-","")}</span>`
                             }
                         }
 
                         return `
                                  <li>
                                     <div id="list-layer" class="list-arranged" style="display: flex;">
-                                        <label class="switch">
                                             <input class="geojson-input" id="input-${g.rincian_target.replaceAll(" ","-") +'-'+g.tahun_data}" type="checkbox" value='${JSON.stringify(g)}'>
-                                            <span class="slider round"></span>
-                                        </label>
                                         <div>
                                             <p class="legend-item">
                                                 Tahun ${g.tahun_data}
@@ -335,16 +514,17 @@
                                                     <i class="fas fa-check-circle info-icon"><span class="tooltiptext">${g.status_verifikasi}</span></i>
                                                 </span>
                                             </p>
-                                            <p class="legend-item" style="font-weight: normal; font-size:14px;margin: 5px 0;max-width:200px;text-transform:none">
-                                               ${p_kinerja}
-                                            </p>
-                                            <p class="legend-des">
+                                            <p class="legend-des" style="font-size:12px">
+                                                Color Shceme
                                                 ${
                                                     `<span>${JSON.parse(g.style).fillColor || JSON.parse(g.style).color || Object.keys(JSON.parse(g.style)).map(a => {
                                                         return JSON.parse(g.style)[a].fillColor != '' ? JSON.parse(g.style)[a].fillColor : JSON.parse(g.style)[a].color 
                                                     }).join(",")}</span>
                                                     ` 
                                                 }
+                                            </p>
+                                            <p class="legend-item" style="font-weight: normal; font-size:12px;margin: 5px 0;max-width:200px;text-transform:none">
+                                               ${p_kinerja}
                                             </p>
                                         </div>
                                     </div>   
@@ -354,19 +534,18 @@
                     let sec_legend = `
                         <div class="legend-group">
                             <div class="legend-subtitle">
-                                <p class="legend-item">${grouped[0].rincian_target} 
+                                <p class="legend-item">Layer ${grouped[0].rincian_target} 
                             </p>
                                 <button id="getchart-${grouped[0].id_rincian_target}" onclick="showChart(this)" class="btn btn-dark get-chart">Analisis </a>
                             </div>
                                  ${leg.join("")} 
                         </div>
                        `
-
                     nested_legend.push(sec_legend)
-
                 })
+
                 let legend_div = `
-                        <div class="map-legend" id="${key}">
+                        <div class="map-legend" id="target-${key}">
                             <p class="legend-title"><i class="bx bxs-layer"></i> Map Legend</p>
                                  <span id="hide-btn-legend-${key}" class="hide-legend-btn" onclick="removeLegend(this)">X</span>
                             <p id="sub-legend" class="legend-title" style="font-size:16px;text-transform:capitalize"></p>
@@ -377,9 +556,11 @@
                         `
                 final_legend.push(legend_div)
             })
+        
             return final_legend.join("")
         }
 
+        
         let legend_placement = document.getElementById('legend-placement')
         legend_placement.innerHTML = createLegend(historiGroupByIdTarget)
 
@@ -390,13 +571,32 @@
                 legend.classList.remove('active')
             })
 
-            let list = document.getElementById(`${el.id.replaceAll("target_","")}`)
-            let sub_title = list.querySelectorAll('p')[1]
-
-            sub_title.innerText = el.innerText
+            let list = document.getElementById(`${el.id.replaceAll("target_","target-")}`)
+            let sub_title = list.querySelectorAll('.legend-title')[1]
+            let select_inner = el.querySelector('span')
+         
+            sub_title.innerText = select_inner.innerText.toUpperCase()
             list.classList.add('active')
 
         }
+
+        let countActiveLayer = async () => {
+            let legend_div = await document.querySelectorAll('.map-legend.active')
+            let legend = await document.querySelectorAll('.map-legend.active input')
+            let legend_id = legend_div[0].id.replaceAll("target-","count-")
+
+            let check = []
+            legend.forEach(l => {
+                check.push(l.checked)
+            })
+
+            let filter = check.filter(c => {
+                return c == true
+            }).length
+
+            document.getElementById(legend_id).innerHTML = filter
+        }
+
 
         let getGeojsonFromInput = async (input) => {
             for (let i = 0; i < input.length; i++) {
@@ -406,9 +606,13 @@
                 let geojson = await raw_prop.geojson
                 let loader = document.getElementById('overlay-preload-map')
                 let geojson_layer = L.geoJSON()
-
+                
                 document.getElementById(checkbox.id).onclick = async function () {
+                   
                     if (this.checked === true) {
+                        countActiveLayer()
+                        general_loader.style.visibility = 'visible'
+
                         let geo = $.ajax({
                             url: geojson,
                             dataType: "json",
@@ -423,8 +627,47 @@
 
                             map.addLayer(geojson_layer)
                             setGeoJsonStyle(raw_prop, geojson_layer)
+
+                            general_loader.style.visibility = 'hidden'
+
+                            geojson_layer.eachLayer(function (layer) {
+                                layer.on('mouseover', function (e) {
+                                    layer.setStyle({
+                                        color: 'blue',
+                                        weight: 3,
+                                        opacity: 0.5
+                                    })
+                                })
+
+                                layer.on('mouseout', function (e) {
+                                    setGeoJsonStyle(raw_prop, geojson_layer)
+                                })
+
+                                layer.on('click', function (e) {
+                                    setGeoJsonStyle(raw_prop, geojson_layer)
+                                    console.log(e.target)
+                                    let raw_content = [e.target.feature.properties].map( a => {
+                                        let b = Object.keys(a).map(k => {
+                                            return `<tr><td style="font-weight:bold;color:#fff;background:#142940">${k}</td><td style="font-weight:bold">${a[k]}</td></tr>`
+                                        })
+                                        return `<p style="font-weight:bold; font-size: 14px;margin: 10px 0;">GEOJSON PROPERTIES</p><p style="border-bottom:2px solid #369151;margin-bottom:10px;margin-top:0"><table class="table first" style="margin-bottom:0">${b.join("")}</table>`
+                                    })
+                                    console.log(raw_content.join(""))
+                                    let popup = new L.Popup()
+                                        .setLatLng(e.target._bounds.getCenter())
+                                        .setContent(raw_content.join(""))
+
+                                    map.openPopup(popup);
+                                    layer.setStyle({
+                                        color: 'blue',
+                                        weight: 3,
+                                        opacity: 1
+                                    })
+                                })
+                            });
                         })
                     } else {
+                        countActiveLayer()
                         map.removeLayer(geojson_layer)
                     }
                 }
@@ -460,6 +703,7 @@
         }
 
         let getChart = (data, id) => {
+            
             let text;
             if (data.length === 1) {
                 text = data[0].tahun_data
@@ -498,18 +742,18 @@
                     data: data.map(a => {
                         return parseInt(a.aktual)
                     }),
-                    color: '#367BF5'
+                    color: '#142940'
                 }, {
                     type: 'spline',
                     name: 'Target Tahunan',
                     data: data.map(a => {
                         return parseInt(a.target_tahunan)
                     }),
-                    color: '#142940',
+                    color: '#EA3D2F',
                     marker: {
                         lineWidth: 2,
                         lineColor: Highcharts.getOptions().colors[3],
-                        fillColor: '#EA3D2F'
+                        fillColor: '#DD4BCE'
                     }
                 }]
             });
@@ -526,7 +770,7 @@
                 raw["capaian"] = `<td>${o.target_tahunan - o.aktual +' '+ o.satuan}</td>`
                 raw1.push(raw)
             })
-            
+
             let x = []
             let xb = raw1.map(o => {
                 return `<tr>${Object.values(o).join("")}</tr>`
@@ -543,16 +787,16 @@
             let body = document.getElementById('body-pd')
             let chart_value = []
             Object.keys(goupByIdRincianTarget).forEach(async id => {
-                
+
                 let chart_placement = document.createElement('div')
                 chart_placement.id = `chart-placement-${id}`
                 chart_placement.className = 'chart-placement'
 
                 let raw_obj = goupByIdRincianTarget[id]
-                console.log('raw_obj',transformToTable(raw_obj))
+                console.log('raw_obj', transformToTable(raw_obj))
                 let length = raw_obj.length - 1
                 let filteredObj = raw_obj[length]
-                
+
                 let aktual_data = `
                         <div id="card-item-${id}">
                             <span id="hide-btn-legend-${id}" class="hide-chart-btn" onclick="removeChart(this)">X</span>
@@ -560,7 +804,7 @@
                                 <div class="chart-title">
                                     <div class="title-text">
                                         <span>Analisis</span>
-                                        <p style='font-size:18px;margin-bottom:10px'>${filteredObj['rincian_target']}</p>
+                                        <p style='font-size:18px;margin:10px 0'>${filteredObj['rincian_target']}</p>
                                         <span>${filteredObj['deskripsi']}.</span>
                                     </div>
                                 </div>
@@ -642,6 +886,9 @@
         };
 
         async function showChart(el) {
+            let fitur = document.getElementById('map-fitur')
+            fitur.classList.add('move')
+
             let chart_placement = await document.querySelectorAll('#body-pd .chart-placement')
             chart_placement.forEach(place => {
                 place.classList.remove('active')
@@ -669,6 +916,9 @@
         }
 
         async function removeChart(el) {
+            let fitur = document.getElementById('map-fitur')
+            fitur.classList.remove('move')
+
             let id = el.id
             let aktif_chart = document.getElementById(`${id.replaceAll("hide-btn-legend-","chart-placement-")}`)
             aktif_chart.classList.remove('active')
@@ -685,7 +935,6 @@
         }
 
         window.addEventListener('load', function () {
-            let general_loader = document.getElementById('overlay-preload')
             general_loader.style.visibility = 'hidden'
         })
     </script>

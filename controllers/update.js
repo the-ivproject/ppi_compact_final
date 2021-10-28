@@ -45,22 +45,29 @@ exports.edit_target = async (req, res) => {
         if (id_region === null) {
             return;
         } else {
-            let id = req.params.id_target
-            db.query('SELECT * FROM 2_target', (err, all_target) => {
-                db.query('SELECT * FROM 2_target WHERE id_target = ?', id, (err, target_edit) => {
-                    if (err) {
-                        console.log(err)
-                    } else {
-                        res.render('admin/edit_target', {
-                            title: 'Edit Target',
-                            current_link: '/admin/add_target',
-                            message: '',
-                            all_target: all_target,
-                            target_edit: target_edit[0],
-                            admin: session,
-                            id_region: id_region
-                        })
-                    }
+            fs.readFile('public/icon_list/fontawesome_list.txt', 'utf8' , (err, data) => {
+                if (err) {
+                  console.error(err)
+                  return
+                }
+                let id = req.params.id_target
+                db.query('SELECT * FROM 2_target', (err, all_target) => {
+                    db.query('SELECT * FROM 2_target WHERE id_target = ?', id, (err, target_edit) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            res.render('admin/edit_target', {
+                                title: 'Edit Target',
+                                current_link: '/admin/add_target',
+                                message: '',
+                                all_target: all_target,
+                                target_edit: target_edit[0],
+                                admin: session,
+                                id_region: id_region,
+                                icon_list: data.split(",")
+                            })
+                        }
+                    })
                 })
             })
         }

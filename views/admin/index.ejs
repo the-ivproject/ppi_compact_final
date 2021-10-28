@@ -75,7 +75,7 @@
                                                 <div class="user-avatar-info">
                                                     <div class="m-b-20">
                                                         <div class="user-avatar-name">
-                                                            <h2 class="mb-1"><%= (admin[0].first_name +' '+ admin[0].last_name).toUpperCase() %></h2>
+                                                            <h2 class="mb-1"><%= admin[0].first_name +' '+ admin[0].last_name %></h2>
                                                         </div>
                                                         <div class="rating-star  d-inline-block">
                                                             <!-- <i class="fa fa-fw fa-star"></i>
@@ -91,13 +91,13 @@
                                                         <p class="border-bottom pb-3">
                                                             <span class="d-xl-inline-block d-block mb-2"><i
                                                                     class="fa fa-map-marker-alt mr-2 text-primary "></i>
-                                                                    <%= (admin[0].nama_region +', '+ admin[0].provinsi).toUpperCase() %></span>
+                                                                    <%= admin[0].nama_region +', '+ admin[0].provinsi %></span>
                                                             <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">Joined:
                                                                 <%= new Date(admin[0].tanggal_join).toLocaleDateString() %> </span>
-                                                            <!-- <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">
+                                                            <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">
+                                                                <%= admin[0].institusi %>
                                                             </span>
-                                                            <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">29
-                                                                Year Old </span> -->
+                                                            <span class=" mb-2 d-xl-inline-block d-block ml-xl-4"><%= admin[0].email %></span>
                                                         </p>
                                                         <div class="mt-3">
                                                             <h5 class="card-header" style="padding-left:0;padding-top:0;border:none">Fokus Target</h5>
@@ -142,6 +142,87 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+	                        <!-- ============================================================== -->
+	                        <!-- four widgets   -->
+	                        <!-- ============================================================== -->
+	                        <!-- ============================================================== -->
+	                        <!-- total views   -->
+	                        <!-- ============================================================== -->
+	                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+	                            <div class="card">
+	                                <div class="card-body">
+	                                    <div class="d-inline-block">
+	                                        <h5 class="text-muted">Total Target</h5>
+	                                        <h2 class="mb-0"> 10,28,056</h2>
+	                                    </div>
+	                                    <div class="float-right icon-circle-medium  icon-box-lg  bg-info-light mt-1">
+	                                        <i class="fas fa-crosshairs fa-fw fa-sm text-info"></i>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <!-- ============================================================== -->
+	                        <!-- end total views   -->
+	                        <!-- ============================================================== -->
+	                        <!-- ============================================================== -->
+	                        <!-- total followers   -->
+	                        <!-- ============================================================== -->
+	                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+	                            <div class="card">
+	                                <div class="card-body">
+	                                    <div class="d-inline-block">
+	                                        <h5 class="text-muted">Total Rincian Target</h5>
+	                                        <h2 class="mb-0"> 24,763</h2>
+	                                    </div>
+	                                    <div class="float-right icon-circle-medium  icon-box-lg  bg-primary-light mt-1">
+	                                        <i class="fas fa-th-list fa-fw fa-sm text-primary"></i>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <!-- ============================================================== -->
+	                        <!-- end total followers   -->
+	                        <!-- ============================================================== -->
+	                        <!-- ============================================================== -->
+	                        <!-- partnerships   -->
+	                        <!-- ============================================================== -->
+	                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+	                            <div class="card">
+	                                <div class="card-body">
+	                                    <div class="d-inline-block">
+	                                        <h5 class="text-muted">Total Update Data</h5>
+	                                        <h2 class="mb-0">14</h2>
+	                                    </div>
+	                                    <div class="float-right icon-circle-medium  icon-box-lg  bg-secondary-light mt-1">
+	                                        <i class="fas fa-database fa-fw fa-sm text-secondary"></i>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <!-- ============================================================== -->
+	                        <!-- end partnerships   -->
+	                        <!-- ============================================================== -->
+	                        <!-- ============================================================== -->
+	                        <!-- total earned   -->
+	                        <!-- ============================================================== -->
+	                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+	                            <div class="card">
+	                                <div class="card-body">
+	                                    <div class="d-inline-block">
+	                                        <h5 class="text-muted">Total Pengunjung</h5>
+	                                        <h2 class="mb-0"> $149.00</h2>
+	                                    </div>
+	                                    <div class="float-right icon-circle-medium  icon-box-lg  bg-brand-light mt-1">
+	                                        <i class="fas fa-eye fa-fw fa-sm text-brand"></i>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <!-- ============================================================== -->
+	                        <!-- end total earned   -->
+	                        <!-- ============================================================== -->
+	                    </div>
                         <!-- ============================================================== -->
                         <!-- end influencer profile  -->
                         <!-- ============================================================== -->

@@ -34,9 +34,60 @@
         font-size: 10px;
 
     }
+
+    #icon-list {
+        background-color: #00000085;
+        position: absolute;
+        height: 100vh;
+        width: 100%;
+        z-index: 88;
+        visibility: hidden;
+    }
+
+    #icon-list .card {
+        margin: 0;
+        position: absolute;
+        /* top: 50%; */
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        z-index: 99;
+        margin: 27% 300px;
+    }
+
+    #icon-list .icon-list-demo {
+        overflow-y: scroll;
+        height: 500px;
+    }
 </style>
 
 <body>
+    <div id="icon-list" class="">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Solid Icons</h4>
+                <h6 class="card-subtitle">use the icon by just put class <code>fas fa-address-book</code> in i tag </h6>
+            </div>
+            <div class="card-body">
+                <div class="icon-list-demo row">
+                    <%
+                    if(icon_list.length!=0){
+                    var i=1;
+                    icon_list.forEach(function(icon){
+                    %>
+                    <div onclick="getIcon(this)" class="col-sm-6 col-md-4 col-lg-3 f-icon">
+                        <i class="<%=icon %>"></i>
+                        <%=icon %>
+                    </div>
+                    <%  i++; }) %>
+                    <% } else { %>
+                        <div class="col-sm-6 col-md-4 col-lg-3 f-icon">
+                            <p>Belum ada icon</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>   
+    </div>   
     <!-- ============================================================== -->
     <!-- main wrapper -->
     <!-- ============================================================== -->
@@ -133,28 +184,9 @@
                                     <div class="form-group">
                                         <label for="exampleFormControlTextarea1">Icon Legenda</label>
                                         <div class="input-group mb-3">
-                                          
-                                            <input id="icon" type="text" name="icon" class="form-control" required="">
+                                            <input id="icon" type="text" name="icon" class="form-control" required>
                                             <div class="input-group-append be-addon">
-                                                <button type="button" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle" aria-expanded="false">Icon</button>
-                                                <div id="add_group" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(460px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                                    
-                                                    <a class="dropdown-item" id="/main/icon/def-icon.svg" onclick="getPath(this)" >
-                                                        <img src="/main/icon/def-icon.svg" width="40" alt="" srcset="">
-                                                    </a>
-                                                    <a class="dropdown-item" id="/main/icon/fire-icon.svg" onclick="getPath(this)" >
-                                                        <img src="/main/icon/fire-icon.svg" width="40" alt="" srcset="">
-                                                    </a>
-                                                    <a class="dropdown-item" id="/main/icon/legal-icon.svg" onclick="getPath(this)" >
-                                                        <img src="/main/icon/legal-icon.svg" width="40" alt="" srcset="">
-                                                    </a>
-                                                    <a class="dropdown-item" id="/main/icon/sertifikat-icon.svg" onclick="getPath(this)" >
-                                                        <img src="/main/icon/sertifikat-icon.svg" width="40" alt="" srcset="">
-                                                    </a>
-                                                    <a class="dropdown-item" id="/main/icon/budidaya-icon.svg" onclick="getPath(this)" >
-                                                        <img src="/main/icon/budidaya-icon.svg" width="40" alt="" srcset="">
-                                                    </a>
-                                                </div>
+                                                <button type="button" onclick="showListIcon()" class="btn btn-secondary " aria-expanded="false">Icon</button>
                                             </div>
                                         </div>
                                     </div>
@@ -277,6 +309,18 @@
         function getPath(el) {
             let id = el.id
             icon_input.value = id
+        }
+        
+        let iconList = document.getElementById('icon-list')
+        function getIcon(el) {
+            let classIcon = el.querySelectorAll('i')[0].className
+            document.getElementById('icon').value = classIcon
+
+            iconList.style.visibility = 'hidden'
+        }
+
+        function showListIcon() {
+            iconList.style.visibility = 'visible'
         }
     </script>
 </body>
