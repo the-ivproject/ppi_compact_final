@@ -179,6 +179,24 @@ a {
     width: 40px
 }
 
+.navbar-brand {
+    display: inline-block;
+    margin-right: 1rem;
+    line-height: inherit;
+    white-space: nowrap;
+    padding: 11px 20px;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #142940;
+    color: #fff;
+}
+
+.navbar-brand:hover {
+    color: #fff;
+}
+
+
 .legend-place {
     width: 100%;
     word-break: break-word;

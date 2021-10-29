@@ -23,6 +23,7 @@ router.get('/', (req, res) => {
     })
 })
 
+
 router.get('/main/map/:id_region', (req, res) => {
     let id_region = req.params.id_region
     db.query('SELECT * FROM 1_region WHERE id_region = ?', [id_region], (err, region) => {

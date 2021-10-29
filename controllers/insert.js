@@ -82,11 +82,11 @@ const uploadLogo = multer({
 
 exports.post_user = (req, res) => {
     const {
-        username,
+        email,
         password
     } = req.body
 
-    db.query('SELECT * FROM 0_admin WHERE username = ? AND password = ?', [username, md5(password)], (err, valid_user) => {
+    db.query('SELECT * FROM 0_admin WHERE email = ? AND password = ?', [email, md5(password)], (err, valid_user) => {
         if (err) {
             console.log(err)
         } else if (valid_user.length == 0) {
@@ -303,4 +303,3 @@ exports.insert_histori_capaian = async (req, res) => {
         query();
     }
 }
-

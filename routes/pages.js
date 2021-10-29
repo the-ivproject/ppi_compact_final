@@ -36,7 +36,6 @@ let check = (session, req, res) => {
 }
 
 router.get('/admin', async (req, res) => {
-
     let session = await req.session.user
     let confrim = await check(session, req, res)
     let query = () => {
@@ -47,28 +46,31 @@ router.get('/admin', async (req, res) => {
             db.query('SELECT 0_admin.*, 1_region.nama_region,1_region.provinsi, 1_region.id_region FROM 0_admin LEFT JOIN 1_region ON 0_admin.id_region = 1_region.id_region WHERE 0_admin.id_region = ?', [id_region], (err, admin) => {
                 db.query('SELECT 4_histori_capaian.*, 3_rincian_target.rincian_target, 3_rincian_target.id_rincian_target, 3_rincian_target.satuan FROM 4_histori_capaian LEFT JOIN 3_rincian_target ON 4_histori_capaian.id_rincian_target = 3_rincian_target.id_rincian_target WHERE 4_histori_capaian.id_region = ?', [id_region], (err, histori_capaian) => {
                     db.query('SELECT * FROM 2_target WHERE id_region = ?', [id_region], (err, target) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                       
-                            res.render('admin/index', {
-                                title: `Selamat Datang`,
-                                menu: 'active',
-                                page_name: 'dashboard',
-                                current_link: '/admin',
-                                admin: admin,
-                                message: '',
-                                histori_capaian: histori_capaian,
-                                id_region: id_region,
-                                target: target
-                            })
-                        }
+                        db.query('SELECT 2_target.id_region, COUNT(DISTINCT 2_target.id_target) AS "total_target", COUNT(DISTINCT 3_rincian_target.id_rincian_target) AS "total_rincian", COUNT(DISTINCT 4_histori_capaian.id_histori_capaian) AS "total_histori" FROM 2_target INNER JOIN 3_rincian_target ON 2_target.id_region = 3_rincian_target.id_region INNER JOIN 4_histori_capaian ON 3_rincian_target.id_region = 4_histori_capaian.id_region WHERE 2_target.id_region = ?', [id_region], (err, count) => {
+                            if (err) {
+                                console.log(err)
+                            } else {
+                                console.log(req.session.views)
+                                  res.render('admin/index', {
+                                    title: `Selamat Datang`,
+                                    menu: 'active',
+                                    page_name: 'dashboard',
+                                    current_link: '/admin',
+                                    admin: admin,
+                                    message: '',
+                                    histori_capaian: histori_capaian,
+                                    id_region: id_region,
+                                    target: target,
+                                    count: count,
+                                    visitors: req.session.views
+                                })
+                            }
+                        })
                     })
                 })
             })
         }
     }
-
     if (confrim === true) {
         query();
     }
@@ -127,7 +129,6 @@ router.get('/admin/add_target', async (req, res) => {
                   console.error(err)
                   return
                 }
-
                 db.query('SELECT * FROM 2_target WHERE id_region = ?', [id_region], (err, results) => {
                     if (err) {
                         console.log(err)
@@ -326,6 +327,7 @@ router.get('/admin/list_rincian_target_filtered/:id_target', async (req, res) =>
 router.get('/admin/list_target', async (req, res) => {
     let session = await req.session.user
     let confrim = await check(session, req, res)
+
     let query = () => {
         let id_region = session[0].id_region
         if (id_region === null) {
