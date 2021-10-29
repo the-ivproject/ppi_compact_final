@@ -48,5 +48,8 @@ router.get('/main/map/:id_region', (req, res) => {
     })
 })
 
+router.get('/main/prevent_mobile', (req, res) => {
+    res.render('main/prevent_mobile')
+})
 
 module.exports = router
