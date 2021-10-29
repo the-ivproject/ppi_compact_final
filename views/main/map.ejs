@@ -47,7 +47,7 @@
         top: 0;
         font-size: 12px;
     }
-    
+
     .icon-terverifikasi {
         color: #367BF5;
         font-size: 14px;
@@ -894,7 +894,7 @@
 
         async function removeLegend(el) {
             let id = el.id
-            let aktif_legend = document.getElementById(`${id.replaceAll("hide-btn-legend-","")}`)
+            let aktif_legend = document.getElementById(`${id.replaceAll("hide-btn-legend-","target-")}`)
             aktif_legend.classList.remove('active')
         }
 
