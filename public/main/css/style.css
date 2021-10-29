@@ -196,6 +196,9 @@ a {
     color: #fff;
 }
 
+.leaflet-control-attribution {
+    display: none !important;
+}
 
 .legend-place {
     width: 100%;
