@@ -514,6 +514,7 @@
                                  <li>
                                     <div id="list-layer" class="list-arranged" style="display: flex;">
                                             <input class="geojson-input" id="input-${g.rincian_target.replaceAll(" ","-") +'-'+g.tahun_data}" type="checkbox" value='${JSON.stringify(g)}'>
+                                            
                                         <div>
                                             <p class="legend-item">
                                                 Tahun ${g.tahun_data}
@@ -541,7 +542,7 @@
                     let sec_legend = `
                         <div class="legend-group">
                             <div class="legend-subtitle">
-                                <p class="legend-item">Layer ${grouped[0].rincian_target} 
+                                <p class="legend-item">${grouped[0].rincian_target} 
                             </p>
                                 <button id="getchart-${grouped[0].id_rincian_target}" onclick="showChart(this)" class="btn btn-dark get-chart">Analisis </a>
                             </div>
@@ -582,7 +583,7 @@
             let sub_title = list.querySelectorAll('.legend-title')[1]
             let select_inner = el.querySelector('span')
 
-            sub_title.innerText = select_inner.innerText.toUpperCase()
+            sub_title.innerText = select_inner.innerText
             list.classList.add('active')
 
         }
@@ -940,7 +941,7 @@
             let colors = d[i].innerHTML.split(",")
             let new_el = []
             colors.forEach(color => {
-                new_el.push(`<i class="fas fa-square" style="color:${color};margin: 2px;"></i>`)
+                new_el.push(`<i class="fas fa-circle" style="color:${color};font-size:14px"></i>`)
             })
             d[i].innerHTML = new_el.join("")
         }
