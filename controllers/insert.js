@@ -147,7 +147,6 @@ exports.insert_account = (req, res) => {
                 res.redirect('/admin/sign_up')
             }
         })
-
     })
 }
 
@@ -194,7 +193,6 @@ exports.insert_region = (req, res) => {
             })
         })
     })
-
     req.pipe(busboy)
 }
 
