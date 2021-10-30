@@ -273,7 +273,7 @@
         <div class="icon-fitur" onclick="fitBounds()">
             <a ><span class="iconify" data-icon="bi:zoom-out"></span></a>
         </div>
-        <div class="icon-fitur" onclick="fitBounds()">
+        <div class="icon-fitur" id="fit-bounds">
             <a ><span class="iconify" data-icon="bi:fullscreen"></span></a>
         </div>
         <div class="icon-fitur" >
@@ -292,12 +292,6 @@
                 <option value="Physical">Physical</option>
             </select>    
         </div>
-        <!-- <ul>
-            <li></li>
-            <li><a onclick="zoomOut()"><span class="iconify" data-icon="bi:zoom-out"></span></a></li>
-            <li><a onclick="fitBounds()"><span class="iconify" data-icon="bi:fullscreen"></span></a></li>
-            <li><a href=""><span class="iconify" data-icon="bi:layers-fill"></span></a></li>
-        </ul> -->
     </div>
     <!--Container Main start-->
     <div id='map'>
@@ -432,7 +426,11 @@
             }
         })
         $.when(geo).done(function () {
-           
+            
+            document.addEventListener('click',function() {
+                map.fitBounds(region_layer.getBounds())
+            })
+
             general_loader.style.visibility = 'hidden'
   
             region_layer.addData(geo.responseJSON)

@@ -493,17 +493,24 @@
 
         async function fitToMap(el) {
 
-            let geojson_value = JSON.parse(el.value)
+            let geojson_value = el.value
 
-
-            geojson.clearLayers(geojson_value)
-            geojson.addData(geojson_value)
-            map2.fitBounds(geojson.getBounds())
-            map2.addLayer(geojson)
-
-
-
+            let geo = $.ajax({
+                url: geojson_value,
+                dataType: "json",
+                success: console.log("County data successfully loaded."),
+                error: function (xhr) {
+                    console.log(xhr.statusText)
+                }
+            })
+            $.when(geo).done(function () {
+                geojson.clearLayers()
+                geojson.addData(geo.responseJSON)
+                map2.fitBounds(geojson.getBounds())
+                map2.addLayer(geojson)
+            })
         }
+        
         $("#region-selection").on('change', function () {
             var id = this.options[this.selectedIndex].id;
             let submit_btn = document.getElementById('submit-btn')
