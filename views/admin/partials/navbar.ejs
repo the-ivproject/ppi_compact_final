@@ -5,4 +5,20 @@
         aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto navbar-right-top">
+            <li class="nav-item">
+                <div id="custom-search" class="top-search-bar">
+                    <input id="def_region" hidden class="form-control" type="text" name="id_region" value="<%= id_region %>" placeholder="">
+                </div>
+            </li>
+            <li class="nav-item dropdown nav-user">
+                <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cog mr-2"></i></a>
+                <div class="dropdown-menu dropdown-menu-right nav-user-dropdown">
+                    <a class="dropdown-item" href="/admin/logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
+                </div>
+            </li>
+        </ul>
+    </div>
 </nav>
