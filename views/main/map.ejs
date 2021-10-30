@@ -421,9 +421,11 @@
         }
 
         let region_layer = L.geoJSON()
+        let url = "<%= region.geojson %>"
+        console.log(url)
         // JSON.stringify( <%- region.geojson %> )
         let geo = $.ajax({
-            url: "<%= region.geojson %>",
+            url: url,
             dataType: "json",
             success: console.log("County data successfully loaded."),
             error: function (xhr) {
@@ -431,8 +433,9 @@
             }
         })
         $.when(geo).done(function () {
+            
             region_layer.addData(geo.responseJSON)
-            map.fitBounds(region_geojson.getBounds())
+            map.fitBounds(region_layer.getBounds())
             map.addLayer(region_layer)
             region_layer.setStyle(region_style)
         })
