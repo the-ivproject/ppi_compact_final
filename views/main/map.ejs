@@ -423,7 +423,7 @@
         let region_layer = L.geoJSON()
         // JSON.stringify( <%- region.geojson %> )
         let geo = $.ajax({
-            url: region.geojson,
+            url: "<%= region.geojson %>",
             dataType: "json",
             success: console.log("County data successfully loaded."),
             error: function (xhr) {
