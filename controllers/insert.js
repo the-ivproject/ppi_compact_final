@@ -115,8 +115,8 @@ exports.insert_account = (req, res) => {
 
         let logo;
 
-        if (req.file === undefined) {
-            logo = ''
+        if (req.file === undefined || req.file === ' ') {
+            logo = '/default/image/avatar-1.jpg'
         } else {
             logo = req.file.destination + req.file.filename
         }
@@ -152,31 +152,50 @@ exports.insert_account = (req, res) => {
 }
 
 exports.insert_region = (req, res) => {
-    const {
-        pj,
-        level,
-        nama_region,
-        provinsi,
-        geojson,
-        id_admin
-    } = req.body
-    db.query('INSERT INTO 1_region SET ?', {
-        pj: pj,
-        level: level,
-        nama_region: nama_region,
-        provinsi: provinsi,
-        geojson: geojson,
-        id_admin: id_admin
-    }, async (err, results) => {
-        if (err) {
-            console.log(err)
-        } else {
-            db.query('UPDATE 0_admin SET id_region = ? WHERE id_admin = ?', [results.insertId, id_admin], (err, update) => {
-                req.flash('message', messageContent('Region anda berhasil ditambahkan!', 'alert-success'))
-                res.redirect('/admin/thank_region_regist')
-            })
-        }
+
+    const uploadPath = 'public/uploads/geojson/'
+
+    let form = new Map()
+    let busboy = new Busboy({
+        headers: req.headers
     })
+
+    busboy.on('field', (fieldname, val) => {
+        form.set(fieldname, val)
+    })
+
+    busboy.on('file', async (fieldname, file, filename) => {
+
+        let final_path = Date.now() + '' + filename
+        // Create a write stream of the new file
+        const fstream = fs.createWriteStream(path.join(uploadPath, final_path));
+        // Pipe it trough
+        file.pipe(fstream);
+
+        // On finish of the upload
+        fstream.on('close', () => {
+            console.log(form)
+            db.query('INSERT INTO 1_region SET ?', {
+                pj: form.get('pj'),
+                level: form.get('pj'),
+                nama_region: form.get('nama_region'),
+                provinsi: form.get('provinsi'),
+                geojson: (uploadPath + final_path).replace("public", ""),
+                id_admin: form.get('id_admin')
+            }, async (err, insert) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    db.query('UPDATE 0_admin SET id_region = ? WHERE id_admin = ?', [insert.insertId, form.get('id_admin')], (err, update) => {
+                        req.flash('message', messageContent('Region anda berhasil ditambahkan!', 'alert-success'))
+                        res.redirect('/admin/thank_region_regist')
+                    })
+                }
+            })
+        })
+    })
+
+    req.pipe(busboy)
 }
 
 exports.insert_target = (req, res) => {
@@ -298,7 +317,6 @@ exports.insert_histori_capaian = async (req, res) => {
             req.pipe(busboy)
         }
     }
-
     if (confrim === true) {
         query();
     }

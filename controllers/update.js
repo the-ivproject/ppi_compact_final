@@ -247,17 +247,66 @@ exports.update_detail_region = async (req, res) => {
         if (id_region === null) {
             return;
         } else {
-            let newData = req.body
-            delete newData['data_layer']
-            let id = req.params.id_region
-            db.query('UPDATE 1_region SET ? WHERE id_region = ?', [newData, id], (err, results) => {
-                if (err) {
-                    console.log(err)
+
+            let updateQuery = (data) => {
+                let id = req.params.id_region
+                db.query('UPDATE 1_region SET ? WHERE id_region = ?', [data, id], (err, results) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        req.flash('message', messageContent('Detail region berhasil di-edit!', 'alert-success'))
+                        res.redirect(`/action/admin/detail_region/${id}`)
+                    }
+                })
+            }
+            
+            let form = new Map()
+           
+            const uploadPath = 'public/uploads/geojson/'
+
+            let busboy = new Busboy({ headers: req.headers })
+
+            busboy.on('field', (fieldname, val) => {
+                form.set(fieldname, val)
+            })
+        
+            busboy.on('file', async (fieldname, file, filename) => {
+                let convertToObj = await Object.fromEntries(form)
+                if(filename === '') {
+                    convertToObj['geojson'] = await convertToObj['ori_geojson']
+                    delete convertToObj['ori_geojson']
+
+                    updateQuery(convertToObj)
+
+                    return false
                 } else {
-                    req.flash('message', messageContent('Detail region berhasil di-edit!', 'alert-success'))
-                    res.redirect(`/action/admin/detail_region/${id}`)
+                    let final_path = Date.now() + '' + filename
+                   
+                    const fstream = fs.createWriteStream(path.join(uploadPath, final_path));
+                    
+                    // Pipe it trough
+                    file.pipe(fstream);
+             
+                    fstream.on('close', () => {
+                        delete convertToObj['ori_geojson']
+                        convertToObj['geojson'] = (uploadPath + final_path).replace("public","")
+                        
+                        updateQuery(convertToObj)
+                    })
                 }
             })
+            req.pipe(busboy)
+            // let newData = req.body
+            // delete newData['data_layer']
+            // let id = req.params.id_region
+            // db.query('UPDATE 1_region SET ? WHERE id_region = ?', [newData, id], (err, results) => {
+            //     if (err) {
+            //         console.log(err)
+            //     } else {
+            //         req.flash('message', messageContent('Detail region berhasil di-edit!', 'alert-success'))
+            //         res.redirect(`/action/admin/detail_region/${id}`)
+            //     }
+            // })
         }
     }
     if (confrim === true) {
@@ -326,9 +375,7 @@ exports.update_histori_capaian = async (req, res) => {
             busboy.on('field', (fieldname, val) => {
                 form.set(fieldname, val)
             })
-            
-           
-
+        
             busboy.on('file', async (fieldname, file, filename) => {
                 let convertToObj = await Object.fromEntries(form)
                 if(filename === '') {
@@ -353,11 +400,8 @@ exports.update_histori_capaian = async (req, res) => {
                         updateQuery(convertToObj)
                     })
                 }
-                
             })
-
             req.pipe(busboy)
-           
         }
     }
     if (confrim === true) {

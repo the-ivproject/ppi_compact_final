@@ -212,7 +212,7 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <form action="/action/admin/add_region" method="POST">
+                                <form action="/action/admin/add_region" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <input id="def_region" name="id_admin" class="form-control" type="hidden" placeholder="Search.." value="<%= id_admin %>" >
 
@@ -257,9 +257,9 @@
                                             placeholder="Misl. kalimantan barat" required disabled>
 
                                         <label for="uploadFile" class="col-form-label">Upload GeoJSON <span class="required-start">*</span></label>
-                                        <input id="uploadFile" type="file" name="data_layer" class="form-control"
+                                        <input id="uploadFile" type="file" name="geoson" class="form-control"
                                             placeholder="Upload geojson" accept=".geojson" required disabled>
-                                        <textarea class="form-control" name="geojson" id="geojson_string" style="display: none;"></textarea>
+                                        <textarea class="form-control" name="pre_geojson" id="geojson_string" style="display: none;"></textarea>
                                     </div>
                                     <br>
                                     <input type="submit" onclick="showLoading(); this.disabled = true" class="btn btn-success" disabled> 
@@ -334,8 +334,9 @@
 
                     let result = fr.result
                     geojson_string.innerText = result
-
+                    
                     let geojson = L.geoJSON(JSON.parse(result))
+
                     let added = geojson.addTo(map)
 
                     let bounds = geojson.getBounds()

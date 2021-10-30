@@ -126,7 +126,7 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <form method="POST">
+                                <form method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <input id="inputText3" type="hidden" name="id_admin" class="form-control"
                                        value="<%= detail_region.id_admin %>" required >
@@ -170,10 +170,18 @@
                                         <input id="inputText5" type="text" name="provinsi" class="form-control"
                                             placeholder="Misl. kalimantan barat" required value="<%= detail_region.provinsi %>">
 
-                                        <label for="uploadFile" class="col-form-label">Upload GeoJSON <span class="required-start">*</span></label>
-                                        <input id="uploadFile" type="file" name="data_layer" class="form-control"
+                                        <!-- border -->
+                                        <label for="uploadFile" class="col-form-label">Upload GeoJSON <span
+                                            class="required-start">*</span></label>
+                                        
+                                        <input id="uploadFile" type="hidden" name="ori_geojson" class="form-control"
+                                            placeholder="Upload geojson" accept=".geojson" disabled value="<%= detail_region.geojson %>">
+
+                                        <input id="uploadFile_new" type="file" name="geojson" class="form-control"
                                             placeholder="Upload geojson" accept=".geojson">
-                                        <textarea class="form-control" name="geojson" id="geojson_string" style="display: none;"><%= detail_region.geojson %></textarea>
+
+                                        <textarea class="form-control" name="prev_geojson" id="geojson_string"
+                                            style="display: none;"></textarea>
                                     </div>
                                     <br>
                                     <button type="submit" onclick="showLoading(); this.disabled = true" class="btn btn-success">Submit Edit</button> 
@@ -241,24 +249,31 @@
 
         // Read selected geojson
         let geojson_string = document.getElementById('geojson_string')
-        let data = JSON.parse(geojson_string.innerHTML)
+        let geojson_ori = document.getElementById('uploadFile')
         
-        geojson = geojson.addData(data)
+        let geo = $.ajax({
+            url: geojson_ori.value,
+            dataType: "json",
+            success: console.log("County data successfully loaded."),
+            error: function (xhr) {
+                console.log(xhr.statusText)
+            }
+        })
+        $.when(geo).done(function () {
+            geojson.addData(geo.responseJSON)
+            
+            map.fitBounds(geojson.getBounds())
+            map.addLayer(geojson)
+        })
 
-
-        map.fitBounds(geojson.getBounds())
-        map.addLayer(geojson)
-
-        const inputElement = document.getElementById("uploadFile")
+        const inputElement = document.getElementById("uploadFile_new")
             .addEventListener('change', function () {
                 let fr = new FileReader();
 
                 fr.onload = async function () {
-                    geojson_string.innerText = await ''
-
+                    
                     let result = await fr.result
-                    geojson_string.innerText = await result
-
+                   
                     geojson.clearLayers();
 
                     geojson.addData(JSON.parse(result))
