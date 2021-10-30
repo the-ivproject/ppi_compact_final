@@ -270,7 +270,7 @@
         <div class="icon-fitur" onclick="zoomIn()">
             <a><span class="iconify" data-icon="bi:zoom-in"></span></a>
         </div>
-        <div class="icon-fitur" onclick="fitBounds()">
+        <div class="icon-fitur" onclick="zoomOut()">
             <a><span class="iconify" data-icon="bi:zoom-out"></span></a>
         </div>
         <div class="icon-fitur" id="fit-bounds">
@@ -429,6 +429,7 @@
         })
         $.when(geo).done(function () {
             let fitToBound = document.getElementById('fit-bounds')
+            
             fitToBound.addEventListener('click', function () {
                 map.fitBounds(region_layer.getBounds())
             })
