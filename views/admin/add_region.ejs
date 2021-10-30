@@ -324,17 +324,14 @@
             }).addTo(map);
 
         // Read selected geojson
-        let geojson_string = document.getElementById('geojson_string')
         const inputElement = document.getElementById("uploadFile")
             .addEventListener('change', function () {
                 let fr = new FileReader();
 
                 fr.onload = async function () {
-                    geojson_string.innerText = ''
 
                     let result = fr.result
-                    geojson_string.innerText = result
-                    
+
                     let geojson = L.geoJSON(JSON.parse(result))
 
                     let added = geojson.addTo(map)
