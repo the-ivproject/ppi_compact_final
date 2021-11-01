@@ -427,9 +427,10 @@
                 console.log(xhr.statusText)
             }
         })
+        
         $.when(geo).done(function () {
             let fitToBound = document.getElementById('fit-bounds')
-            
+
             fitToBound.addEventListener('click', function () {
                 map.fitBounds(region_layer.getBounds())
             })
@@ -658,9 +659,9 @@
                                         .properties
                                     ].map(a => {
                                         let b = Object.keys(a).map(
-                                        k => {
-                                            return `<tr><td style="font-weight:bold;color:#fff;background:#142940">${k}</td><td style="font-weight:bold">${a[k]}</td></tr>`
-                                        })
+                                            k => {
+                                                return `<tr><td style="font-weight:bold;color:#fff;background:#142940">${k}</td><td style="font-weight:bold">${a[k]}</td></tr>`
+                                            })
                                         return `<p style="font-weight:bold; font-size: 14px;margin: 10px 0;">GEOJSON PROPERTIES</p><p style="border-bottom:2px solid #369151;margin-bottom:10px;margin-top:0"><table class="table first" style="margin-bottom:0">${b.join("")}</table>`
                                     })
                                     console.log(raw_content.join(""))
