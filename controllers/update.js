@@ -155,7 +155,7 @@ exports.update_rincian_target = async (req, res) => {
         } else {
             let newData = req.body
             delete newData['target']
-            console.log(newData)
+           
             let id = req.params.id_rincian_target
             db.query('UPDATE 3_rincian_target SET ? WHERE id_rincian_target = ?', [newData, id], (err, results) => {
                 if (err) {
@@ -296,17 +296,6 @@ exports.update_detail_region = async (req, res) => {
                 }
             })
             req.pipe(busboy)
-            // let newData = req.body
-            // delete newData['data_layer']
-            // let id = req.params.id_region
-            // db.query('UPDATE 1_region SET ? WHERE id_region = ?', [newData, id], (err, results) => {
-            //     if (err) {
-            //         console.log(err)
-            //     } else {
-            //         req.flash('message', messageContent('Detail region berhasil di-edit!', 'alert-success'))
-            //         res.redirect(`/action/admin/detail_region/${id}`)
-            //     }
-            // })
         }
     }
     if (confrim === true) {

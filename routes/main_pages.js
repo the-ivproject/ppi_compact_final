@@ -3,15 +3,36 @@ const db = require('../config/dbconfig.js')
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
+// router.get('/', (req, res) => {
+//     db.query('SELECT * FROM 2_target', (err, list_group) => {
+//         db.query('SELECT 4_histori_capaian.*, 3_rincian_target.* FROM 4_histori_capaian LEFT JOIN 3_rincian_target ON 4_histori_capaian.id_rincian_target = 3_rincian_target.id_rincian_target', (err, histori_capaian) => {
+//             db.query('SELECT * FROM 1_region', (err, region) => {
+//                 if (err) {
+//                     res.status(404)
+//                 } else {
+//                     res.render('main/landing', {
+//                         title: 'Map',
+//                         legend: list_group,
+//                         histori_capaian: histori_capaian,
+//                         region: region,
+//                         lang: 'eng'
+//                     })
+//                 }
+//             })
+//         })
+//     })
+// })
+
+
+router.get('/',(req,res) => {
     db.query('SELECT * FROM 2_target', (err, list_group) => {
         db.query('SELECT 4_histori_capaian.*, 3_rincian_target.* FROM 4_histori_capaian LEFT JOIN 3_rincian_target ON 4_histori_capaian.id_rincian_target = 3_rincian_target.id_rincian_target', (err, histori_capaian) => {
             db.query('SELECT * FROM 1_region', (err, region) => {
                 if (err) {
                     res.status(404)
                 } else {
-                    res.render('main/landing', {
-                        title: 'Map',
+                    res.render('main/select_region', {
+                        title: 'Selamat Data',
                         legend: list_group,
                         histori_capaian: histori_capaian,
                         region: region,
@@ -22,6 +43,7 @@ router.get('/', (req, res) => {
         })
     })
 })
+
 
 
 router.get('/main/map/:id_region', (req, res) => {

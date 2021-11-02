@@ -173,7 +173,6 @@ exports.insert_region = (req, res) => {
 
         // On finish of the upload
         fstream.on('close', () => {
-            console.log(form)
             db.query('INSERT INTO 1_region SET ?', {
                 pj: form.get('pj'),
                 level: form.get('pj'),
