@@ -21,7 +21,7 @@
         text-align: center;
         font-weight: bold;
         color: white;
-        background: linear-gradient(rgb(0 0 0 / 65%), rgb(0 0 0 / 88%)), url(/global/img/mangrove_2.jpg);
+        background: linear-gradient(rgb(0 0 0 / 65%), rgb(0 0 0 / 88%)), url(/global/img/mangrove_2.JPG);
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -69,7 +69,7 @@
         padding: 10px;
         color: #142940;
         font-weight: bold;
-        width: 22%;
+        width: 29%;
     }
 
     .button-section button:hover {
@@ -79,10 +79,6 @@
     .button-section span {
         margin: 0 15px;
     }
-
-    /* #overlay-preload-map {
-        display: none;
-    } */
 
     #overlay-preload,
     #overlay-preload-map {
@@ -168,8 +164,9 @@
                     region.forEach(function(region){
                     %>
                     <button id="<%= region.id_region%>" class="btn btn-success"
-                        onclick="MovePage(this)"><%= region.nama_region +', '+ region.provinsi %> <div id="spinner<%= region.id_region %>" class="dashboard-spinner spinner-secondary spinner-xs"
-                        style="vertical-align: middle;visibility:hidden"></div></button>
+                        onclick="MovePage(this)">Kab. <%= region.nama_region +', Prov. '+ region.provinsi %> <div
+                            id="spinner<%= region.id_region %>" class="dashboard-spinner spinner-secondary spinner-xs"
+                            style="vertical-align: middle;visibility:hidden"></div></button>
                     <span id="span<%= i %>"> Atau </span>
                     <%  i++; }) %>
                     <% } else { %>
@@ -201,10 +198,10 @@
 
         function MovePage(el) {
             let id = el.id
-            window.location.href = `/main/map/${id}`
-            el.style.width ='25%'
+            // window.location.href = `/main/map/${id}`
+            el.style.width = '32%'
             document.getElementById(`spinner${id}`).style.visibility = 'visible'
- 
+
         }
 
         window.addEventListener('load', function () {
