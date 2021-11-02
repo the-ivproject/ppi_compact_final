@@ -11,7 +11,7 @@
 </head>
 <style>
     @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
-
+   
     .room {
         height: 100vh;
     }
@@ -198,7 +198,7 @@
 
         function MovePage(el) {
             let id = el.id
-            // window.location.href = `/main/map/${id}`
+            window.location.href = `/main/map/${id}`
             el.style.width = '32%'
             document.getElementById(`spinner${id}`).style.visibility = 'visible'
 
