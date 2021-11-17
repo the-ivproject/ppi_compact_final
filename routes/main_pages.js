@@ -190,6 +190,12 @@ router.get('/main/map_data_active/:id_region/:id_active/:id_data', (req, res) =>
                     if (err) {
                         res.status(404)
                     } else {
+                        // console.log(list_data)
+                        
+                        let group_name = list_group.filter(a => {
+                            return a.id_group_data == list_data[0].id_group_data 
+                        })
+
                         res.render('main/map_data_active', {
                             title: 'Data Map',
                             legend: list_group,
@@ -198,7 +204,8 @@ router.get('/main/map_data_active/:id_region/:id_active/:id_data', (req, res) =>
                             region: region[0],
                             all_region: all_region,
                             id_active:id_active,
-                            id_data:id_data
+                            id_data:id_data,
+                            group_name: group_name[0].nama_group_data
                         })
                     }
                 })
