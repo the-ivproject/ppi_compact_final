@@ -1,0 +1,35 @@
+<div id="card-item-${id}">
+    <div class="card-analisis">
+        <p style='font-size:18px;text-transform: capitalize;font-weight:800'>${filteredObj['nama_data']}<span id="hide-btn-legend-${id}" class="hide-chart-btn" onclick="removeChart(this)"><i class="fas fa-eye-slash"></i></span></p>
+        <p style="font-weight:normal">Attribute Data</p>
+    </div>
+    <div class="hr-line"></div>
+    <div class="nested-card">
+        <p style="font-size: 14px;">Informasi Data</p>
+        <table class="table first" style="font-size:12px;margin-top:10px;">
+            <tr>
+                <th style="background-color:#142940;color:white">Deskripsi</th>    
+                <th>: ${filteredObj['deskripsi_data']}</th>    
+            </tr>
+            <tr>
+                <th style="background-color:#142940;color:white">Tahun</th>    
+                <th>: ${filteredObj['tahun_data']}</th>    
+            </tr>
+            <tr>
+                <th style="background-color:#142940;color:white">Sumber</th>    
+                <th>: ${filteredObj['sumber_data']}</th>    
+            </tr>
+            <tr>
+                <th style="background-color:#142940;color:white">Tanggal Upload</th>    
+                <th>: ${new Date(filteredObj['last_update']).toDateString()}</th>    
+            </tr>
+        <table>
+    </div>
+    <div class="hr-line"></div>
+    <div class="nested-card">
+        <p style="font-size: 14px;">Attibute Table</p>
+        <div style="overflow-x:auto">
+            ${geojsonToTable()}
+        </div>
+    </div>
+</div>

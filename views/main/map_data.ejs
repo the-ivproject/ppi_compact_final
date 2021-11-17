@@ -233,7 +233,8 @@
                 style="font-size: 12px;font-weight: 600;">Submit</button>
             <div class="vl"></div>
             <div class="language-selection">
-                <a id="lang-selection" onclick="alert('English version not available yet')"><%= lang.toUpperCase() %></a>
+                <a id="lang-selection"
+                    onclick="alert('English version not available yet')"><%= lang.toUpperCase() %></a>
             </div>
         </div>
     </header>
@@ -246,9 +247,9 @@
                 <i class="fas fa-chevron-right margin"></i>
                 <a class="active-link">Kab. <%= region.nama_region %></a>
                 <i class="fas fa-chevron-right margin"></i>
-                <a>Data Explorer</a>  
+                <a>Data Explorer</a>
 
-                <a href= "/main/map/<%= region.id_region %>"  id="btn-switch" class="floating"> <i class="fas fa-database"
+                <a href="/main/map/<%= region.id_region %>" id="btn-switch" class="floating"> <i class="fas fa-database"
                         style="margin-right: 5px; font-size: 10px;"></i> MRV PPH</a>
 
             </div>
@@ -259,7 +260,8 @@
             <div class="title-target" style="margin-top: 10px;line-height: 1;">
                 <h2><%= legend.length %></h2>
                 <p style="font-size:14px;">Group Data </p>
-                <p class="small-kab" style="text-align: center;width: 100%;margin: 5px 0;">Kab. <%= region.nama_region %></p>
+                <p class="small-kab" style="text-align: center;width: 100%;margin: 5px 0;">Kab.
+                    <%= region.nama_region %></p>
             </div>
             <div class="legend-place">
                 <div class="nav_list">
@@ -800,7 +802,7 @@
                         })
 
                         let table = `
-                        <table class="table first" style="font-size:12px;margin-top:10px;overflow-x:auto">
+                        <table class="table first" style="font-size:12px;margin-top:10px;max-width:100%;white-space:nowrap;">
                             <thead style="background-color:#142940; color:white;font-weight:bold">
                                 ${thead.join("")}
                             </thead>
@@ -810,8 +812,8 @@
                         return table
                     }
 
-                   let aktual_data = `
-                        <div id="card-item-${id}">
+                    let aktual_data = `
+                         <div id="card-item-${id}">
                             <div class="card-analisis">
                                 <p style='font-size:18px;text-transform: capitalize;font-weight:800'>${filteredObj['nama_data']}<span id="hide-btn-legend-${id}" class="hide-chart-btn" onclick="removeChart(this)"><i class="fas fa-eye-slash"></i></span></p>
                                 <p style="font-weight:normal">Attribute Data</p>
@@ -836,11 +838,12 @@
                                         <th style="background-color:#142940;color:white">Tanggal Upload</th>    
                                         <th>: ${new Date(filteredObj['last_update']).toDateString()}</th>    
                                     </tr>
-                                <table>
+                                </table>
                             </div>
                             <div class="hr-line"></div>
                             <div class="nested-card">
                                 <p style="font-size: 14px;">Attibute Table</p>
+                                <div style="overflow-x:auto">
                                     ${geojsonToTable()}
                                 </div>
                             </div>
