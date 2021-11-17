@@ -14,7 +14,6 @@ let messageContent = (information, alert_class) => {
  </div>`
 }
 
-
 let check = (session, req, res) => {
     if (!session) {
         req.flash('message', messageContent('Upps, Mohon login terlebih dahulu!', 'alert-warning'))
@@ -94,6 +93,71 @@ exports.update_target = async (req, res) => {
 
                     req.flash('message', messageContent(`Target ID:${id} Berhasil di-edit!`, 'alert-success'))
                     res.redirect(`/admin/add_target`)
+                }
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+}
+
+exports.edit_group_data = async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            fs.readFile('public/icon_list/fontawesome_list.txt', 'utf8' , (err, data) => {
+                if (err) {
+                  console.error(err)
+                  return
+                }
+                let id = req.params.id_group_data
+                db.query('SELECT * FROM 7_group_data', (err, all_group) => {
+                    db.query('SELECT * FROM 7_group_data WHERE id_group_data = ?', id, (err, group_edit) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            res.render('admin/edit_group_data', {
+                                title: 'Edit Target',
+                                current_link: '/admin/add_group_data',
+                                message: '',
+                                all_group: all_group,
+                                group_edit: group_edit[0],
+                                admin: session,
+                                id_region: id_region,
+                                icon_list: data.split(",")
+                            })
+                        }
+                    })
+                })
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+}
+
+exports.update_group_data = async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            let newData = req.body
+            let id = req.params.id_group_data
+            db.query('UPDATE 7_group_data SET ? WHERE id_group_data = ?', [newData, id], (err, results) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    req.flash('message', messageContent(`Group Data ID:${id} Berhasil di-edit!`, 'alert-success'))
+                    res.redirect(`/admin/add_group_data`)
                 }
             })
         }
@@ -197,7 +261,34 @@ exports.update_style_layer = async (req, res) => {
                 if (err) {
                     console.log(err)
                 } else {
-                    res.redirect('/admin')
+                    res.redirect('/admin/list_histori_capaian')
+                }
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+}
+
+exports.update_style_data = async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            let kat = req.body['kat']
+            let val = req.body['val']
+            let properti = req.body['properti']
+            let id = req.params.id_data
+
+            db.query('UPDATE 8_list_data SET tipe_style = ?, style = ?, properti = ? WHERE id_data = ?', [kat, val, properti, id], (err, results) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    res.redirect('/admin/list_data')
                 }
             })
         }
@@ -371,6 +462,7 @@ exports.update_histori_capaian = async (req, res) => {
                     convertToObj['geojson'] = await convertToObj['ori_geojson']
                     delete convertToObj['ori_geojson']
 
+                    convertToObj['kinerja'] = convertToObj['target_tahunan'] - convertToObj['aktual'] 
                     updateQuery(convertToObj)
 
                     return false
@@ -384,6 +476,8 @@ exports.update_histori_capaian = async (req, res) => {
              
                     fstream.on('close', () => {
                         delete convertToObj['ori_geojson']
+                        convertToObj['kinerja'] = convertToObj['target_tahunan'] - convertToObj['aktual'] 
+
                         convertToObj['geojson'] = (uploadPath + final_path).replace("public","")
                         
                         updateQuery(convertToObj)
@@ -397,6 +491,108 @@ exports.update_histori_capaian = async (req, res) => {
         query();
     }
 }
+
+exports.edit_data = async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            let id = req.params.id_data
+            db.query('SELECT 8_list_data.*, 7_group_data.* FROM 8_list_data LEFT JOIN 7_group_data ON 8_list_data.id_group_data = 7_group_data.id_group_data WHERE 8_list_data.id_data = ?', [id], (err, results) => {
+                db.query('SELECT * FROM 7_group_data', (err, group_data) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        res.render('admin/edit_data', {
+                            title: 'Edit Data',
+                            menu: '',
+                            page_name: 'edit Data',
+                            current_link: '',
+                            admin: session,
+                            message: req.flash('message'),
+                            data: results[0],
+                            group_data:group_data,
+                            id_region: id_region
+                        })
+                    }  
+                })
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+}
+
+exports.update_data = async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = async () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            let updateQuery = (data) => {
+                let id = req.params.id_data
+                db.query('UPDATE 8_list_data SET ? WHERE id_data = ?', [data, id], (err, results) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        req.flash('message', messageContent(`Data ID:${id} berhasil di-edit!`, 'alert-success'))
+                        res.redirect(`/admin/list_data`)
+                    }
+                })
+            }
+            
+            let form = new Map()
+           
+            const uploadPath = 'public/uploads/geojson/list_data/'
+
+            let busboy = new Busboy({ headers: req.headers })
+
+            busboy.on('field', (fieldname, val) => {
+                form.set(fieldname, val)
+            })
+        
+            busboy.on('file', async (fieldname, file, filename) => {
+                let convertToObj = await Object.fromEntries(form)
+                if(filename === '') {
+                    convertToObj['geojson'] = await convertToObj['ori_geojson']
+                    delete convertToObj['ori_geojson']
+                    delete convertToObj['group_data_display']
+                   
+                    updateQuery(convertToObj)
+
+                    return false
+                } else {
+                    let final_path = Date.now() + '' + filename
+                   
+                    const fstream = fs.createWriteStream(path.join(uploadPath, final_path));
+                    
+                    // Pipe it trough
+                    file.pipe(fstream);
+             
+                    fstream.on('close', () => {
+                        delete convertToObj['ori_geojson']
+                        delete convertToObj['group_data_display']
+
+                        convertToObj['geojson'] = (uploadPath + final_path).replace("public","")
+                        
+                        updateQuery(convertToObj)
+                    })
+                }
+            })
+            req.pipe(busboy)
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+}
+
 
 
 

@@ -213,16 +213,7 @@
             $("#message-placement").delay(5000).slideUp(300);
         });
 
-        function confrimDelete(el) {
-            let id_target = el.id
-            
-            if(confirm('yakin?') == true) {
-                window.location.href = `/action/admin/delete_rincian_target/${id_target}`
-            } else {
-                return;
-            }
-        }
-
+        
         function filterByTarget(opt) {
             let id_target = opt.value
             

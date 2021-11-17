@@ -23,20 +23,21 @@
                 <a href="#" class="nav_logo" style="text-align: center;"> <i class='bx bx-layer nav_logo-icon'></i>
                     <span class="nav_logo-name">Map</span> </a>
                 <div class="nav_list">
-                <%
+                    <%
                 if(group_layer.length!=0){
                 let i=1;
                 group_layer.forEach(function(layer){
                 %>
-                    <a href="/get_group/<%= layer.id_group %>" id="gg" class="nav_link active"> <i class='<%= layer.icon %>'></i>
-                        <span class="nav_name"><%= layer.nama_group %></span> 
-                    </a> 
-                <%  i++; }) %>
-                <% } else { %>
+                    <a href="/get_group/<%= layer.id_group %>" id="gg" class="nav_link active"> <i
+                            class='<%= layer.icon %>'></i>
+                        <span class="nav_name"><%= layer.nama_group %></span>
+                    </a>
+                    <%  i++; }) %>
+                    <% } else { %>
                     <a href="#" id="gg" class="nav_link active"> <i class='bx bxs-tree nav_icon'></i>
                         <span class="nav_name">No Layer</span>
                     </a>
-                <% } %>   
+                    <% } %>
                 </div>
             </div>
             <a href="#" class="nav_link"> <i class='bx bx-log-out nav_icon'></i>
@@ -69,47 +70,48 @@
         L.control.zoom({
             position: 'topright'
         }).addTo(map);
-        
+
         // Get Map
-        
+
         let raw_data = []
         let kat_data = []
+
         let layer = '<% Object.keys(data_layer).forEach(function(keys){ %>'
-            raw_data.push({
-                'geojson':JSON.parse('<%- data_layer[keys].data_layer %>'),
-                'tipe_style': '<%= data_layer[keys].tipe_style %>',
-                'style': JSON.parse('<%- data_layer[keys].style %>'),
-                'properti': '<%= data_layer[keys].properti %>'
-            })
+        raw_data.push({
+            'geojson': JSON.parse('<%- data_layer[keys].data_layer %>'),
+            'tipe_style': '<%= data_layer[keys].tipe_style %>',
+            'style': JSON.parse('<%- data_layer[keys].style %>'),
+            'properti': '<%= data_layer[keys].properti %>'
+        })
         '<% }) %>'
-       
+
         raw_data.forEach(layer => {
-            
+
             let geojson = layer.geojson
             let def_geo = L.geoJSON(geojson)
-         
-          
+
+
             def_geo.addTo(map)
             map.fitBounds(def_geo.getBounds())
 
-            if(layer.tipe_style === "single") {
-               return def_geo.setStyle(layer.style)
+            if (layer.tipe_style === "single") {
+                return def_geo.setStyle(layer.style)
             } else {
 
                 let f_prop = layer.properti
-              
-                let getKategoriStyle = (feature) =>{
+
+                let getKategoriStyle = (feature) => {
                     let prop = feature.properties[f_prop]
-                   
+
                     return setKategoriStyle(prop)
                 }
-        
+
                 let setKategoriStyle = (prop) => {
                     let prop_val = Object.keys(layer.style)
-                    for(let i = 0; i < prop_val.length; i++) {
-                        switch(prop){
+                    for (let i = 0; i < prop_val.length; i++) {
+                        switch (prop) {
                             case prop_val[i]:
-                            return layer.style[prop_val[i]]
+                                return layer.style[prop_val[i]]
                                 break
                         }
                     }
@@ -117,7 +119,7 @@
                 return def_geo.setStyle(getKategoriStyle)
             }
         })
-        
+
 
         // Free hand
         let nav_list = document.querySelectorAll('.nav_name')
@@ -125,13 +127,13 @@
         nav_list.forEach(text => {
             let count = 8
             let text_ori = text.innerHTML
-        
-            let slice = text_ori.slice(0, count) + (text_ori.length > count ? "-" + (text_ori.slice(count - text_ori.length)) : "");
-           
-            text.innerHTML = slice
-           
-        })
 
+            let slice = text_ori.slice(0, count) + (text_ori.length > count ? "-" + (text_ori.slice(count -
+                text_ori.length)) : "");
+
+            text.innerHTML = slice
+
+        })
     </script>
 </body>
 

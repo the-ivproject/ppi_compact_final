@@ -5,23 +5,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Datang</title>
+    <title>Selamat Datang di Entative</title>
+    <%- include('./partials/headerlink'); %>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="/admin/assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
 </head>
 <style>
-    @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap");
+
+    * {
+        font-family: 'Montserrat';
+    }
 
     .room {
         height: 100vh;
     }
 
     .jumbotron {
-        font-family: 'Nunito';
+        font-family: 'Montserrat';
         text-align: center;
         font-weight: bold;
-        color: white;
-        background: linear-gradient(rgb(0 0 0 / 65%), rgb(0 0 0 / 88%)), url(/global/img/mangrove_2.JPG);
+        /* color: white; */
+        /* background: linear-gradient(rgb(0 0 0 / 65%), rgb(0 0 0 / 88%)), url(/global/img/mangrove_2.JPG); */
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -29,14 +34,16 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        /* background: white !important; */
     }
 
     .jumbotron h1 {
-        font-size: 3rem;
+        font-size: 40px;
         line-height: 1;
-        font-weight: bold;
-        padding: 15px;
-        margin: 25px;
+        font-weight: 800;
+        padding: 20px;
+        margin: 20px;
+        color: #000;
     }
 
     .jumbotron p {
@@ -46,14 +53,6 @@
         font-weight: bold;
     }
 
-    .main-title {
-        padding: 15px;
-        /* border-bottom: 5px solid #000; */
-        width: 30%;
-        margin: 25px auto;
-        background-color: #142940;
-        border-radius: 5px;
-    }
 
     .main-title span {
         color: #FAAF02;
@@ -61,19 +60,22 @@
 
     .button-section {
         justify-content: center;
+
     }
 
     .button-section button {
-        background-color: #e8e8ec;
-        border: #e8e8ec;
-        padding: 10px;
+        border-radius: 5px;
+        background-color: #FAFAFA;
+        border: 1px solid #E1E1E1;
+        /* padding: 10px; */
         color: #142940;
         font-weight: bold;
-        width: 323px;
+        /* width: 323px; */
     }
 
     .button-section button:hover {
         background-color: #2ec551;
+        border: 1px solid #2ec551;
     }
 
     .button-section span {
@@ -143,30 +145,114 @@
             transform: rotate(360deg);
         }
     }
+
+    .btn {
+        font-size: 14px !important;
+        padding: 10px;
+        display: table-cell;
+        vertical-align: middle;
+        margin: 0 10px;
+    }
+
+    .conn-section {
+        position: absolute;
+        right: 0;
+        top: 0;
+        margin: 10px;
+        font-weight: 600;
+        /* border: 1px solid #E1E1E1; */
+        border-radius: 6px;
+        display: flex;
+        padding: 12px 16px;
+        /* background-color: #1429404a; */
+        line-height: 1;
+        cursor: pointer;
+        /* line-height: 1.3; */
+        /* box-shadow: -0.4rem 0.4rem 1.6rem rgb(0 0 0 / 5%), 0 0.1rem 0 rgb(0 0 0 / 5%); */
+    }
+
+    .conn-section::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 15%;
+        width: 50%;
+        height: 0.1em;
+        background-color: #53C351;
+        opacity: 0;
+        transition: opacity 300ms, transform 300ms;
+    }
+
+    .conn-section:hover::after,
+    .conn-section:focus::after {
+        opacity: 1;
+        transform: translate3d(0, 0.2em, 0);
+    }
+
+    .conn-section .small-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #0000006b;
+        margin-bottom: 5px;
+        padding-top: 5px;
+    }
+
+    .conn-section p {
+        font-weight: 800;
+        font-size: 18px;
+        color: #142940;
+        margin: 0;
+        line-height: 0.8;
+        letter-spacing: 0px;
+    }
+
+    .conn-section i {
+        font-size: 12px;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+    }
+
+    .icon-sec {
+        margin-right: 10px;
+        line-height: 2;
+    }
+
+    .text-sec {
+        margin-bottom: 4px;
+    }
 </style>
 
-<body>
+<body style="padding: 0;">
     <div id="overlay-preload">
         <img src="/main/preload/loader-1.svg" alt="" srcset="" width="100">
     </div>
     <div class="room">
-        <div class="jumbotron jumbotron-fluid">
+        <div class="conn-section" style="font-weight: 600;">
+            <div class="icon-sec">
+                <img width="35" src="/global/img/plug.svg" alt="" srcset="">
+            </div>
+            <div class="text-sec" onclick="window.location.href = 'https://sourceup.org/'">
+                <p class="small-text">Connected to</p>
+                <p>SourceUp</p>
+            </div>
+        </div>
+        <div class="jumbotron jumbotron-fluid" style="padding: 0;background-color: #ffffffe3;">
+            <!-- background-color: #e9ecef00; -->
             <div class="container">
-                <div class="main-title">
-                    <p class="display-4">PERTUMBUHAN HIJAU</p>
-                    <span>Monitoring Platform</span>
+                <div class="new-brand" style="display: block;margin: 0;">
+                    <%- include('./partials/navbar-brand'); %>
                 </div>
-                <h1>Mewujudkan Pembangunan Berwawasan Lingkungan</h1>
-                <div id="btn-sec" class="button-section">
+                <h1>Sustainable Development <br>and Inclusive Growth, Start Here!</h1>
+                <div id="btn-sec" class="button-section" style="padding: 10px;">
                     <%
                     if(region.length!=0){
                     var i=1;
                     region.forEach(function(region){
                     %>
-                    <button id="<%= region.id_region%>" class="btn btn-success" onclick="MovePage(this)">Kab.
-                        <%= region.nama_region +', Prov. '+ region.provinsi %> <div id="spinner<%= region.id_region %>"
-                            class="dashboard-spinner spinner-secondary spinner-xs"
-                            style="vertical-align: middle;visibility:hidden"></div></button>
+                    <button id="<%= region.id_region%>" class="btn btn-success " onclick="MovePage(this)" style="border: none;">
+                        <span>Kab. <%= region.nama_region + ', ' %> Kalbar </span><i class="fas fa-caret-right"
+                            style="font-size: 18px;vertical-align: middle;"></i> </button>
                     <span id="span<%= i %>"> Atau </span>
                     <%  i++; }) %>
                     <% } else { %>
@@ -178,9 +264,40 @@
             </div>
         </div>
     </div>
+    <div class="new-footer">
+        <div class="all-logo">
+            <h2 class="small-text bold">Collaboration</h2>
+            <div class="img">
+                <a>
+                    <img width="25" src="/global/img/logo/bkt.svg" alt="" srcset="">
+                </a>
+                <a>
+                    <img width="38" src="/global/img/logo/idh_hijau.svg" alt="" srcset="">
+                </a>
+                <a>
+                    <img width="18" src="/global/img/logo/pemkab_ktp.svg" alt="" srcset="">
+                </a>
+                <a>
+                    <img width="20" src="/global/img/logo/pemkab_kkr.svg" alt="" srcset="">
+                </a>
+            </div>
+        </div>
+    </div>
+    <section id="cookie_card" class="cookie">
+        <div class="txt">
+            <h2>Cookies</h2>
+            <p class="">
+                This website uses cookies to improve your experience. We'll assume you're ok with this, but you can
+                opt-out if you wish.<br>
+                <span><button class="btn accept">Accept</button></span>
+                <span><button class="btn accept" style="background-color: #142940;">Reject</button></span>
+            </p>
+        </div>
+
+    </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/css/bootstrap.min.css"></script>
-
+    <script src="/admin/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script>
         function detectmobile() {
 
@@ -198,7 +315,7 @@
         if (detectmobile() && document.documentElement.clientWidth <= 768) {
             window.location.href = '/main/prevent_mobile';
         }
-        
+
         let general_loader = document.getElementById('overlay-preload')
         let btn_section = document.querySelectorAll('#btn-sec button')
 
@@ -215,15 +332,31 @@
 
         function MovePage(el) {
             let id = el.id
-            window.location.href = `/main/map/${id}`
-            el.style.width = '32%'
-            document.getElementById(`spinner${id}`).style.visibility = 'visible'
-
+            window.location.href = `/main/dataset/${id}`
+            // el.style.width = '32%'
+            // document.getElementById(`spinner${id}`).style.visibility = 'visible'
         }
 
         window.addEventListener('load', function () {
             general_loader.style.visibility = 'hidden'
+
+            let cookie = document.getElementById('cookie_card')
+            cookie.style.visibility = 'visible'
+            cookie.style.opacity = '1'
+ 
         })
+
+
+        if (localStorage.getItem('cookieSeen') != 'shown') {
+            $('.cookie').delay(2000).fadeIn();
+            localStorage.setItem('cookieSeen', 'shown')
+        };
+        
+        $('.accept').click(function () {
+            $('.cookie').fadeOut();
+        })
+
+      
     </script>
 </body>
 

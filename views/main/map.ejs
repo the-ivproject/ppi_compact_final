@@ -10,27 +10,27 @@
 <style>
     #map {
         width: 100%;
-        height: 119vh;
+        height: 90vh;
         z-index: 0;
     }
 
-    .info-icon .tooltiptext {
+    #veryfied-icon .tooltiptext {
         visibility: hidden;
-        width: 120px;
-        background-color: #E2EDEB;
+        background-color: #e2edebd9;
         color: #000;
         text-align: center;
-        border-radius: 6px;
-        padding: 10px;
+        border-radius: 5px;
+        padding: 20px;
         position: absolute;
         z-index: 9999;
-        margin: -20px 2px;
+        margin: -54px 16px;
         right: 15px;
         font-size: 12px;
-        font-weight: bold
+        text-transform: capitalize;
+        line-height: 1.4;
     }
 
-    .info-icon:hover .tooltiptext {
+    #veryfied-icon:hover .tooltiptext {
         visibility: visible;
     }
 
@@ -39,7 +39,7 @@
     }
 
     .legend-subtitle .legend-item {
-        padding: 7px 0;
+        padding: 0;
     }
 
     .get-chart {
@@ -47,6 +47,8 @@
         right: 0;
         top: 0;
         font-size: 12px;
+        padding: 5px;
+        width: 80px;
     }
 
     .icon-terverifikasi {
@@ -58,14 +60,6 @@
         color: #ACBCA3;
         font-size: 14px;
     }
-
-    .nested-card {
-        border-bottom: 1px solid #ced4da;
-        /* border-radius: 10px; */
-        /* margin: 25px 0; */
-        padding: 12px 0;
-    }
-
     .nav_list a {
         border: 1px solid #ced4da;
         border-radius: 5px;
@@ -125,27 +119,27 @@
         z-index: 9999;
     }
 
-    .legend-des span {
+    /* .legend-des span {
         float: right;
         position: absolute;
         right: 0;
         margin: 0 25px;
-    }
+    } */
 
     .check-counter {
-        margin: 7px;
+        margin: 7px !important;
         position: absolute;
         right: 0;
         top: 0;
-        background: #EA3D2F;
+        background: #ea3d2f66;
         color: white;
         /* padding: 5px; */
         font-size: 12px;
         font-weight: bold;
         border-radius: 3px;
         width: 17px;
-        height: 17px;
-        line-height: 1.4;
+        /* height: 17px; */
+        /* line-height: 1.4; */
         transition-delay: 0s, 0.3s;
     }
 
@@ -154,7 +148,7 @@
         background: white;
         z-index: 777;
         right: 0;
-        top: 63px;
+        top: 114px;
         margin: 11px;
         /* padding: 10px; */
         border-radius: 3px;
@@ -214,8 +208,9 @@
         <img src="/main/preload/loader-1.svg" alt="" srcset="" width="100">
     </div>
     <header class="header" id="header">
-        <a class="navbar-brand">Pertumbuhan Hijau <p
-                style="margin: 0;font-size: 12px;text-transform: capitalize;color:#FAAF02">Monitoring Platform</p></a>
+        <div class="new-brand">
+            <%- include('./partials/navbar-brand'); %>
+        </div>
         <div class="region-form">
             <!-- <label for="region-selection">Select Region</label> -->
             <select id="region-selection" class="form-control">
@@ -233,15 +228,36 @@
                 </tr>
                 <% } %>
             </select>
-            <button onclick="filterByRegion()" class="btn btn-success">submit</button>
+            <button onclick="filterByRegion()" class="btn btn-success" style="font-size: 12px;font-weight: 600;">Submit</button>
             <div class="vl"></div>
             <div class="language-selection">
                 <a id="lang-selection" onclick="changeLanguage()"><%= lang.toUpperCase() %></a>
             </div>
         </div>
     </header>
+    <div id="nav-info">
+        <div class="sec-nav-tec">
+            <div class="left-text">
+                <i class="fas fa-map-marker-alt" style="font-size: 20px;"></i>
+                <i class="fas fa-chevron-right margin"></i>
+                <a href="/main/dataset/<%= region.id_region %>">Dataset</a>
+                <i class="fas fa-chevron-right margin"></i>
+                <a class="active-link">Kab. <%= region.nama_region %></a>
+                <i class="fas fa-chevron-right margin"></i>
+                <a >MRV PPH</a>
+
+                <a href="/main/map_data/<%= region.id_region %>" id="btn-switch" class="floating" > <i class="fas fa-database" style="margin-right: 5px; font-size: 10px;"></i> Data Explorer</a>
+
+            </div>
+        </div>
+    </div>
     <div class="l-navbar" id="nav-bar">
         <nav class="nav">
+            <div class="title-target" style="margin-top: 10px;line-height: 1;">
+                <h2><%= legend.length %></h2>
+                <p style="font-size:14px;">Target </p>
+                <p class="small-kab" style="text-align: center;width: 100%;margin: 5px 0;">Kab. <%= region.nama_region %></p>
+            </div>
             <div class="legend-place">
                 <div class="nav_list">
                     <%
@@ -258,7 +274,7 @@
                     <% } else { %>
 
                     <a href="#" id="gg" class="nav_link active">
-                        <i class="fas fa-info-circle" style="color:#53C351;margin:10px"></i>
+                        <i class="fas fa-frown" style="color:#53C351;margin:10px"></i>
                         <span class="nav_name">Upps! Data belum tersedia.</span>
                     </a>
                     <% } %>
@@ -365,9 +381,9 @@
         let general_loader = document.getElementById('overlay-preload')
 
         // add basemaplayer
-        var layer = L.esri.basemapLayer('Topographic').addTo(map);
+        let layer = L.esri.basemapLayer('Topographic').addTo(map);
 
-        var layerLabels;
+        let layerLabels;
 
         function setBasemap(basemap) {
             if (layer) {
@@ -394,11 +410,6 @@
                 layerLabels = L.esri.basemapLayer('ImageryLabels');
                 map.addLayer(layerLabels);
             }
-        }
-
-        function changeBasemap(basemaps) {
-            var basemap = basemaps.value;
-            setBasemap(basemap);
         }
 
         function changeBasemap(basemaps) {
@@ -482,6 +493,7 @@
         let createLegend = (obj) => {
 
             let final_legend = []
+
             Object.keys(obj).forEach(key => {
                 let filtered = obj[key]
                 let grouping = groupBy(filtered, 'id_rincian_target')
@@ -496,58 +508,72 @@
                         if (g.rule === 'under baseline') {
                             if (parseInt(g.aktual) < parseInt(g.target_tahunan)) {
                                 p_kinerja =
-                                    `Kinerja <span class="kinerja-positif" style="font-weight:bold;color:#53C351">+${g.kinerja +' '+ g.satuan}</span> `
+                                    `<p class="kinerja-text mbc-2" style="margin:0;color:#53C351"> ${g.kinerja} </p>`
                             } else {
                                 p_kinerja =
-                                    `Kinerja <span class="kinerja-negatif" style="font-weight:bold;color:#EA3D2F">${g.kinerja +' '+ g.satuan}</span> `
+                                    `<p class="kinerja-text mbc-2" style="margin:0;color:#EA3D2F"> ${g.kinerja} </p>`
                             }
                         } else {
                             if (parseInt(g.aktual) < parseInt(g.target_tahunan)) {
                                 p_kinerja =
-                                    `Kinerja <span class="kinerja-negatif">${g.kinerja +' '+ g.satuan}</span> `
+                                    `<p class="kinerja-text mbc-2" style="margin:0;color:#EA3D2F"> ${g.kinerja} </p>`
                             } else {
                                 p_kinerja =
-                                    `Kinerja <span class="kinerja-positif"> +${(g.kinerja +' '+ g.satuan).replace("-","")}</span>`
+                                    `<p class="kinerja-text mbc-2" style="margin:0;color:#53C351"> ${g.kinerja} </p>`
                             }
+                        }
+                        let veryfied_icon;
+
+                        if(g.status_verifikasi === 'terverifikasi') {
+                            veryfied_icon = "/global/img/veryfied.svg"
+                        } else {
+                            veryfied_icon = "/global/img/unveryfied.svg"
                         }
 
                         return `
                                  <li>
                                     <div id="list-layer" class="list-arranged" style="display: flex;">
                                             <input class="geojson-input" id="input-${g.rincian_target.replaceAll(" ","-") +'-'+g.tahun_data}" type="checkbox" value='${JSON.stringify(g)}'>
-                                            
-                                        <div>
-                                            <p class="legend-item">
-                                                Tahun ${g.tahun_data}
-                                                <span class="icon-${g.status_verifikasi.replaceAll(" ","-")}">
-                                                    <i class="fas fa-check-circle info-icon"><span class="tooltiptext">${g.status_verifikasi}</span></i>
-                                                </span>
-                                            </p>
-                                            <p class="legend-des" style="font-size:12px">
-                                                Color Shceme
-                                                ${
-                                                    `<span>${JSON.parse(g.style).fillColor || JSON.parse(g.style).color || Object.keys(JSON.parse(g.style)).map(a => {
-                                                        return JSON.parse(g.style)[a].fillColor != '' ? JSON.parse(g.style)[a].fillColor : JSON.parse(g.style)[a].color 
-                                                    }).join(",")}</span>
-                                                    ` 
-                                                }
-                                            </p>
-                                            <p class="legend-item" style="font-weight: normal; font-size:12px;margin: 5px 0;max-width:200px;text-transform:none">
+                                        <div style="display:flex;width:100%">
+                                            <div class="bx-1">
+                                                <p class="legend-item mbc-2">
+                                                    Tahun ${g.tahun_data}
+                                                </p>
+                                                <p class="legend-des" style="font-size:12px;color:#6f6f6f">
+                                                    ${
+                                                        `<span>${JSON.parse(g.style).fillColor || JSON.parse(g.style).color || Object.keys(JSON.parse(g.style)).map(a => {
+                                                            return JSON.parse(g.style)[a].fillColor != '' ? JSON.parse(g.style)[a].fillColor : JSON.parse(g.style)[a].color 
+                                                        }).join(",")}</span>
+                                                        ` 
+                                                    }
+                                                    ${g.rincian_target}
+                                                </p>
+                                            </div>
+                                            <div class="bx-2">
                                                ${p_kinerja}
-                                            </p>
+                                               <span>hektare</span>
+                                            </div>
+                                            <div class="bx-2">
+                                                <a style="vertical-align:middle;color:#ccd6d5"><i class="fas fa-info-circle"></i></a>
+                                                <a id="veryfied-icon"><img width="30" height="30" src=${veryfied_icon}><span class="tooltiptext">${g.status_verifikasi}</span></a>
+                                            </div>
                                         </div>
                                     </div>   
                                 </li>
                            `
                     })
                     let sec_legend = `
-                        <div class="legend-group">
+                        <div class="legend-group" id="group-${key}">
                             <div class="legend-subtitle">
                                 <p class="legend-item">${grouped[0].rincian_target} 
                             </p>
-                                <button id="getchart-${grouped[0].id_rincian_target}" onclick="showChart(this)" class="btn btn-dark get-chart">Analisis </a>
+                            <span>Last update, June 2021</span>
+                                <button id="getchart-${grouped[0].id_rincian_target}" onclick="showChart(this)" class="btn btn-dark get-chart">Analisis </button>
+                                <a id="collapse-${key}"><i class="fas fa-chevron-down coll-icon" style="vertical-align:middle"></i></a>
                             </div>
+                            <div class="list-legend-container" id="container-${key}">
                                  ${leg.join("")} 
+                            </div>
                         </div>
                        `
                     nested_legend.push(sec_legend)
@@ -555,8 +581,14 @@
 
                 let legend_div = `
                         <div class="map-legend" id="target-${key}">
-                            <p class="legend-title"><i class="bx bxs-layer"></i> Map Legend</p>
-                                 <span id="hide-btn-legend-${key}" class="hide-legend-btn" onclick="removeLegend(this)">X</span>
+                           <div class="title-section">
+                                <i class="bx bxs-layer"></i>
+                                <div class="title">
+                                    <p id="title-replacement" class="legend-title"></p>
+                                    <span>Target</span>
+                                </div>
+                                <span id="hide-btn-legend-${key}" class="hide-legend-btn" onclick="removeLegend(this)"> <i class="fas fa-eye-slash"></i></span>
+                            </div>
                             <p id="sub-legend" class="legend-title" style="font-size:16px;text-transform:capitalize"></p>
                             <ul id="id-list-legend" class="legend-list">
                                 ${nested_legend.join("")}
@@ -569,6 +601,10 @@
             return final_legend.join("")
         }
 
+        // filter form legend - cadangan 
+        // <div class="filter-form">
+        //     <input class="form-control legend-title" style="padding:12px"></input>
+        // </div>
 
         let legend_placement = document.getElementById('legend-placement')
         legend_placement.innerHTML = createLegend(historiGroupByIdTarget)
@@ -581,12 +617,31 @@
             })
 
             let list = document.getElementById(`${el.id.replaceAll("target_","target-")}`)
-            let sub_title = list.querySelectorAll('.legend-title')[1]
+            let sub_title = list.querySelectorAll('.legend-title')[0]
             let select_inner = el.querySelector('span')
 
-            sub_title.innerText = select_inner.innerText
+            sub_title.innerText = select_inner.innerText 
             list.classList.add('active')
 
+            let selector = document.querySelectorAll('.legend-subtitle a')
+            selector.forEach(s => {
+                let id = s.id.replaceAll('collapse','container')
+                let id_2 = s.id.replaceAll('collapse','group')
+                s.onclick = function() {
+                    let list = document.getElementById(id)
+                    let icon = document.getElementById(id_2)
+                    
+                    let selector = document.querySelector(`#${id_2} i`)
+                    
+                    selector.classList.toggle('rotate-icon')
+                    
+                    if(list.className.includes('show-list')) {
+                        list.classList.remove('show-list')
+                    } else {
+                        list.classList.add('show-list')
+                    }
+                }
+            })
         }
 
         let countActiveLayer = async () => {
@@ -654,7 +709,7 @@
 
                                 layer.on('click', function (e) {
                                     setGeoJsonStyle(raw_prop, geojson_layer)
-                                    console.log(e.target)
+                                 
                                     let raw_content = [e.target.feature
                                         .properties
                                     ].map(a => {
@@ -664,7 +719,7 @@
                                             })
                                         return `<p style="font-weight:bold; font-size: 14px;margin: 10px 0;">GEOJSON PROPERTIES</p><p style="border-bottom:2px solid #369151;margin-bottom:10px;margin-top:0"><table class="table first" style="margin-bottom:0">${b.join("")}</table>`
                                     })
-                                    console.log(raw_content.join(""))
+                                    
                                     let popup = new L.Popup()
                                         .setLatLng(e.target._bounds.getCenter())
                                         .setContent(raw_content.join(""))
@@ -715,27 +770,33 @@
         }
 
         let getChart = (data, id) => {
-
-            let text;
-            if (data.length === 1) {
-                text = data[0].tahun_data
-            } else {
-                text = data[0].tahun_data + ' - ' + data[data.length - 1].tahun_data
+          
+            let text = () => {
+                return data.length == 1 ? data[0].tahun_data : data[0].tahun_data + ' - ' + data[data.length - 1].tahun_data
             }
-
+          
             Highcharts.chart(`container-chart-${id}`, {
+                chart: {
+                    spacingBottom: 15,
+                    spacingTop: 30,
+                    spacingLeft: 10,
+                    spacingRight: 10,
+                },
                 title: {
+                    y: 0,
                     text: `Series ${data[0].rincian_target}`,
                     align: 'center',
+                    margin : 10,
                     style: {
                         color: '#000',
                         fontWeight: 'bold',
-                        textTransform: 'uppercase',
-                        fontSize: 14
+                        textTransform: 'capitalize',
+                        fontSize: "16px",
                     }
                 },
                 subtitle: {
-                    text: `Periode ${text}`,
+                    y: 15,
+                    text: `Periode ${text()}`,
                     align: 'center',
                 },
                 xAxis: {
@@ -744,6 +805,7 @@
                     })
                 },
                 yAxis: {
+                    gridLineColor: 'transparent',
                     title: {
                         text: data[0].satuan
                     },
@@ -754,40 +816,40 @@
                     data: data.map(a => {
                         return parseInt(a.aktual)
                     }),
-                    color: '#142940'
+                    color: '#F3A72E'
                 }, {
                     type: 'spline',
                     name: 'Target Tahunan',
                     data: data.map(a => {
                         return parseInt(a.target_tahunan)
                     }),
-                    color: '#EA3D2F',
+                    color: '#142940',
                     marker: {
                         lineWidth: 2,
-                        lineColor: Highcharts.getOptions().colors[3],
-                        fillColor: '#DD4BCE'
+                        lineColor: '#ACBCA3',
+                        fillColor: '#142940'
                     }
                 }]
             });
         }
 
         let transformToTable = (obj) => {
-            let raw1 = []
-
+            let final_obj = []
+            
             obj.forEach(o => {
                 let raw = {}
                 raw["tahun"] = `<td>${o.tahun_data}</td>`
                 raw["target_tahunan"] = `<td>${o.target_tahunan +' '+ o.satuan}</td>`
                 raw["aktual"] = `<td>${o.aktual +' '+ o.satuan}</td>`
                 raw["capaian"] = `<td>${o.target_tahunan - o.aktual +' '+ o.satuan}</td>`
-                raw1.push(raw)
+                final_obj.push(raw)
             })
 
-            let x = []
-            let xb = raw1.map(o => {
+            let tr_gen = final_obj.map(o => {
                 return `<tr>${Object.values(o).join("")}</tr>`
             })
-            return xb
+            
+            return tr_gen
         }
 
         let input = document.querySelectorAll("#legend-placement .geojson-input")
@@ -805,59 +867,80 @@
                 chart_placement.className = 'chart-placement'
 
                 let raw_obj = goupByIdRincianTarget[id]
-                console.log('raw_obj', transformToTable(raw_obj))
+               
                 let length = raw_obj.length - 1
                 let filteredObj = raw_obj[length]
 
                 let aktual_data = `
                         <div id="card-item-${id}">
-                            <span id="hide-btn-legend-${id}" class="hide-chart-btn" onclick="removeChart(this)">X</span>
                             <div class="card-analisis">
-                                <div class="chart-title">
-                                    <div class="title-text">
-                                        <span>Analisis</span>
-                                        <p style='font-size:18px;margin:10px 0'>${filteredObj['rincian_target']}</p>
-                                        <span>${filteredObj['deskripsi']}.</span>
-                                    </div>
+                                <p style='font-size:18px;text-transform: capitalize;font-weight:800'>${filteredObj['rincian_target']}<span id="hide-btn-legend-${id}" class="hide-chart-btn" onclick="removeChart(this)"><i class="fas fa-eye-slash"></i></span></p>
+                                <p style="font-weight:normal">Periode 2014 - 2015</p>
+                            </div>
+                            <div class="hr-line"></div>
+                            <div class="nested-card">
+                                <p style="font-size: 14px;">Summary</p>
+                                <p style="font-weight:normal">Capaian aktual dari data terakhir yang di-update.</p>
+                                <div class="row-container" style="margin:10px 24px">
+                                    <div class="row" style="padding:0">
+                                        <div class="col-md-6" style="padding:0">
+                                            <div class="data-capaian" style="border-radius: 5px 0 0 0;">
+                                                <p>Target Tahunan</p>
+                                                <div style="display:flex">
+                                                    <h2 >${filteredObj['target_tahunan']} </h2>
+                                                <span style="margin-top:15%;margin-left:8px">${filteredObj['satuan']}</span>
+                                                </div>
+                                                <div class="v-line-small"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" style="padding:0">
+                                            <div class="data-capaian" style="border-radius: 0 5px 0 0;">
+                                                <p>Aktual Per ${filteredObj['tahun_data']}</p>
+                                                <div style="display:flex">
+                                                    <h2 >${filteredObj['aktual']} </h2>
+                                                <span style="margin-top:15%;margin-left:8px">${filteredObj['satuan']}</span>
+                                                </div>
+                                                <div class="v-line-small"></div>
+                                            </div>
+                                        </div>
+                                    </div>   
+                                    <div class="row">
+                                        <div class="col-md-6" style="padding:0">
+                                            <div class="data-capaian" style="border-radius: 0 0 0 5px;">
+                                                <p>Target VS Aktual </p>
+                                                <div style="display:flex">
+                                                    <h2 >${filteredObj['kinerja']} </h2>
+                                                <span style="margin-top:15%;margin-left:8px">${filteredObj['satuan']}</span>
+                                                </div>
+                                                <div class="v-line-small"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" style="padding:0">
+                                            <div class="data-capaian" style="border-radius: 0 0 5px 0;">
+                                                <p>Target Tahunan</p>
+                                                <h2>7500 <span>hektare</span></h2>
+                                                <div class="v-line-small"></div>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div>   
+                            </div>
+                            <div class="hr-line"></div>
+                            <div class="nested-card">
+                                <p style="font-size: 14px;">Chart</p>
+                                <p style="font-weight:normal">Grafik historis capaian kinerja</p>
+                                <div class="card-analisis">
+                                    <figure class="highcharts-figure">
+                                        <div class="container-chart" id="container-chart-${id}"></div>
+                                    </figure>
                                 </div>
                             </div>
+                            <div class="hr-line"></div>
                             <div class="nested-card">
-                                <div class="card-analisis">
-                                    <p style="font-size: 14px;margin:10px 0">SUMMARY</p>
-                                    <div class="card-value">
-                                        <img src="/main/icon/chart-value-icon.svg" alt="" srcset="">
-                                        <div id="value">
-                                            <p>Target Tahunan</p>
-                                            <div class="val-count">
-                                                 <h3 class="val-count">${filteredObj['target_tahunan']} </h3><span>${filteredObj['satuan']}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-value" style="background-color: #F3A72E;">
-                                        <img src="/main/icon/chart-value-icon.svg" alt="" srcset="">
-                                        <div id="value">
-                                            <p>Aktual Per ${filteredObj['tahun_data']}</p>
-                                            <div class="val-count">
-                                                <h3 class="val-count">${filteredObj['aktual']} </h3><span>${filteredObj['satuan']}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-value" style="background-color: #367BF5;">
-                                        <img src="/main/icon/chart-value-icon.svg" alt="" srcset="">
-                                        <div id="value">
-                                            <p>Target Tahunan VS Aktual Per ${filteredObj['tahun_data']}</p>
-                                            <div class="val-count">
-                                                <h3>${filteredObj['kinerja']} </h3><span>${filteredObj['satuan']}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="nested-card">
-                                <div class="card-analisis">
-                                <p style="font-size: 14px;margin:10px 0">TABULASI</p>
-                                <table class="table first" style="font-size:12px;font-family: 'Nunito'">
-                                    <tr style="border-bottom: 2px solid #369151;">
+                                <p style="font-size: 14px;">Chart</p>
+                                <p style="font-weight:normal">Grafik historis capaian kinerja</p>
+                                <table class="table first" style="font-size:12px;margin-top:10px;">
+                                    <tr style="border-bottom: 2px solid #E1E1E1;background:#142940;color:#fff">
                                         <th>Tahun</th>
                                         <th>Target Tahunan</th>
                                         <th>Aktual</th>
@@ -865,14 +948,6 @@
                                     </tr>
                                   ${transformToTable(raw_obj).join("")}
                                 </table>
-                                </div>
-                            </div>
-                            <div class="nested-card">
-                                <div class="card-analisis">
-                                    <p style="font-size: 14px;margin:10px 0">CHART</p>
-                                    <figure class="highcharts-figure">
-                                        <div class="container-chart" id="container-chart-${id}"></div>
-                                    </figure>
                                 </div>
                             </div>
                         </div>
@@ -911,7 +986,7 @@
 
             await document.getElementById(currentCard).classList.add('active')
 
-            let selector_count = document.querySelectorAll(`#${currentCard} h3`)
+            let selector_count = document.querySelectorAll(`#${currentCard} h2`)
 
             selector_count.forEach(h3 => {
                 let value = h3.innerText
@@ -942,7 +1017,7 @@
             let colors = d[i].innerHTML.split(",")
             let new_el = []
             colors.forEach(color => {
-                new_el.push(`<i class="fas fa-circle" style="color:${color};font-size:14px"></i>`)
+                new_el.push(`<i class="fas fa-circle" style="color:${color};font-size:12px"></i>`)
             })
             d[i].innerHTML = new_el.join("")
         }

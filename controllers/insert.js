@@ -219,6 +219,39 @@ exports.insert_target = (req, res) => {
     })
 }
 
+exports.insert_group_data = async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            const {
+                nama_group_data,
+                icon_group_data,
+                deskripsi_group
+            } = req.body
+            db.query('INSERT INTO 7_group_data SET ?', {
+                id_region,
+                nama_group_data,
+                icon_group_data,
+                deskripsi_group,
+            }, async (err, results) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    req.flash('message', messageContent('Group data baru berhasil ditambahkan', 'alert-success'))
+                    res.redirect('/admin/add_group_data')
+                }
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+}
+
 exports.insert_rincian_target = (req, res) => {
     const date = Date.now()
     const last_update = new Date(date)
@@ -304,6 +337,71 @@ exports.insert_histori_capaian = async (req, res) => {
                                 } else {
                                     req.flash('message', messageContent('Histori capaian baru berhasil ditambahkan!', 'alert-success'))
                                     res.redirect('/admin/list_histori_capaian')
+                                }
+                            })
+                        }
+                    })
+                })
+            })
+
+            req.pipe(busboy)
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+}
+
+exports.insert_data = async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            const uploadPath = 'public/uploads/geojson/list_data/'
+
+            let form = new Map()
+            let busboy = new Busboy({
+                headers: req.headers
+            })
+
+            busboy.on('field', (fieldname, val) => {
+                form.set(fieldname, val)
+            })
+
+            busboy.on('file', async (fieldname, file, filename) => {
+
+                let final_path = Date.now() + '' + filename
+                // Create a write stream of the new file
+                const fstream = fs.createWriteStream(path.join(uploadPath, final_path));
+                // Pipe it trough
+                file.pipe(fstream);
+
+                // On finish of the upload
+                fstream.on('close', () => {
+                    db.query('INSERT INTO 8_list_data SET ?', {
+                        id_group_data:  form.get('id_group_data'),
+                        id_region: id_region,
+                        nama_data: form.get('nama_data'),
+                        tahun_data: form.get('tahun_data'),
+                        sumber_data: form.get('sumber_data'),
+                        status_data: form.get('status_data'),
+                        geojson:(uploadPath + final_path).replace("public", "")
+                    }, async (err, insert) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            let id = form.get('id_group_data')
+                            let date = Date.now()
+                            const last_update = new Date(date)
+                            db.query('UPDATE 7_group_data SET last_update = ? WHERE id_group_data = ?', [last_update, id], (err, update) => {
+                                if (err) {
+                                    console.log(err)
+                                } else {
+                                    req.flash('message', messageContent('Data baru berhasil ditambahkan!', 'alert-success'))
+                                    res.redirect('/admin/add_data')
                                 }
                             })
                         }

@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headerlink'); %>
+</head>
+
+<style>
+    #sukses-alert {
+        display: none;
+    }
+
+    .btn-right {
+        float: right;
+        right: 0;
+        padding: 9px 16px
+    }
+
+    .btn-right a {
+        width: 60px;
+        height: 23px;
+        padding: 5px;
+        font-size: 10px;
+        color: white;
+    }
+
+    .btn-notif {
+        font-size: 10px;
+        padding: 5px;
+    }
+
+    .btn-notif span {
+        font-size: 10px;
+
+    }
+
+    #add_group a {
+        cursor: pointer;
+    }
+
+    #map {
+        width: 100%;
+        height: 500px;
+    }
+
+    .table-fixed {
+        table-layout: fixed !important;
+    }
+
+    td {
+        border: 1px solid #000;
+    }
+
+    tr td:last-child {
+        width: 1%;
+        white-space: nowrap;
+    }
+
+    .mr {
+        margin-right: 10px;
+    }
+</style>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper">
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <%- include('./partials/navbar'); %>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+        <%- include('./partials/sidebar'); %>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="container-fluid dashboard-content">
+                <!-- ============================================================== -->
+                <!-- pageheader -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="page-header">
+                            <h2 class="pageheader-title"><%= title %></h2>
+
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a>
+                                        </li>
+                                        <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">UI Elements</a>
+                                        </li>
+                                        <li class="breadcrumb-item active" aria-current="page">Accordions</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end pageheader -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- accrodions -->
+                <!-- ============================================================== -->
+                <div id="sukses-alert" class="alert alert-primary" role="alert">
+                    Success
+                </div>
+                <div class="row">
+
+                    <!-- ============================================================== -->
+                    <!-- accrodions style one -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="tab-regular">
+                            <ul class="nav nav-tabs " id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#single-style"
+                                        role="tab" aria-controls="single-style" aria-selected="true">Single</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Kategorisasi-style"
+                                        role="tab" aria-controls="Kategorisasi-style"
+                                        aria-selected="false">Kategorisasi</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade active show" id="single-style" role="tabpanel"
+                                    aria-labelledby="home-tab">
+                                    <div id="single-style-prop" class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="position-bottom-right">Weight (ketebalan garis)</label>
+                                                    <input type="number" id="position-bottom-right" class="form-control"
+                                                        value="1" style="line-height: 1.8;">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="position-top-right">Opacity (transparasi garis)</label>
+                                                    <input type="number" id="position-bottom-right" class="form-control"
+                                                        value="1" style="line-height: 1.8;">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="position-top-right">Fill Opacity (transparasi
+                                                        poligon)</label>
+                                                    <input type="number" id="position-bottom-right" class="form-control"
+                                                        value="1" style="line-height: 1.8;">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="position-bottom-left">Fill Color (warna poligon)</label>
+                                                    <input type="color" id="position-bottom-right" class="form-control"
+                                                        value="#000" style="height: 39px;">
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="position-bottom-left">Color (warna garis)</label>
+                                                    <input type="color" id="position-bottom-right" class="form-control"
+                                                        value="#000" style="height: 39px;">
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group" style="margin:15px ;">
+                                                <button id="previewSingleColor"
+                                                    class="btn btn-secondary mr">Preview</button>
+                                                <button id="insertSingleStyle"
+                                                    class="btn btn-success">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="Kategorisasi-style" role="tabpanel"
+                                    aria-labelledby="profile-tab">
+                                    <div class="input-group mb-3">
+                                        <div class="form-group" style="width: 100%;">
+                                            <label for="input-select">Pilih Properties</label>
+                                            <select class="form-control" id="input-select-prop">
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group" style="width: 100%;">
+                                            <div id="table-responsive" class="table-responsive">
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br>
+                                    <button id="previewColorKategori" class="btn btn-secondary mr">Preview</a>
+                                    <button id="insertKategoriStyle"class="btn btn-success">Submit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end accrodions style one -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- accrodions style two -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="section-block">
+                            <h5 class="section-title">Preview Data</h5>
+                            <p>Preview data GeoJSON yang akan di-telah ke database.</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-body" style="padding:0px">
+                                <div id='map'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper -->
+    <!-- ============================================================== -->
+
+    <%- include('./partials/footerlink'); %>
+
+    <script>
+        let geoUrl = "<%- data[0].geojson %>"
+        let def_style = JSON.stringify( <%- data[0].style %> )
+        let geojson_layer = L.geoJSON()
+        let raw_data = []
+        const map = L.map('map').setView([39.74739, -105], 13);
+
+        L.tileLayer(
+            'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox/light-v9',
+                tileSize: 512,
+                zoomOffset: -1
+            }).addTo(map);
+
+        let geo = $.ajax({
+            url: geoUrl,
+            dataType: "json",
+            success: function (data) {
+              
+                $('#input-select-prop').change(function(){
+                   let prop = $(this).val()
+                   let geojson =data
+                   
+                   let getGeojsonValue = geojson.features.map(feature => {
+                    return feature.properties[prop]
+                    }).filter(onlyUnique)
+
+                    createTableFromProperies(getGeojsonValue)
+                })
+                
+                // global function, find a unique thing
+                function onlyUnique(value, index, self) {
+                    return self.indexOf(value) === index;
+                }
+
+                let table = document.createElement('table')
+                table.id = 'tbodyid'
+                table.className = "table table-striped table-bordered first table-fixed"
+
+                async function createTableFromProperies(prop) {
+                    await $("#tbodyid").empty();
+                    let defult_prop = ['kategori', 'fillColor', 'color', 'weight', 'opacity',
+                        'fillOpacity'
+                    ]
+
+                    // Head table section
+                    let head = defult_prop.map((head, i) => {
+                        return `<th>${head}</th>`
+                    })
+
+                    let head_table = document.createElement('thead')
+                    let head_row = document.createElement('tr')
+
+                    head_row.innerHTML = head.join("")
+                    head_table.appendChild(head_row)
+                    table.appendChild(head_table)
+
+                    // Row and column table section
+                    for (let i = 0; i < prop.length; i++) {
+                        let row = document.createElement('tr')
+                        let keys = [
+                            `<input id="prop" type="text" class="form-control"style="height: 40px;" value="${prop[i]}">`,
+                            `
+                            <input id="fill-color" type="color" name="fill-color" class="form-control"
+                                style="height: 40px;" value="#6B70FF">`,
+                                    `<input id="line-color" type="color" name="line-color" class="form-control"
+                                style="height: 40px;" value="#333AFF">`,
+                                    `<input id="weight" type="number" name="weight" class="form-control" value=2>`,
+                                    `<input id="opacity" type="number" name="opacity" class="form-control" value=1>`,
+                                    `<input id="fill-opacity" type="number" name="fill-opacity" class="form-control"
+                                value=0.5>`
+                        ]
+                        for (let j = 0; j < keys.length; j++) {
+                            let col = document.createElement('td')
+                            col.innerHTML = keys[j]
+
+                            row.appendChild(col)
+                        }
+                        table.appendChild(row)
+                    }
+                }
+
+                let location_table = document.getElementById('table-responsive')
+                location_table.appendChild(table)
+
+                function reChangeOption(prop) {
+                    let select_option = document.getElementById('input-select-prop')
+
+                    let option = prop.map(prop => {
+                        return `<option value="${prop}">${prop}</option>`
+                    })
+
+                    select_option.innerHTML = option.join("")
+                }
+
+
+                async function filterByRincianTarget() {
+                    await $("#tbodyid").empty();
+
+                    let properties = await Object.keys(data.features[0].properties)
+
+                    await reChangeOption(properties)
+
+                }
+
+                filterByRincianTarget()
+
+                 // Single style
+                let prevSingleColor = document.getElementById("previewSingleColor")
+                prevSingleColor.addEventListener('click', function(){
+                    let input = document.querySelectorAll('#single-style-prop input')
+                    let default_prop = ['weight', 'opacity', 'fillOpacity', 'fillColor', 'color']
+
+                    let style = getSingleStyle(default_prop, input)
+
+                    geojson_layer.setStyle(style)
+                })
+               
+               
+                function getSingleStyle(arr, input) {
+                    let obj = {}
+                    for (let i in arr) {
+                        obj[arr[i]] = input[i].value
+                    }
+                    return obj
+                }
+
+                function getTableValue(table) {
+
+                    let obj2 = []
+                    for (let i = 1; i < table.rows.length; i++) {
+                        let row = table.rows[i]
+
+                        let head = []
+                        let obj = {}
+                        //iterate through rows
+                        //rows would be accessed using the "row" variable assigned in the for loop
+                        for (let j = 0; j < row.cells.length; j++) {
+                            head.push(table.rows[0].cells[j].innerHTML)
+                            let col = row.cells[j].querySelector('input').value
+
+                            obj[head[j]] = col
+                            //iterate through columns
+                            //columns would be accessed using the "col" variable assigned in the for loop
+                        }
+
+                        obj2.push(obj)
+                    }
+                    let group = obj2.reduce((r, a) => {
+                        r[a.kategori] = [...r[a.kategori] || [], a];
+                        return r;
+                    }, {});
+
+                    // Delet prop
+                    let del = Object.keys(group).map((a, b) => {
+                        let empty_object = {}
+                        let ori_object = group[a][0]
+
+                        empty_object[a] = ori_object
+
+                        delete ori_object.kategori
+                        return empty_object
+                    })
+
+                    return del
+                }
+
+                function transFormObject(raw_obj) {
+                    let temp = {}
+
+                    for (let i in raw_obj) {
+                        let key = Object.keys(raw_obj[i])
+                        temp[key] = raw_obj[i][key]
+                    }
+                    return temp
+                }
+
+                function setKategoriColor(prop) {
+                    let table = document.getElementById('tbodyid')
+                    let obj = getTableValue(table)
+
+                    let temp = transFormObject(obj)
+
+                    let new_key = Object.keys(temp)
+                    
+                    for (let i in new_key) {
+                        switch (prop) {
+                            case new_key[i]:
+                                return temp[new_key[i]];
+                                break
+                        }
+                    }
+                }
+
+              
+                let prewCatColor = document.getElementById('previewColorKategori')
+                prewCatColor.addEventListener('click', function() {
+                    geojson_layer.setStyle(kat_style)
+                })
+
+                function kat_style(feature) {
+                    let val = document.getElementById('input-select-prop').value
+                  
+                    return setKategoriColor(feature.properties[val])
+                }
+                let insertSingleSytle = document.getElementById('insertSingleStyle')
+                insertSingleSytle.addEventListener('click', async function(){
+                    let input = await document.querySelectorAll('#single-style-prop input')
+                    let default_prop = ['weight', 'opacity', 'fillOpacity', 'fillColor', 'color']
+        
+                    let final_obj = await getSingleStyle(default_prop,input)
+                    console.log(final_obj)
+                    $.ajax({
+                        url: '/action/admin/update_style_data/<%= id_data %>',
+                        method: 'POST',
+                        data: {
+                            kat: 'single',
+                            val: JSON.stringify(final_obj),
+                            properti:'single',
+                        },
+                        success: function (res) {
+                            window.location.href = '/admin/list_data'
+                        },
+                        error: function (res) {
+                            alert(res)
+                        }
+                    });
+                })
+
+                let insertCatStyle = document.getElementById('insertKategoriStyle')
+                insertCatStyle.addEventListener('click', async function() {
+                    let table = await document.getElementById('tbodyid')
+                    let data = await getTableValue(table)
+                    let final_obj = await transFormObject(data)
+                    let prop_val = await document.getElementById('input-select-prop').value
+                    $.ajax({
+                        url: '/action/admin/update_style_data/<%= id_data %>',
+                        method: 'POST',
+                        data: {
+                            kat: 'kagetori',
+                            val: JSON.stringify(final_obj),
+                            properti:prop_val,
+                        },
+                        success: function (res) {
+                            window.location.href = '/admin/list_data'
+                        },
+                        error: function (res) {
+                            alert(res)
+                        }
+                    });
+                })
+            },
+            error: function (xhr) {
+                console.log(xhr.statusText)
+            }
+        })
+        $.when(geo).done(function () {
+            let response = geo.responseJSON
+            geojson_layer.addData(response)
+
+            map.fitBounds(geojson_layer.getBounds())
+            map.addLayer(geojson_layer)
+            geojson_layer.setStyle(JSON.parse(def_style))
+
+        })
+    </script>
+</body>
+
+</html>

@@ -51,7 +51,7 @@ router.get('/admin', async (req, res) => {
                                 console.log(err)
                             } else {
                                 console.log(req.session.views)
-                                  res.render('admin/index', {
+                                res.render('admin/index', {
                                     title: `Selamat Datang`,
                                     menu: 'active',
                                     page_name: 'dashboard',
@@ -124,10 +124,10 @@ router.get('/admin/add_target', async (req, res) => {
         if (id_region === null) {
             return;
         } else {
-            fs.readFile('public/icon_list/fontawesome_list.txt', 'utf8' , (err, data) => {
+            fs.readFile('public/icon_list/fontawesome_list.txt', 'utf8', (err, data) => {
                 if (err) {
-                  console.error(err)
-                  return
+                    console.error(err)
+                    return
                 }
                 db.query('SELECT * FROM 2_target WHERE id_region = ?', [id_region], (err, results) => {
                     if (err) {
@@ -140,6 +140,44 @@ router.get('/admin/add_target', async (req, res) => {
                             current_link: '/admin/add_target',
                             message: req.flash('message'),
                             target: results,
+                            admin: session,
+                            id_region: id_region,
+                            icon_list: data.split(",")
+                        })
+                    }
+                })
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+})
+
+router.get('/admin/add_group_data', async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            fs.readFile('public/icon_list/fontawesome_list.txt', 'utf8', (err, data) => {
+                if (err) {
+                    console.error(err)
+                    return
+                }
+                db.query('SELECT * FROM 7_group_data WHERE id_region = ?', [id_region], (err, results) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        res.render('admin/add_group_data', {
+                            title: 'Tambah Group Data',
+                            menu: 'active',
+                            page_name: 'add group data',
+                            current_link: '/admin/add_group_data',
+                            message: req.flash('message'),
+                            data: results,
                             admin: session,
                             id_region: id_region,
                             icon_list: data.split(",")
@@ -515,6 +553,143 @@ router.get('/admin/fitur_styling_layer/:id_histori_capaian', async (req, res) =>
                         message: req.flash('message'),
                         histori_capaian: results,
                         id_histori_capaian: id,
+                        admin: session,
+                        id_region: id_region
+                    })
+                }
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+})
+
+router.get('/admin/add_data', async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            db.query('SELECT * FROM 7_group_data WHERE id_region = ?', [id_region], (err, group_data) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    res.render('admin/add_data', {
+                        title: 'Tambah Data',
+                        menu: 'active',
+                        page_name: 'add data',
+                        current_link: '/admin/add_data',
+                        message: req.flash('message'),
+                        group_data: group_data,
+                        id_region: id_region,
+                        admin: session,
+                        // for handling type of page undefined 
+                        param_check: group_data[0]
+                    })
+                }
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+})
+
+router.get('/admin/list_data', async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            db.query('SELECT 7_group_data.id_group_data, 7_group_data.nama_group_data, 8_list_data.* FROM 7_group_data LEFT JOIN 8_list_data ON 7_group_data.id_group_data = 8_list_data.id_group_data WHERE 8_list_data.id_region = ?', [id_region], (err, results) => {
+                db.query('SELECT * FROM 7_group_data', (err, group_data) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        res.render('admin/list_data', {
+                            title: 'List Data',
+                            menu: 'active',
+                            page_name: 'list data',
+                            current_link: '/admin/list_data',
+                            message: req.flash('message'),
+                            list_data: results,
+                            group_data: group_data,
+                            admin: session,
+                            id_region: id_region,
+                            
+                        })
+                    }
+                })
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+})
+
+router.get('/admin/list_data_filtered/:id_group_data', async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            let id = req.params.id_group_data
+            db.query('SELECT 7_group_data.id_group_data, 7_group_data.nama_group_data, 8_list_data.* FROM 7_group_data LEFT JOIN 8_list_data ON 7_group_data.id_group_data = 8_list_data.id_group_data WHERE 8_list_data.id_region = ? AND 8_list_data.id_group_data = ?', [id_region,id], (err, results) => {
+                db.query('SELECT * FROM 7_group_data', (err, group_data) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        res.render('admin/list_data_filtered', {
+                            title: 'List Data',
+                            menu: 'active',
+                            page_name: 'list data',
+                            current_link: '/admin/list_data',
+                            message: req.flash('message'),
+                            list_data: results,
+                            group_data: group_data,
+                            admin: session,
+                            id_region: id_region,
+                            id_new: 'opt' + id,
+                        })
+                    }
+                })
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+})
+
+router.get('/admin/fitur_styling_data/:id_data', async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            let id = req.params.id_data
+            db.query('SELECT * FROM 8_list_data WHERE id_data = ? AND id_region = ?', [id, id_region], (err, results) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    res.render('admin/fitur_styling_data', {
+                        title: 'Styling Data',
+                        menu: 'active',
+                        page_name: 'Styling Data',
+                        current_link: '',
+                        message: req.flash('message'),
+                        data: results,
+                        id_data: id,
                         admin: session,
                         id_region: id_region
                     })

@@ -256,6 +256,10 @@
             }
         })
         
+        function getValId(el) {
+            document.getElementById('status_verifikasi').value = el.innerText
+        }
+
         $.when(geo).done(function () {
             
             let geojson = L.geoJSON()

@@ -26,7 +26,6 @@ exports.delete_target = (req, res) => {
                     })
                 }
             })
-         
         }
     })
 }
@@ -63,3 +62,34 @@ exports.delete_histori_capaian = (req, res) => {
     })
 }
 
+exports.delete_group_data = (req, res) => {
+    let id = req.params.id_group_data
+ 
+    db.query('DELETE FROM 7_group_data WHERE id_group_data = ?', [id], (err, results) => {
+        if (err) {
+            console.log(err)
+        } else {
+            db.query('UPDATE 8_list_data SET id_group_data = ? WHERE id_group_data = ?', [null,id], (err, results1) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    req.flash('message', messageContent(`Group Data ID:${id} berhasil dihapus!`, 'alert-success'))
+                    res.redirect('/admin/add_group_data')
+                }
+            })
+        }
+    })
+}
+
+exports.delete_data = (req, res) => {
+    let id = req.params.id_data
+ 
+    db.query('DELETE FROM 8_list_data WHERE id_data = ?', [id], (err, results) => {
+        if (err) {
+            console.log(err)
+        } else {
+            req.flash('message', messageContent(`Data ID:${id} berhasil dihapus!`, 'alert-success'))
+            res.redirect('/admin/list_data')
+        }
+    })
+}

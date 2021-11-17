@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headerlink'); %>
+    <link rel="stylesheet" href="/admin/assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+    <link rel="stylesheet" href=" https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<style>
+    #map {
+        width: 100%;
+        height: 119vh;
+        z-index: 0;
+    }
+
+    #veryfied-icon .tooltiptext {
+        visibility: hidden;
+        background-color: #e2edebd9;
+        color: #000;
+        text-align: center;
+        border-radius: 5px;
+        padding: 20px;
+        position: absolute;
+        z-index: 9999;
+        margin: -54px 16px;
+        right: 15px;
+        font-size: 12px;
+        text-transform: capitalize;
+        line-height: 1.4;
+    }
+
+    #veryfied-icon:hover .tooltiptext {
+        visibility: visible;
+    }
+
+    .legend-subtitle {
+        position: relative;
+    }
+
+    .legend-subtitle .legend-item {
+        padding: 0;
+    }
+
+    .get-chart {
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 12px;
+        padding: 5px;
+        width: 80px;
+    }
+
+    .icon-terverifikasi {
+        color: #367BF5;
+        font-size: 14px;
+    }
+
+    .icon-belum-terverifikasi {
+        color: #ACBCA3;
+        font-size: 14px;
+    }
+
+    .nested-card {
+        border-bottom: 1px solid #ced4da;
+        /* border-radius: 10px; */
+        /* margin: 25px 0; */
+        padding: 12px 0;
+    }
+
+    .nav_list a {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+
+    .kinerja-positif {
+        font-weight: bold;
+        color: #53C351;
+        float: right;
+        right: 0;
+        position: absolute;
+        margin: 0 27px;
+    }
+
+    .kinerja-negatif {
+        font-weight: bold;
+        color: #EA3D2F;
+        float: right;
+        right: 0;
+        position: absolute;
+        margin: 0 27px;
+    }
+
+    .val-count {
+        display: flex;
+    }
+
+    .val-count span {
+        line-height: 22px;
+        margin: 0 2px;
+    }
+
+    #overlay-preload-map {
+        visibility: hidden;
+    }
+
+    #overlay-preload,
+    #overlay-preload-map {
+        position: fixed;
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 888;
+        cursor: pointer;
+    }
+
+    #overlay-preload img,
+    #overlay-preload-map {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 9999;
+    }
+
+    /* .legend-des span {
+        float: right;
+        position: absolute;
+        right: 0;
+        margin: 0 25px;
+    } */
+
+    .check-counter {
+        margin: 7px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: #EA3D2F;
+        color: white;
+        /* padding: 5px; */
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 3px;
+        width: 17px;
+        height: 17px;
+        line-height: 1.4;
+        transition-delay: 0s, 0.3s;
+    }
+
+    .map-fitur-normal {
+        position: fixed;
+        background: white;
+        z-index: 777;
+        right: 0;
+        top: 63px;
+        margin: 11px;
+        /* padding: 10px; */
+        border-radius: 3px;
+        display: block;
+        border: 1px solid #ced4da;
+        transition-property: right, visibility;
+        transition-duration: 0.3s, 0s;
+        transition-delay: 0s, 0.3s;
+    }
+
+    .icon-fitur {
+        padding: 10px;
+        border-bottom: 1px solid #ced4da;
+    }
+
+    .map-fitur-normal .icon-fitur {
+        cursor: pointer;
+    }
+
+    .map-fitur-normal .icon-fitur:hover {
+        background-color: #00000018;
+    }
+
+    .iconify {
+        color: #000;
+    }
+
+    .map-fitur-normal.move {
+        transition-property: visibility, right;
+        transition-duration: 0s, 0.3s;
+        right: 400px;
+    }
+
+    .select-base {
+        position: absolute;
+        right: 45px;
+        top: 0px;
+        background: white;
+        padding: 10px;
+        border-radius: 3px;
+        border: 1px solid #ced4da;
+        font-size: 12px;
+    }
+
+    .select-base option {
+        border-bottom: 1px solid #ced4da;
+        padding: 5px;
+    }
+
+    .select-base option:hover {
+        background-color: #00000018;
+    }
+</style>
+
+<body id="body-pd">
+    <!-- <div id="overlay-preload">
+        <img src="/main/preload/loader-1.svg" alt="" srcset="" width="100">
+    </div> -->
+    <header class="header" id="header">
+        <div class="new-brand">
+            <%- include('./partials/navbar-brand'); %>
+        </div>
+        <div class="region-form">
+            <!-- <label for="region-selection">Select Region</label> -->
+            <select id="region-selection" class="form-control">
+                <%
+                if(all_region.length!=0){
+                var i=1;
+                all_region.forEach(function(all_region){
+                %>
+                <option id="region<%= all_region.id_region%>" value="<%= all_region.id_region%>">
+                    <%= all_region.nama_region +', '+ all_region.provinsi %></option>
+                <%  i++; }) %>
+                <% } else { %>
+                <tr>
+                    <option>No Region</option>
+                </tr>
+                <% } %>
+            </select>
+            <button onclick="filterByRegion()" class="btn btn-success cs-btn"
+                style="font-size: 12px;font-weight: 600;">Submit </button>
+            <div class="vl"></div>
+            <div class="language-selection">
+                <a id="lang-selection" onclick="alert('English version not available yet')"><%= lang.toUpperCase() %></a>
+            </div>
+        </div>
+    </header>
+    <div id="nav-info">
+        <div class="sec-nav-tec">
+            <div class="left-text">
+                <i class="fas fa-database" style="font-size: 20px;"></i>
+                <i class="fas fa-chevron-right margin"></i>
+                <a href="/main/dataset/<%= region.id_region %>">Dataset</a>
+                <i class="fas fa-chevron-right margin"></i>
+                <a class="active-link">Kab. <%= region.nama_region %></a>
+                <i class="fas fa-chevron-right margin"></i>
+                <a><%= title %></a>
+                <a class="floating">Jumlah Data Ditemukan <span
+                        style="font-size: 20px;color: #142940;font-weight: 800;margin: 0 10px;"><%= list_data.length %></span></a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="data-placement">
+        <div class="back-img"></div>
+    </div>
+
+    <div class="container-data">
+        <div class="row">
+            <!-- <p class="v-line"></p> -->
+            <div class="col-md-auto br-left">
+                <h2>List Dataset <i class="fas fa-chevron-down" style="float: right;"></i></h2>
+                <p class="def-p">List group dataset peta </p>
+                <div class="data-col container-lg cursoring ">
+                    <div class="row cus">
+                        <div class="col cursoring">
+                            <div id="filter-section">
+                                <!-- <h2>Filter data</h2> -->
+                                <!-- <div class="hr-line" style="margin-bottom: 0;"></div> -->
+                                <div class="menu-section">
+                                    <p style="margin-bottom: 0;line-height: 1;">Cari Dataset</p>
+                                    <span style="font-size: 12px;color: #000;">Cari dataset dengan nama
+                                        tertentu</span>
+                                    <div class="search-form" style="margin-top: 10px;">
+                                        <input id="search-content" class="form-control" type="text" placeholder="Cari dataset" style="font-size: 14px;">
+                                        <button onclick="cariData()" class="btn btn-success cs-btn"
+                                            style="font-size: 12px;font-weight: 600;"><i
+                                                class="fas fa-search filter-icon"></i> </button>
+                                    </div>
+                                </div>
+                                <div class="menu-section">
+                                    <p style="margin-bottom: 0;line-height: 1;">Group Dataset</p>
+                                    <span style="font-size: 12px;color: #000;">Filter dataset
+                                        berdasarkan group</span>
+                                    <div class="search-form" style="display: block;margin: 10px 0;">
+                                        <%
+                                        if(group_data.length!=0){
+                                        var i=1;
+                                        group_data.forEach(function(group){
+                                        %>
+                                        <li onclick="window.location.href = '/main/data_selection/<%= region.id_region %>/<%= group.id_group_data %>'">
+                                            <p style="margin: 0;padding: 5px;border-radius: 3px;background-color: #142940;">
+                                                <i class="<%= group.icon_group_data %>"
+                                                style="font-size: 10px;color: #2EC551;"></i>
+                                            </p>
+                                            <a style="display: flex;font-size: 14px;margin-left: 5px;"> <%= group.nama_group_data %>
+                                            </a>
+                                            <p style="margin: 0;font-size: 10px;" class="count-total"><%= group.total_data %></p>
+                                        </li>
+                                        <%  i++; }) %>
+                                        <% } else { %>
+                                            <li>
+                                                <a style="display: flex;font-size: 14px;margin-left: 5px;"> Tidak ada group data ditemukan.
+                                                </a>
+                                            </li>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col small-icon-size">
+                <h2><%= nama_group %> <i class="fas fa-chevron-down" style="float: right;font-size: 24px;color: #142940;"></i></h2>
+                <p class="def-p">List dataset yang tersedia</p>
+                <div class="data-col container-lg">
+                    <div class="row cus">
+                        <%
+                        if(list_data.length!=0){
+                        var i=1;
+                        list_data.forEach(function(data){
+                        %>
+                        <div id="data-list" class="detail-map" style="display: flex;">
+                            <div class="map-frame" id="map<%= data.id_data %>" style="height: 220px;width: 300px;">
+                                <input id="geo_path" type="hidden" value="<%= data.geojson %>">
+                            </div>
+                            <div class="des-map">
+                                <h2 onclick="window.location.href = `/main/map_data_active/<%= region.id_region %>/<%= data.id_group_data %>/<%= data.nama_data +' '+data.tahun_data %>`" style="margin-bottom: 10px;text-transform: capitalize;"><%= data.nama_data %></h2>
+                                <p><%= data.deskripsi_data %></p>
+                                <div class="hr-line" style="border-bottom:1px solid #E1E1E1;width: 90%;"></div>
+                                <div class="list-icon" style="display: flex;">
+                                    <li><i class="fas fa-user"></i> Admin</li>
+                                    <li><i class="fas fa-calendar"></i> <%= data.tahun_data %></li>
+                                    <li><i class="fas fa-info-circle"></i> <%= data.sumber_data %></li>
+                                </div>
+                            </div>
+                        </div>
+                        <%  i++; }) %>
+                        <% } else { %>
+                            <div class="detail-map" style="display: flex;">
+                                <div class="des-map">
+                                    <h2 style="margin-bottom: 10px;">Maaf, data belum tersedia.</h2>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-lg-2">
+
+            </div>
+        </div>
+    </div>
+
+    <%- include('./partials/footerlink'); %>
+    <script src="/admin/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script>
+
+        function MoveToMap() {
+            window.location.href = `/main/map/<%= region.id_region %>`
+        }
+
+        function filterByRegion() {
+            let selected = document.getElementById('region-selection')
+            window.location.href = `/main/dataset/${selected.value}`
+        }
+
+        function getMap(map_id, map_url) {
+            let map = L.map(map_id).setView([39.74739, -105], 13);
+            map.removeControl(map.zoomControl);
+            L.tileLayer(
+            'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox/light-v9',
+                tileSize: 512,
+                zoomOffset: -1
+            }).addTo(map);
+
+            let data_style = {
+                fillColor: '#EA3D2F',
+                color: '',
+                opacity: 0,
+                fillOpacity: 1
+            }
+
+            let geo = $.ajax({
+                url: map_url,
+                dataType: "json",
+                success: console.log("County data successfully loaded."),
+                error: function (xhr) {
+                    console.log(xhr.statusText)
+                }
+            })
+
+            let emp_geo = L.geoJSON()
+
+            $.when(geo).done(function () {
+              
+                emp_geo.addData(geo.responseJSON)
+                emp_geo.setStyle(data_style)
+
+                map.fitBounds(emp_geo.getBounds())
+                map.addLayer(emp_geo)
+            })
+        }
+
+        async function initMap() {
+            let list_data = await document.querySelectorAll('.map-frame')
+            let geo_path = await document.querySelectorAll('.map-frame input')
+
+            list_data.forEach((l, i) => {
+                let id = l.id
+                let url = geo_path[i].value
+                getMap(id, url)
+            })
+        }
+
+        initMap()
+        
+        function cariData() {
+            let content = document.getElementById('search-content')
+
+            window.location.href = `/main/data_selection_search/<%= region.id_region %>/${content.value}`
+            
+        }
+       
+    </script>
+</body>
+
+</html>
