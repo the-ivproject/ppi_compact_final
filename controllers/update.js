@@ -3,7 +3,7 @@ const path = require("path")
 const Busboy = require('busboy')
 const inspect = require('util').inspect
 const fs = require('fs');
-
+const translate = require('@vitalets/google-translate-api');
 
 let messageContent = (information, alert_class) => {
     return `<div class="alert ${alert_class} alert-dismissible fade show" role="alert"> 
@@ -86,13 +86,28 @@ exports.update_target = async (req, res) => {
         } else {
             let newData = req.body
             let id = req.params.id_target
-            db.query('UPDATE 2_target SET ? WHERE id_target = ?', [newData, id], (err, results) => {
+            db.query('UPDATE 2_target SET ? WHERE id_target = ?', [newData, id], async (err, results) => {
                 if (err) {
                     console.log(err)
                 } else {
+                    let newData1 = newData
 
-                    req.flash('message', messageContent(`Target ID:${id} Berhasil di-edit!`, 'alert-success'))
-                    res.redirect(`/admin/add_target`)
+                    let target1 = await translate(newData1['target'],{to: "en"})
+                    let disp = await translate(newData1['display_name'],{to: "en"})
+                    let des = await translate(newData1['deskripsi'],{to: "en"})
+                    
+                    newData1['target'] = target1.text
+                    newData1['display_name'] = disp.text
+                    newData1['deskripsi'] = des.text
+
+                    db.query('UPDATE 22_target_en SET ? WHERE id_target = ?', [newData1, id], (err, results) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            req.flash('message', messageContent(`Target ID:${id} Berhasil di-edit!`, 'alert-success'))
+                            res.redirect(`/admin/add_target`)
+                        }
+                    })
                 }
             })
         }
@@ -152,12 +167,26 @@ exports.update_group_data = async (req, res) => {
         } else {
             let newData = req.body
             let id = req.params.id_group_data
-            db.query('UPDATE 7_group_data SET ? WHERE id_group_data = ?', [newData, id], (err, results) => {
+            db.query('UPDATE 7_group_data SET ? WHERE id_group_data = ?', [newData, id], async (err, results) => {
                 if (err) {
                     console.log(err)
                 } else {
-                    req.flash('message', messageContent(`Group Data ID:${id} Berhasil di-edit!`, 'alert-success'))
-                    res.redirect(`/admin/add_group_data`)
+                    let newData1 = newData
+
+                    let target1 = await translate(newData1['nama_group_data'],{to: "en"})
+                    let disp = await translate(newData1['deskripsi_group'],{to: "en"})
+                    
+                    newData1['nama_group_data'] = target1.text
+                    newData1['deskripsi_group'] = disp.text
+
+                    db.query('UPDATE 77_group_data_en SET ? WHERE id_group_data = ?', [newData1, id], (err, results) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            req.flash('message', messageContent(`Group Data ID:${id} Berhasil di-edit!`, 'alert-success'))
+                            res.redirect(`/admin/add_group_data`)
+                        }
+                    })
                 }
             })
         }
@@ -227,12 +256,35 @@ exports.update_rincian_target = async (req, res) => {
                 } else {
                     let id_target = newData.id_target
 
-                    db.query('UPDATE 4_histori_capaian SET id_target = ? WHERE id_rincian_target = ?', [id_target, id], (err, results1) => {
+                    db.query('UPDATE 4_histori_capaian SET id_target = ? WHERE id_rincian_target = ?', [id_target, id], async (err, results1) => {
                         if (err) {
                             console.log(err)
                         } else {
-                            req.flash('message', messageContent(`Rincian Target ID:${id} berhasil di-edit!`, 'alert-success'))
-                            res.redirect(`/admin/list_rincian_target`)
+                            let newData1 = newData
+
+                            let target1 = await translate(newData1['rincian_target'],{to: "en"})
+                            let disp = await translate(newData1['satuan'],{to: "en"})
+                            let disp2 = await translate(newData1['deskripsi'],{to: "en"})
+                            
+                            newData1['rincian_target'] = target1.text
+                            newData1['satuan'] = disp.text
+                            newData1['deskripsi'] = disp2.text
+
+                            db.query('UPDATE 33_rincian_target_en SET ? WHERE id_rincian_target = ?', [newData1, id], (err, results) => {
+                                if (err) {
+                                    console.log(err)
+                                } else {
+                                    db.query('UPDATE 44_histori_capaian_en SET id_target = ? WHERE id_rincian_target = ?', [id_target, id], async (err, results1) => {
+                                        if(err) {
+                                            console.log(err)
+                                        } else {
+                                            req.flash('message', messageContent(`Rincian Target ID:${id} berhasil di-edit!`, 'alert-success'))
+                                            res.redirect(`/admin/list_rincian_target`)
+                                        }
+                                    })
+                                    
+                                }
+                            })
                         }
                     })
                 }
@@ -436,12 +488,26 @@ exports.update_histori_capaian = async (req, res) => {
         } else {
             let updateQuery = (data) => {
                 let id = req.params.id_histori_capaian
-                db.query('UPDATE 4_histori_capaian SET ? WHERE id_histori_capaian = ?', [data, id], (err, results) => {
+                db.query('UPDATE 4_histori_capaian SET ? WHERE id_histori_capaian = ?', [data, id], async (err, results) => {
                     if (err) {
                         console.log(err)
                     } else {
-                        req.flash('message', messageContent(`Histori Capaian ID:${id} berhasil di-edit!`, 'alert-success'))
-                        res.redirect(`/admin/list_histori_capaian`)
+                        let newData1 = data
+
+                        let target1 = await translate(newData1['status_verifikasi'],{to: "en"})
+                        let disp = await translate(newData1['sumber_data'],{to: "en"})
+                        
+                        newData1['status_verifikasi'] = target1.text
+                        newData1['sumber_data'] = disp.text
+
+                        db.query('UPDATE 44_histori_capaian_en SET ? WHERE id_histori_capaian = ?', [newData1, id], (err, results) => {
+                            if (err) {
+                                console.log(err)
+                            } else {
+                                req.flash('message', messageContent(`Histori Capaian ID:${id} berhasil di-edit!`, 'alert-success'))
+                                res.redirect(`/admin/list_histori_capaian`)
+                            }
+                        })
                     }
                 })
             }
@@ -537,12 +603,30 @@ exports.update_data = async (req, res) => {
         } else {
             let updateQuery = (data) => {
                 let id = req.params.id_data
-                db.query('UPDATE 8_list_data SET ? WHERE id_data = ?', [data, id], (err, results) => {
+                db.query('UPDATE 8_list_data SET ? WHERE id_data = ?', [data, id], async (err, results) => {
                     if (err) {
                         console.log(err)
                     } else {
-                        req.flash('message', messageContent(`Data ID:${id} berhasil di-edit!`, 'alert-success'))
-                        res.redirect(`/admin/list_data`)
+                        let newData1 = data
+
+                        let target1 = await translate(newData1['nama_data'],{to: "en"})
+                        let disp = await translate(newData1['sumber_data'],{to: "en"})
+                        let disp2 = await translate(newData1['status_data'],{to: "en"})
+                        let disp3 = await translate(newData1['deskripsi_data'],{to: "en"})
+                        
+                        newData1['nama_data'] = target1.text
+                        newData1['sumber_data'] = disp.text
+                        newData1['status_data'] = disp2.text
+                        newData1['deskripsi_data'] = disp3.text
+
+                        db.query('UPDATE 88_list_data_en SET ? WHERE id_data = ?', [newData1, id], (err, results) => {
+                            if (err) {
+                                console.log(err)
+                            } else {
+                                req.flash('message', messageContent(`Data ID:${id} berhasil di-edit!`, 'alert-success'))
+                                res.redirect(`/admin/list_data`)
+                            }
+                        })
                     }
                 })
             }

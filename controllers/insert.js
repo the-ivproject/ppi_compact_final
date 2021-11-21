@@ -5,6 +5,7 @@ const path = require("path")
 const Busboy = require('busboy')
 const inspect = require('util').inspect
 const fs = require('fs');
+const translate = require('@vitalets/google-translate-api');
 
 let messageContent = (information, alert_class) => {
     return `<div class="alert ${alert_class} alert-dismissible fade show" role="alert"> 
@@ -79,6 +80,12 @@ const uploadGeojson = multer({
 const uploadLogo = multer({
     storage: storageImg,
 }).single('logo')
+
+
+// let trText = async (text) => {
+//     let x = await translate(text, {to: "en"})
+//     return x
+// }
 
 exports.post_user = (req, res) => {
     const {
@@ -195,7 +202,7 @@ exports.insert_region = (req, res) => {
     req.pipe(busboy)
 }
 
-exports.insert_target = (req, res) => {
+exports.insert_target = async (req, res) => {
     const {
         id_region,
         target,
@@ -203,6 +210,8 @@ exports.insert_target = (req, res) => {
         deskripsi,
         icon
     } = req.body
+
+    // trText
     db.query('INSERT INTO 2_target SET ?', {
         id_region,
         target,
@@ -210,19 +219,32 @@ exports.insert_target = (req, res) => {
         deskripsi,
         icon
     }, async (err, results) => {
-        if (err) {
-            console.log(err)
-        } else {
-            req.flash('message', messageContent('Target baru berhasil ditambahkan', 'alert-success'))
-            res.redirect('/admin/add_target')
-        }
+        
+        const target_en = await translate(target, {to: "en"})
+        const display_name_en = await translate(display_name, {to: "en"})
+        const deskripsi_en = await translate(deskripsi, {to: "en"})
+
+        db.query('INSERT INTO 22_target_en SET ?', {
+            id_region,
+            target: target_en.text,
+            display_name: display_name_en.text,
+            deskripsi:deskripsi_en.text,
+            icon
+        }, async (err, results) => {
+            if (err) {
+                console.log(err)
+            } else {
+                req.flash('message', messageContent('Target baru berhasil ditambahkan', 'alert-success'))
+                res.redirect('/admin/add_target')
+            }
+        })
     })
 }
 
 exports.insert_group_data = async (req, res) => {
     let session = await req.session.user
     let confrim = await check(session, req, res)
-    let query = () => {
+    let query = async () => {
         let id_region = session[0].id_region
         if (id_region === null) {
             return;
@@ -232,6 +254,7 @@ exports.insert_group_data = async (req, res) => {
                 icon_group_data,
                 deskripsi_group
             } = req.body
+
             db.query('INSERT INTO 7_group_data SET ?', {
                 id_region,
                 nama_group_data,
@@ -241,8 +264,22 @@ exports.insert_group_data = async (req, res) => {
                 if (err) {
                     console.log(err)
                 } else {
-                    req.flash('message', messageContent('Group data baru berhasil ditambahkan', 'alert-success'))
-                    res.redirect('/admin/add_group_data')
+                    const nama_group_data_en = await translate(nama_group_data, {to: "en"})
+                    const deskripsi_group_en = await translate(deskripsi_group, {to: "en"})
+
+                    db.query('INSERT INTO 77_group_data_en SET ?', {
+                        id_region,
+                        nama_group_data:nama_group_data_en.text,
+                        icon_group_data,
+                        deskripsi_group:deskripsi_group_en.text,
+                    }, async (err, results) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            req.flash('message', messageContent('Group data baru berhasil ditambahkan', 'alert-success'))
+                            res.redirect('/admin/add_group_data')
+                        }
+                    })
                 }
             })
         }
@@ -252,7 +289,7 @@ exports.insert_group_data = async (req, res) => {
     }
 }
 
-exports.insert_rincian_target = (req, res) => {
+exports.insert_rincian_target = async (req, res) => {
     const date = Date.now()
     const last_update = new Date(date)
     const {
@@ -265,6 +302,7 @@ exports.insert_rincian_target = (req, res) => {
         target_tahunan,
         rule
     } = req.body
+
     db.query('INSERT INTO 3_rincian_target SET ?', {
         id_target,
         id_region,
@@ -279,8 +317,28 @@ exports.insert_rincian_target = (req, res) => {
         if (err) {
             console.log(err)
         } else {
-            req.flash('message', messageContent('Rincian target baru berhasil ditambahkan!', 'alert-success'))
-            res.redirect('/admin/add_rincian_target')
+            const rincian_target_en = await translate(rincian_target, {to: "en"})
+            const satuan_en = await translate(satuan, {to: "en"})
+            const deskripsi_en = await translate(deskripsi, {to: "en"})
+        
+            db.query('INSERT INTO 33_rincian_target_en SET ?', {
+                id_target,
+                id_region,
+                rincian_target:rincian_target_en.text,
+                baseline,
+                satuan:satuan_en.text,
+                target_tahunan,
+                deskripsi:deskripsi_en.text,
+                rule,
+                last_update
+            }, async (err, results) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    req.flash('message', messageContent('Rincian target baru berhasil ditambahkan!', 'alert-success'))
+                    res.redirect('/admin/add_rincian_target')
+                }
+            })
         }
     })
 }
@@ -288,7 +346,7 @@ exports.insert_rincian_target = (req, res) => {
 exports.insert_histori_capaian = async (req, res) => {
     let session = await req.session.user
     let confrim = await check(session, req, res)
-    let query = () => {
+    let query = async () => {
         let id_region = session[0].id_region
         if (id_region === null) {
             return;
@@ -304,7 +362,7 @@ exports.insert_histori_capaian = async (req, res) => {
                 form.set(fieldname, val)
             })
 
-            busboy.on('file', async (fieldname, file, filename) => {
+            busboy.on('file', (fieldname, file, filename) => {
 
                 let final_path = Date.now() + '' + filename
                 // Create a write stream of the new file
@@ -313,7 +371,7 @@ exports.insert_histori_capaian = async (req, res) => {
                 file.pipe(fstream);
 
                 // On finish of the upload
-                fstream.on('close', () => {
+                fstream.on('close', async () => {
                     db.query('INSERT INTO 4_histori_capaian SET ?', {
                         id_target: form.get('id_target'),
                         id_region: form.get('id_region'),
@@ -323,20 +381,47 @@ exports.insert_histori_capaian = async (req, res) => {
                         status_verifikasi: form.get('status_verifikasi'),
                         sumber_data: form.get('sumber_data'),
                         target_tahunan: form.get('target_tahunan'),
-                        aktual: form.get('aktual')
+                        aktual: form.get('aktual'),
+                        kinerja: form.get('target_tahunan') - form.get('aktual')
                     }, async (err, insert) => {
                         if (err) {
                             console.log(err)
                         } else {
-                            let id = form.get('id_rincian_target')
-                            let date = Date.now()
-                            const last_update = new Date(date)
-                            db.query('UPDATE 3_rincian_target SET last_update = ? WHERE id_rincian_target = ?', [last_update, id], (err, update) => {
+                            let status_verifikasi_en = await translate(form.get('status_verifikasi'), {to: "en"})
+                            let sumber_data_en = await translate(form.get('sumber_data'), {to: "en"})
+        
+                            db.query('INSERT INTO 44_histori_capaian_en SET ?', {
+                                id_target: form.get('id_target'),
+                                id_region: form.get('id_region'),
+                                id_rincian_target: form.get('id_rincian_target'),
+                                tahun_data: form.get('tahun_data'),
+                                geojson: (uploadPath + final_path).replace("public", ""),
+                                status_verifikasi: status_verifikasi_en.text,
+                                sumber_data: sumber_data_en.text,
+                                target_tahunan: form.get('target_tahunan'),
+                                aktual: form.get('aktual'),
+                                kinerja: form.get('target_tahunan') - form.get('aktual')
+                            }, async (err, insert) => {
                                 if (err) {
                                     console.log(err)
                                 } else {
-                                    req.flash('message', messageContent('Histori capaian baru berhasil ditambahkan!', 'alert-success'))
-                                    res.redirect('/admin/list_histori_capaian')
+                                    let id = form.get('id_rincian_target')
+                                    let date = Date.now()
+                                    const last_update = new Date(date)
+                                    db.query('UPDATE 3_rincian_target SET last_update = ? WHERE id_rincian_target = ?', [last_update, id], (err, update) => {
+                                        if (err) {
+                                            console.log(err)
+                                        } else {
+                                            db.query('UPDATE 33_rincian_target_en SET last_update = ? WHERE id_rincian_target = ?', [last_update, id], (err, update) => {
+                                                if (err) {
+                                                    console.log(err)
+                                                } else {
+                                                    req.flash('message', messageContent('Histori capaian baru berhasil ditambahkan!', 'alert-success'))
+                                                    res.redirect('/admin/list_histori_capaian')
+                                                }
+                                            })
+                                        }
+                                    })
                                 }
                             })
                         }
@@ -380,7 +465,7 @@ exports.insert_data = async (req, res) => {
                 file.pipe(fstream);
 
                 // On finish of the upload
-                fstream.on('close', () => {
+                fstream.on('close', async () => {
                     db.query('INSERT INTO 8_list_data SET ?', {
                         id_group_data:  form.get('id_group_data'),
                         id_region: id_region,
@@ -388,27 +473,47 @@ exports.insert_data = async (req, res) => {
                         tahun_data: form.get('tahun_data'),
                         sumber_data: form.get('sumber_data'),
                         status_data: form.get('status_data'),
-                        geojson:(uploadPath + final_path).replace("public", "")
+                        geojson:(uploadPath + final_path).replace("public", ""),
+                        deskripsi_data: form.get('deskripsi_data')
                     }, async (err, insert) => {
                         if (err) {
                             console.log(err)
                         } else {
-                            let id = form.get('id_group_data')
-                            let date = Date.now()
-                            const last_update = new Date(date)
-                            db.query('UPDATE 7_group_data SET last_update = ? WHERE id_group_data = ?', [last_update, id], (err, update) => {
+                            let nama_data_en = await translate(form.get('nama_data'),{to: "en"})
+                            let sumber_data_en = await translate(form.get('sumber_data'),{to: "en"})
+                            let status_data_en = await translate(form.get('status_data'),{to: "en"})
+                            let des_data = await translate(form.get('deskripsi_data'),{to: "en"})
+
+                            db.query('INSERT INTO 88_list_data_en SET ?', {
+                                id_group_data:  form.get('id_group_data'),
+                                id_region: id_region,
+                                nama_data: nama_data_en.text,
+                                tahun_data: form.get('tahun_data'),
+                                sumber_data: sumber_data_en.text,
+                                status_data: status_data_en.text,
+                                geojson:(uploadPath + final_path).replace("public", ""),
+                                deskripsi_data: des_data.text
+                            }, async (err, insert) => {
                                 if (err) {
                                     console.log(err)
                                 } else {
-                                    req.flash('message', messageContent('Data baru berhasil ditambahkan!', 'alert-success'))
-                                    res.redirect('/admin/add_data')
+                                    let id = form.get('id_group_data')
+                                    let date = Date.now()
+                                    const last_update = new Date(date)
+                                    db.query('UPDATE 7_group_data SET last_update = ? WHERE id_group_data = ?', [last_update, id], (err, update) => {
+                                        if (err) {
+                                            console.log(err)
+                                        } else {
+                                            req.flash('message', messageContent('Data baru berhasil ditambahkan!', 'alert-success'))
+                                            res.redirect('/admin/add_data')
+                                        }
+                                    })
                                 }
                             })
                         }
                     })
                 })
             })
-
             req.pipe(busboy)
         }
     }

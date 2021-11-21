@@ -234,7 +234,7 @@
             <div class="vl"></div>
             <div class="language-selection">
                 <a id="lang-selection"
-                    onclick="alert('English version not available yet')"><%= lang.toUpperCase() %></a>
+                    onclick="window.location.href = '/main/map_data_en/<%= region.id_region %>/en'"><%= lang.toUpperCase() %></a>
             </div>
         </div>
     </header>
@@ -554,13 +554,14 @@
                                             </div>
                                             <div class="bx-2" style="width: 40%">
                                                 <a id="getchart-${g.id_data}" onclick="showChart(this)" style="vertical-align:middle;margin: 0 5px"><i class="fas fa-table"></i></a>
-                                                <a style="vertical-align:middle;color:#ccd6d5;margin: 0 5px"><i class="fas fa-info-circle"></i></a>
                                             </div>
                                         </div>
                                     </div>   
                                 </li>
                            `
                     })
+                    // <a style="vertical-align:middle;color:#ccd6d5;margin: 0 5px"><i class="fas fa-info-circle"></i></a>
+
                     let sec_legend = `
                         <div class="legend-group" id="groupdata-${key}">
                             <div class="legend-subtitle">
@@ -889,20 +890,20 @@
                                 <p style="font-size: 14px;">Informasi Data</p>
                                 <table class="table first" style="font-size:12px;margin-top:10px;">
                                     <tr>
-                                        <th style="background-color:#142940;color:white">Deskripsi</th>    
-                                        <th>: ${filteredObj['deskripsi_data']}</th>    
+                                        <th style="background-color:#142940;color:white;max-width:100%;white-space:nowrap;">Deskripsi</th>    
+                                        <th style="font-weight:600">${filteredObj['deskripsi_data']}</th>    
                                     </tr>
                                     <tr>
-                                        <th style="background-color:#142940;color:white">Tahun</th>    
-                                        <th>: ${filteredObj['tahun_data']}</th>    
+                                        <th style="background-color:#142940;color:white;max-width:100%;white-space:nowrap;">Tahun</th>    
+                                        <th style="font-weight:600">${filteredObj['tahun_data']}</th>    
                                     </tr>
                                     <tr>
-                                        <th style="background-color:#142940;color:white">Sumber</th>    
-                                        <th>: ${filteredObj['sumber_data']}</th>    
+                                        <th style="background-color:#142940;color:white;max-width:100%;white-space:nowrap;">Sumber</th>    
+                                        <th style="font-weight:600">${filteredObj['sumber_data']}</th>    
                                     </tr>
                                     <tr>
-                                        <th style="background-color:#142940;color:white">Tanggal Upload</th>    
-                                        <th>: ${new Date(filteredObj['last_update']).toDateString()}</th>    
+                                        <th style="background-color:#142940;color:white;max-width:100%;white-space:nowrap;">Tanggal Upload</th>    
+                                        <th style="font-weight:600">${new Date(filteredObj['last_update']).toDateString()}</th>    
                                     </tr>
                                 </table>
                             </div>

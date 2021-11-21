@@ -99,7 +99,7 @@
 .cookie{
     width: 420px;
     /* height: 72px; */
-    background-color: #e2edebd1;
+    background-color: #fff;
     position: fixed;
     bottom: 2%;
     border-radius: 10px;
@@ -536,7 +536,8 @@ a {
 #fitur-col span {
     display: inline-block;
     font-size: 14px;
-    font-weight: normal
+    font-weight: normal;
+    /* line-height: 1.2; */
 }
 
 .col-xl-4 span {
@@ -594,6 +595,10 @@ a {
     border-radius: 5px;
     color: #000;
     text-align: center
+}
+
+.f-600 td{
+    font-weight: 600;
 }
 
 .language-selection a {
@@ -908,6 +913,7 @@ a {
     font-weight: 800;
     text-transform: capitalize;
     padding: 0;
+    max-width: 75%;
 }
 
 #btn-switch {

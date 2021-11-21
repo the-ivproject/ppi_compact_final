@@ -232,7 +232,7 @@
             <div class="icon-sec">
                 <img width="35" src="/global/img/plug.svg" alt="" srcset="">
             </div>
-            <div class="text-sec" onclick="window.location.href = 'https://sourceup.org/'">
+            <div class="text-sec" onclick="window.open('https://sourceup.org/', '_blank').focus();">
                 <p class="small-text">Connected to</p>
                 <p>SourceUp</p>
             </div>
@@ -321,6 +321,8 @@
 
         btn_section[0].style.backgroundColor = '#2ec551'
         btn_section[0].style.color = '#fff'
+        // btn_section[1].style.backgroundColor = '#2ec551'
+        // btn_section[1].style.color = '#fff'
 
         let span_selector = document.querySelectorAll('#btn-sec span')
 
@@ -343,7 +345,7 @@
             let cookie = document.getElementById('cookie_card')
             cookie.style.visibility = 'visible'
             cookie.style.opacity = '1'
- 
+            
         })
 
 
@@ -356,7 +358,6 @@
             $('.cookie').fadeOut();
         })
 
-      
     </script>
 </body>
 

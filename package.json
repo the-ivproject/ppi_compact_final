@@ -12,6 +12,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@iconify/json": "^1.1.420",
+    "@vitalets/google-translate-api": "^7.0.0",
     "body-parse": "^0.1.0",
     "body-parser": "^1.19.0",
     "busboy": "^0.3.1",

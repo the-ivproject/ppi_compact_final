@@ -16,15 +16,21 @@ exports.delete_target = (req, res) => {
         if (err) {
             console.log(err)
         } else {
-            db.query('UPDATE 3_rincian_target SET id_target = ? WHERE id_target = ?', [null,id], (err, results1) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    db.query('UPDATE 4_histori_capaian SET id_target = ? WHERE id_target = ?', [null,id], (err, results1) => {
-                        req.flash('message', messageContent(`Target ID:${id} berhasil dihapus!`, 'alert-success'))
-                        res.redirect('/admin/list_target')
+            db.query('DELETE FROM 22_target_en WHERE id_target = ?', [id], (err, results) => {
+                db.query('UPDATE 3_rincian_target SET id_target = ? WHERE id_target = ?', [null,id], (err, results1) => {
+                    db.query('UPDATE 33_rincian_target_en SET id_target = ? WHERE id_target = ?', [null,id], (err, results1) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            db.query('UPDATE 4_histori_capaian SET id_target = ? WHERE id_target = ?', [null,id], (err, results1) => {
+                                db.query('UPDATE 44_histori_capaian_en SET id_target = ? WHERE id_target = ?', [null,id], (err, results1) => {
+                                    req.flash('message', messageContent(`Target ID:${id} berhasil dihapus!`, 'alert-success'))
+                                    res.redirect('/admin/list_target')
+                                })
+                            })
+                        }
                     })
-                }
+                })  
             })
         }
     })
@@ -37,13 +43,21 @@ exports.delete_rincian_target = (req, res) => {
         if (err) {
             console.log(err)
         } else {
-            db.query('DELETE FROM 4_histori_capaian WHERE id_rincian_target = ?', [id], (err, results) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    req.flash('message', messageContent(`Rincian target ID:${id} berhasil dihapus!`, 'alert-success'))
-                    res.redirect('/admin/list_rincian_target')
-                }
+            db.query('DELETE FROM 33_rincian_target_en WHERE id_rincian_target = ?', [id], (err, results) => {
+                db.query('DELETE FROM 4_histori_capaian WHERE id_rincian_target = ?', [id], (err, results) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        db.query('DELETE FROM 44_histori_capaian_en WHERE id_rincian_target = ?', [id], (err, results) => {
+                            if (err) {
+                                console.log(err)
+                            } else {
+                                req.flash('message', messageContent(`Rincian target ID:${id} berhasil dihapus!`, 'alert-success'))
+                                res.redirect('/admin/list_rincian_target')
+                            }
+                        })
+                    }
+                })
             })
         }
     })
@@ -56,8 +70,10 @@ exports.delete_histori_capaian = (req, res) => {
         if (err) {
             console.log(err)
         } else {
-            req.flash('message', messageContent(`Histori capaian ID:${id} berhasil dihapus!`, 'alert-success'))
-            res.redirect('/admin/list_histori_capaian')
+            db.query('DELETE FROM 44_histori_capaian_en WHERE id_histori_capaian = ?', [id], (err, results) => {
+                req.flash('message', messageContent(`Histori capaian ID:${id} berhasil dihapus!`, 'alert-success'))
+                res.redirect('/admin/list_histori_capaian')    
+            })
         }
     })
 }
@@ -69,13 +85,17 @@ exports.delete_group_data = (req, res) => {
         if (err) {
             console.log(err)
         } else {
-            db.query('UPDATE 8_list_data SET id_group_data = ? WHERE id_group_data = ?', [null,id], (err, results1) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    req.flash('message', messageContent(`Group Data ID:${id} berhasil dihapus!`, 'alert-success'))
-                    res.redirect('/admin/add_group_data')
-                }
+            db.query('DELETE FROM 77_group_data_en WHERE id_group_data = ?', [id], (err, results) => {
+                db.query('UPDATE 8_list_data SET id_group_data = ? WHERE id_group_data = ?', [null,id], (err, results1) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        db.query('UPDATE 88_list_data_en SET id_group_data = ? WHERE id_group_data = ?', [null,id], (err, results1) => {
+                            req.flash('message', messageContent(`Group Data ID:${id} berhasil dihapus!`, 'alert-success'))
+                            res.redirect('/admin/add_group_data')    
+                        })
+                    }
+                })
             })
         }
     })
@@ -88,8 +108,11 @@ exports.delete_data = (req, res) => {
         if (err) {
             console.log(err)
         } else {
-            req.flash('message', messageContent(`Data ID:${id} berhasil dihapus!`, 'alert-success'))
-            res.redirect('/admin/list_data')
+            db.query('DELETE FROM 88_list_data_en WHERE id_data = ?', [id], (err, results) => {
+                req.flash('message', messageContent(`Data ID:${id} berhasil dihapus!`, 'alert-success'))
+                res.redirect('/admin/list_data')
+    
+            })
         }
     })
 }
