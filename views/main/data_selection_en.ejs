@@ -223,8 +223,7 @@
             <%- include('./partials/navbar-brand'); %>
         </div>
         <div class="region-form">
-            <!-- <label for="region-selection">Select Region</label> -->
-            <select id="region-selection" class="form-control">
+            <!-- <select id="region-selection" class="form-control">
                 <%
                 if(all_region.length!=0){
                 var i=1;
@@ -240,7 +239,7 @@
                 <% } %>
             </select>
             <button onclick="filterByRegion()" class="btn btn-success cs-btn"
-                style="font-size: 12px;font-weight: 600;">Submit </button>
+                style="font-size: 12px;font-weight: 600;">Submit </button> -->
             <div class="vl"></div>
             <div class="language-selection">
                 <a id="lang-selection" onclick="window.location.href = '/main/data_selection/<%= region.id_region %>/<%= id_group_data %>'"><%= lang.toUpperCase() %></a>
@@ -259,7 +258,6 @@
                 <a><%= title %></a>
                 <a class="floating">Total Data Found <span
                         style="font-size: 20px;color: #142940;font-weight: 800;margin: 0 10px;"><%= list_data.length %></span></a>
-
             </div>
         </div>
     </div>

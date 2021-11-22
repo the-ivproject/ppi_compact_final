@@ -238,7 +238,6 @@
             </div>
         </div>
         <div class="jumbotron jumbotron-fluid" style="padding: 0;background-color: #ffffffe3;">
-            <!-- background-color: #e9ecef00; -->
             <div class="container">
                 <div class="new-brand" style="display: block;margin: 0;">
                     <%- include('./partials/navbar-brand'); %>
@@ -253,7 +252,6 @@
                     <button id="<%= region.id_region%>" class="btn btn-success " onclick="MovePage(this)" style="border: none;">
                         <span>Kab. <%= region.nama_region + ', ' %> Kalbar </span><i class="fas fa-caret-right"
                             style="font-size: 18px;vertical-align: middle;"></i> </button>
-                    <span id="span<%= i %>"> Atau </span>
                     <%  i++; }) %>
                     <% } else { %>
 
@@ -326,11 +324,11 @@
 
         let span_selector = document.querySelectorAll('#btn-sec span')
 
-        if (btn_section.length === 1) {
-            span_selector[0].style.visibility = 'hidden'
-        } else {
-            span_selector[span_selector.length - 1].remove()
-        }
+        // if (btn_section.length === 1) {
+        //     span_selector[0].style.visibility = 'hidden'
+        // } else {
+        //     span_selector[span_selector.length - 1].remove()
+        // }
 
         function MovePage(el) {
             let id = el.id
