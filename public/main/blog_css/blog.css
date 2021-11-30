@@ -738,7 +738,7 @@ pre code {
 .col-4 {
     flex: 0 0 33.3333333333%;
     max-width: 33.3333333333%;
-    max-height: 126vh;
+    height: 100%;
     overflow-y: auto;
 }
 
