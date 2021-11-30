@@ -241,7 +241,7 @@
             </select>
             <button onclick="filterByRegion()" class="btn btn-success cs-btn"
                 style="font-size: 12px;font-weight: 600;">Submit </button> -->
-                <%- include('./partials/new-navbar'); %>
+            <%- include('./partials/new-navbar'); %>
             <div class="vl"></div>
             <div class="language-selection">
                 <a id="lang-selection" onclick="window.location.href = '/main/dataset_en/1/en'">ENG</a>
@@ -277,7 +277,7 @@
                 <h2>Dataset <i class="fas fa-chevron-down" style="float: right;padding-top: 4px;color: #949494;"></i></h2>
                 <p class="def-p">List dataset yang tersedia</p>
                 <div class="data-col container-lg">
-                    <div class="row cus">
+                    <div class="row cus" style="height: 73vh;">
                         <%
                         if(group_data.length!=0){
                         var i=1;
