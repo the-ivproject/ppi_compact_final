@@ -1,7 +1,7 @@
 const express = require('express')
 const db = require('../config/dbconfig.js')
 const translate = require('@vitalets/google-translate-api');
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 
 const router = express.Router()
   
