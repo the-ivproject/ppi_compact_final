@@ -1682,10 +1682,11 @@ a.text-dark:hover, a.text-dark:focus {
 
 .features h5 {
   color: #2D2B3A;
+  font-weight: 600;
 }
 
 .features p {
-  font-size: 13px;
+  font-size: 16px;
   color: #898798;
   text-transform: capitalize;
 }
@@ -2361,4 +2362,5 @@ a.text-dark:hover, a.text-dark:focus {
 .profile-photo img {
   box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
   width: 100px;
+  border-radius: 5px;
 }
