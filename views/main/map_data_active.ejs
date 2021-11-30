@@ -231,6 +231,7 @@
             </select>
             <button onclick="filterByRegion()" class="btn btn-success"
                 style="font-size: 12px;font-weight: 600;">Submit</button> -->
+            <%- include('./partials/new-navbar'); %>
             <div class="vl"></div>
             <div class="language-selection">
                 <a id="lang-selection"
@@ -243,14 +244,14 @@
             <div class="left-text">
                 <i class="fas fa-map-marker-alt" style="font-size: 20px;"></i>
                 <i class="fas fa-chevron-right margin"></i>
-                <a href="/main/dataset/<%= region.id_region %>">Dataset</a>
+                <a class="contain-link" href="/main/dataset/<%= region.id_region %>">Dataset</a>
                 <i class="fas fa-chevron-right margin"></i>
                 <a class="active-link">Kab. <%= region.nama_region %></a>
                 <i class="fas fa-chevron-right margin"></i>
                 <a>Data Explorer</a>
 
                 <a href="/main/map/<%= region.id_region %>" id="btn-switch" class="floating"> <i class="fas fa-database"
-                        style="margin-right: 5px; font-size: 10px;"></i> MRV PPH</a>
+                        style="margin-right: 5px; font-size: 10px;"></i> Platform PPH </a>
 
             </div>
         </div>

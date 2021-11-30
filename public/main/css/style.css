@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
 :root {
     --header-height: 3rem;
     --nav-width: 110px;
@@ -424,6 +423,10 @@ a {
 
 .flexi {
     display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    /* height: 100%; */
+    background: green;
 }
 
 .row .cus .split {
@@ -454,7 +457,7 @@ a {
 
 .col i {
     display: block;
-    font-size: 80px;
+    font-size: 50px;
     color: #2EC551;
 }
 
@@ -528,9 +531,10 @@ a {
 }
 
 #fitur-col a {
-    font-size: 18px;
-    margin-left: 10px ;
+    font-size: 16px;
+    margin: 0 20px ;
     text-align: left;
+    line-height: 1.3;
 }
 
 #fitur-col span {
@@ -588,14 +592,39 @@ a {
 }
 
 .language-selection {
-    display: flex;
+    /* display: flex; */
     margin: 0;
     /* background: #ced4da; */
-    padding: 0px 10px;
+    padding-right: 10px;
     border-radius: 5px;
-    color: #000;
-    text-align: center
+    color: #142940;
+    text-align: center;
+    transition: 0.3s;
 }
+
+.contain-link {
+    transition: 0.3s;
+    color: #142940 !important;
+}
+
+#btn-hov1 {
+    transition: 0.3s;
+}
+
+#btn-hov1:hover {
+    background-color: #142940 !important;
+    color: white;
+}
+
+.margin-5 {
+    margin: 0 10px;
+    padding: 0;
+}
+
+.language-selection:hover, .contain-link:hover {
+    color: #007bff !important;
+}
+
 
 .f-600 td{
     font-weight: 600;
@@ -604,12 +633,12 @@ a {
 .language-selection a {
     font-size: 14px;
     font-weight: bold;
-    color: #000000b3;
+    color: #949494;
     margin: 0;
     line-height: 39px;
-    padding: 0 5px;
+    /* padding: 0 5px; */
     width: 40px;
-    text-align: center;
+    text-align: left;
     cursor: pointer;
 }
 
@@ -620,6 +649,7 @@ a {
 
 .vl {
     border-left: 1px solid #ced4da;
+    margin: 0 20px;
 }
 
 .header_toggle {
@@ -866,7 +896,7 @@ a {
     letter-spacing: -1px;
     font-style: normal;
 
-    /* text-transform: uppercase; */
+    text-transform: capitalize;
 }
 
 #veryfied-icon {
@@ -918,16 +948,17 @@ a {
 
 #btn-switch {
     padding: 8px 15px;
-    background-color: #142940;
+    background-color: rgb(46, 197, 81);
     font-size: 12px !important;
     border-radius: 5px;
     color: white !important;
-    font-weight: normal !important;
     cursor: pointer;
+    font-weight: bold !important;
+    transition: 0.3s;
 }
 
 #btn-switch:hover {
-    background-color: #000;
+    background-color: #142940;
 }
 
 .legend-subtitle span {

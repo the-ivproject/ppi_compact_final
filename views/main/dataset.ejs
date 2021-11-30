@@ -223,6 +223,7 @@
             <%- include('./partials/navbar-brand'); %>
         </div>
         <div class="region-form">
+          
             <!-- <select id="region-selection" class="form-control">
                 <%
                 if(all_region.length!=0){
@@ -240,10 +241,10 @@
             </select>
             <button onclick="filterByRegion()" class="btn btn-success cs-btn"
                 style="font-size: 12px;font-weight: 600;">Submit </button> -->
+                <%- include('./partials/new-navbar'); %>
             <div class="vl"></div>
             <div class="language-selection">
-                <a id="lang-selection"
-                    onclick="window.location.href = '/main/dataset_en/<%= region.id_region %>/en'"><%= lang.toUpperCase() %></a>
+                <a id="lang-selection" onclick="window.location.href = '/main/dataset_en/1/en'">ENG</a>
             </div>
         </div>
     </header>
@@ -252,7 +253,7 @@
             <div class="left-text">
                 <i class="fas fa-database" style="font-size: 20px;"></i>
                 <i class="fas fa-chevron-right margin"></i>
-                <a href="/">Select Region</a>
+                <a class="contain-link" href="/">Select Region</a>
                 <i class="fas fa-chevron-right margin"></i>
                 <a class="active-link">Kab. <%= region.nama_region %></a>
                 <i class="fas fa-chevron-right margin"></i>
@@ -262,7 +263,6 @@
                         style="font-size: 20px;color: #142940;font-weight: 800;margin: 0 10px;"><%= group_data.length %></span></a>
                 <a class="floating">Jumlah Data <span
                         style="font-size: 20px;color: #142940;font-weight: 800;margin: 0 10px;"><%= list_data.length %></span></a>
-
             </div>
         </div>
     </div>
@@ -274,7 +274,7 @@
     <div class="container-data">
         <div class="row">
             <div class="col-8 col-md-8">
-                <h2>Dataset <i class="fas fa-chevron-down" style="float: right;"></i></h2>
+                <h2>Dataset <i class="fas fa-chevron-down" style="float: right;padding-top: 4px;color: #949494;"></i></h2>
                 <p class="def-p">List dataset yang tersedia</p>
                 <div class="data-col container-lg">
                     <div class="row cus">
@@ -306,20 +306,36 @@
             </div>
             <!-- <p class="v-line"></p> -->
             <div class="col-4 col-md-4 br-left">
-                <h2>Tematik Khusus <i class="fas fa-chevron-down" style="float: right;"></i></h2>
-                <p class="def-p">List peta dengan tematik khusus</p>
+                <h2>Pertumbuhan Hijau<i class="fas fa-chevron-down" style="float: right;padding-top: 4px;color: #949494;"></i></h2>
+                <p class="def-p">Capaian kinerja pertumbuhan Hijau </p>
                 <div class="data-col container-lg cursoring ">
-                    <div class="row cus">
-                        <div id="fitur-col" class="col" onclick="MoveToMap()">
+                    <div class="row cus" style="margin-right: 15px;height: 73vh;">
+                        <%
+                        if(list_target.length!=0){
+                        var i=1;
+                        list_target.forEach(function(target){
+                        %>
+                        <div id="fitur-col" class="col" onclick="MoveToMap('<%= target.id_target %>')">
+                           
                             <div class="p flexi">
-                                <!-- <p class="total-data">2</p> -->
-                                <i class="fas fa-chart-pie"></i>
-                                <a>MRV PPH
-                                    <span>Pantau capaian indikator pertumbuhan hijau melalui Platform monitoring
-                                        Percepatan Pertumbuhan Hijau (PPH).</span>
+                                <i class="<%= target.icon %>"></i>
+                                <a style="text-transform: capitalize;"><span style="display: block;margin-bottom: 8px;">target</span><%= target.target %> <br>
+                                    <div class="class" style="display: flex;margin-top: 8px;">
+                                        <i class="fas fa-calendar" style="font-size: 12px;margin-right: 5px;;margin-top: 2px;color: white;"></i> <span>Last update: <%= new Date(target.last_update).toLocaleDateString() %></span>
+                                    </div>
                                 </a>
                             </div>
                         </div>
+                        <%  i++; }) %>
+                        <% } else { %>
+                            <div id="fitur-col" class="col" onclick="MoveToMap()">
+                                <div class="p flexi">
+                                    <!-- <p class="total-data">2</p> -->
+                                    <i class="fas fa-chart-pie"></i>
+                                    
+                                </div>
+                            </div>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -346,8 +362,8 @@
             window.location.href = '/main/prevent_mobile';
         }
 
-        function MoveToMap() {
-            window.location.href = `/main/map/<%= region.id_region %>`
+        function MoveToMap(id) {
+            window.location.href = `/main/map_active/<%= region.id_region %>/${id}`
         }
 
         function getID(el) {

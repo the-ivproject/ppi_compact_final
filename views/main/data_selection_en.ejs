@@ -240,6 +240,7 @@
             </select>
             <button onclick="filterByRegion()" class="btn btn-success cs-btn"
                 style="font-size: 12px;font-weight: 600;">Submit </button> -->
+                <%- include('./partials/new-navbar'); %>
             <div class="vl"></div>
             <div class="language-selection">
                 <a id="lang-selection" onclick="window.location.href = '/main/data_selection/<%= region.id_region %>/<%= id_group_data %>'"><%= lang.toUpperCase() %></a>
@@ -251,7 +252,7 @@
             <div class="left-text">
                 <i class="fas fa-database" style="font-size: 20px;"></i>
                 <i class="fas fa-chevron-right margin"></i>
-                <a href="/main/dataset/<%= region.id_region %>">Dataset</a>
+                <a class="contain-link" href="/main/dataset/<%= region.id_region %>">Dataset</a>
                 <i class="fas fa-chevron-right margin"></i>
                 <a class="active-link"><%= region.nama_region %> District </a>
                 <i class="fas fa-chevron-right margin"></i>
@@ -449,7 +450,7 @@ window.location.href = '/main/prevent_mobile';
         function cariData() {
             let content = document.getElementById('search-content')
 
-            window.location.href = `/main/data_selection_search/<%= region.id_region %>/${content.value}`
+            window.location.href = `/main/data_selection_search_en/<%= region.id_region %>/${content.value}`
             
         }
        

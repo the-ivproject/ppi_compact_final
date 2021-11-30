@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,8 @@
     <%- include('./partials/headerlink'); %>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/admin/assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+
+    <script src="/global_js/cookies.js"></script>
 </head>
 <style>
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap");
@@ -223,7 +226,7 @@
     }
 </style>
 
-<body style="padding: 0;">
+<body onload="checkCookie()" style="padding: 0;" >
     <div id="overlay-preload">
         <img src="/main/preload/loader-1.svg" alt="" srcset="" width="100">
     </div>
@@ -243,14 +246,15 @@
                     <%- include('./partials/navbar-brand'); %>
                 </div>
                 <h1>Sustainable Development <br>and Inclusive Growth, Start Here!</h1>
+                
                 <div id="btn-sec" class="button-section" style="padding: 10px;">
                     <%
                     if(region.length!=0){
                     var i=1;
                     region.forEach(function(region){
                     %>
-                    <button id="<%= region.id_region%>" class="btn btn-success " onclick="MovePage(this)" style="border: none;">
-                        <span>Kab. <%= region.nama_region + ', ' %> Kalbar </span><i class="fas fa-caret-right"
+                    <button id="btn-hov<%= region.id_region %>" class="btn btn-success " onclick="MovePage(this)" style="border: none;">
+                        <span><%= region.nama_region%>, West Kalimantan </span><i class="fas fa-caret-right"
                             style="font-size: 18px;vertical-align: middle;"></i> </button>
                     <%  i++; }) %>
                     <% } else { %>
@@ -266,39 +270,37 @@
         <div class="all-logo">
             <h2 class="small-text bold">Collaboration</h2>
             <div class="img">
-                <a>
+                <a onclick="window.open('https://bentangkalimantan.org', '_blank').focus();" href="">
                     <img width="25" src="/global/img/logo/bkt.svg" alt="" srcset="">
                 </a>
-                <a>
+                <a onclick="window.open('https://www.idhsustainabletrade.com/', '_blank').focus();" href="">
                     <img width="38" src="/global/img/logo/idh_hijau.svg" alt="" srcset="">
                 </a>
-                <!-- <a>
-                    <img width="18" src="/global/img/logo/pemkab_ktp.svg" alt="" srcset="">
-                </a> -->
-                <a>
+                <a onclick="window.open('https://bappeda.kuburayakab.go.id/', '_blank').focus();" href="">
                     <img width="20" src="/global/img/logo/pemkab_kkr.svg" alt="" srcset="">
                 </a>
             </div>
         </div>
     </div>
+  
     <section id="cookie_card" class="cookie">
         <div class="txt">
             <h2>Cookies</h2>
             <p class="">
                 This website uses cookies to improve your experience. We'll assume you're ok with this, but you can
                 opt-out if you wish.<br>
-                <span><button class="btn accept">Accept</button></span>
-                <span><button class="btn accept" style="background-color: #142940;">Reject</button></span>
+                <span><button id="acc" class="btn accept" >Accept</button></span>
+                <span><button id="rjt" class="btn accept" style="background-color: #142940;">Reject</button></span>
             </p>
         </div>
-
     </section>
-
+   
+  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/css/bootstrap.min.css"></script>
     <script src="/admin/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script>
-        function detectmobile() {
 
+        function detectmobile() {
             let a = navigator.userAgent || navigator.vendor || window.opera;
             if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i
                 .test(a) ||
@@ -309,7 +311,7 @@
                 return false;
             }
         }
-
+        
         if (detectmobile() && document.documentElement.clientWidth <= 768) {
             window.location.href = '/main/prevent_mobile';
         }
@@ -331,7 +333,7 @@
         // }
 
         function MovePage(el) {
-            let id = el.id
+            let id = el.id.replaceAll("btn-hov","")
             window.location.href = `/main/dataset/${id}`
             // el.style.width = '32%'
             // document.getElementById(`spinner${id}`).style.visibility = 'visible'
