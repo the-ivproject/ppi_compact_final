@@ -212,6 +212,10 @@
     .select-base option:hover {
         background-color: #00000018;
     }
+
+    .col {
+        flex: none !important;
+    }
 </style>
 
 <body id="body-pd">
@@ -316,7 +320,6 @@
                         list_target.forEach(function(target){
                         %>
                         <div id="fitur-col" class="col" onclick="MoveToMap('<%= target.id_target %>')">
-                           
                             <div class="p flexi">
                                 <i class="<%= target.icon %>"></i>
                                 <a style="text-transform: capitalize;"><span style="display: block;margin-bottom: 8px;">target</span><%= target.target %> <br>
