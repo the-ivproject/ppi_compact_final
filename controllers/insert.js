@@ -241,6 +241,42 @@ exports.insert_target = async (req, res) => {
     })
 }
 
+exports.insert_resources = async (req, res) => {
+    const {
+        id_region,
+        nama,
+        kategori,
+        link_gd,
+    } = req.body
+
+    // trText
+    db.query('INSERT INTO 9_resources SET ?', {
+        id_region,
+        nama,
+        kategori,
+        link_gd,
+    }, async (err, results) => {
+        
+        const nama_en = await translate(nama, {to: "en"})
+        const kategori_en = await translate(kategori, {to: "en"})
+
+
+        db.query('INSERT INTO 99_resources_en SET ?', {
+            id_region,
+            nama: nama_en.text,
+            kategori:kategori_en.text,
+            link_gd
+        }, async (err, results) => {
+            if (err) {
+                console.log(err)
+            } else {
+                req.flash('message', messageContent('Resources baru berhasil ditambahkan', 'alert-success'))
+                res.redirect('/admin/add_resources')
+            }
+        })
+    })
+}
+
 exports.insert_group_data = async (req, res) => {
     let session = await req.session.user
     let confrim = await check(session, req, res)

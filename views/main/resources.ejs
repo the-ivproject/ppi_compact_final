@@ -62,17 +62,8 @@
                 <th scope="col">Download</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Strategi Rencana Aksi Percepatan Pertumbuhan Hijau, Kab. Kubu Raya</td>
-                <td><a href="https://drive.google.com/file/d/1Tljfv8v82eusa08-CxARxsd6KRe0j0or/view?usp=sharing">Preview</a></td>
-                <td><a href="https://drive.google.com/file/d/1Tljfv8v82eusa08-CxARxsd6KRe0j0or/view?usp=sharing">Download</a></td>
-              </tr>
-              <tr>
-                <td>Profil Pokja Percepatan Pertumbuhan Hijau, Kab. KKR</td>
-                <td><a href="https://drive.google.com/file/d/1AUSF3g3XCBRyBrL4F7BKAj0YKEVtPIQA/view?usp=sharing">Preview</a></td>
-                <td><a href="https://drive.google.com/file/d/1AUSF3g3XCBRyBrL4F7BKAj0YKEVtPIQA/view?usp=sharing">Download</a></td>
-              </tr>
+            <tbody id="res-table">
+              
             </tbody>
           </table>
         
@@ -117,6 +108,40 @@
   <script src="../assets/js/theme.js"></script>
 
 
+  <script>
+
+    let data = JSON.parse('<%- JSON.stringify(resources) %>')
+    
+    let toTable = data.map(a => {
+      delete a.id_res
+      delete a.tanggal_upload
+      delete a.id_region
+      delete a.kategori
+
+      let k = Object.keys(a)
+
+      let td = []
+
+
+      k.forEach((k, i) => {
+       if(k !== 'link_gd') {
+         td.push(`<td>${a[k]}</td>`)
+       } else if(i === k.length - 1) {
+          return;
+       } else {
+        td.push(`<td><a href="${a[k]}">Preview</a></td>`)
+       }
+      })
+
+      td.push(`<td><a href="${a['link_gd']}">Download</a></td>`)
+      return `<tr>${td.join("")}</tr>`
+
+    })
+
+    let table = document.getElementById("res-table")
+    table.innerHTML = toTable.join("")
+  
+  </script>
 </body>
 
 </html>

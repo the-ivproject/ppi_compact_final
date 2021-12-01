@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headerlink'); %>
+    <title>PPI Compact Dashboard</title>
+</head>
+
+<style>
+    #sukses-alert {
+        display: none;
+    }
+
+    .btn-right {
+        float: right;
+        right: 0;
+        padding: 9px 16px
+    }
+
+    .btn-right a {
+        width: 60px;
+        height: 23px;
+        padding: 5px;
+        font-size: 10px;
+        color: white;
+    }
+
+    .btn-notif {
+        font-size: 10px;
+        padding: 5px;
+    }
+
+    .btn-notif span {
+        font-size: 10px;
+    }
+
+    #icon-list {
+        background-color: #00000085;
+        position: absolute;
+        height: 100vh;
+        width: 100%;
+        z-index: 88;
+        visibility: hidden;
+    }
+
+    #icon-list .card {
+        margin: 0;
+        position: absolute;
+        /* top: 50%; */
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        z-index: 99;
+        margin: 27% 300px;
+    }
+
+    #icon-list .icon-list-demo {
+        overflow-y: scroll;
+        height: 500px;
+    }
+</style>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper">
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <%- include('./partials/navbar'); %>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+        <%- include('./partials/sidebar'); %>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="container-fluid dashboard-content">
+                <!-- ============================================================== -->
+                <!-- pageheader -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="page-header">
+                            <h2 class="pageheader-title"><%= title %></h2>
+
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a>
+                                        </li>
+                                        <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">UI Elements</a>
+                                        </li>
+                                        <li class="breadcrumb-item active" aria-current="page">Accordions</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end pageheader -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- accrodions -->
+                <!-- ============================================================== -->
+                <div id="sukses-alert" class="alert alert-primary" role="alert">
+                    Success
+                </div>
+
+                <div id="message-placement"></div>
+
+                <div class="row">
+
+                    <!-- ============================================================== -->
+                    <!-- accrodions style one -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="section-block">
+                            <h5 class="section-title">Edit Resources</h5>
+                            <p>Edit Resources PPI Compact</p>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <form id="form" method="POST">
+                                    <input id="id_region" type="text" name="id_region" class="form-control"
+                                        style="display: none;" value="<%= id_region %>">
+                                        <div class="form-group">
+                                            <label for="inputText3" class="col-form-label">Nama Data</label>
+                                            <input id="inputText3" type="text" name="nama" class="form-control" value="<%= res_edit.nama %>"
+                                                placeholder="Strategi Rencana Aksi Kubu Raya" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputText3" class="col-form-label">Link File / Link Google Drive</label>
+                                            <input id="inputText3" type="text" name="link_gd" class="form-control" value="<%= res_edit.link_gd %>"
+                                                disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputText3" class="col-form-label">Jenis Resources</label>
+                                            <div class="input-group mb-3">
+                                                <input id="kategori" type="text" name="kategori" class="form-control" required="" value="<%= res_edit.kategori %>">
+                                                <div class="input-group-append be-addon">
+                                                    <button type="button" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle" aria-expanded="false">Jenis</button>
+                                                    <div id="add_group" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(460px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                        
+                                                        <a id="dokumen" onclick="getGroupId(this)" class="dropdown-item">Dokumen</a>
+                                                        <a id="policy-brief" onclick="getGroupId(this)" class="dropdown-item">Policy Brief</a>
+                                                        <a id="data" onclick="getGroupId(this)" class="dropdown-item">Data</a>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <br>
+                                    <input type="submit" onclick="showLoading(); this.disabled = true"
+                                        class="btn btn-success" disabled>
+                                    <span id="loading-submit" class="dashboard-spinner spinner-secondary spinner-xs"
+                                        style="vertical-align: middle;visibility: hidden;"></span>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end accrodions style one -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- accrodions style two -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="section-block">
+                            <h5 class="section-title">List Eksisting Target</h5>
+                            <p>List target di database</p>
+                        </div>
+                        <div class="accrodion-regular">
+                            <div id="accordion">
+                                <%
+                                if(res.length!=0){
+                                var i=1;
+                                res.forEach(function(res){
+                                %>
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                        <h5 class="mb-0">
+                                            <div style="text-align:left;width: 100%;
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            text-overflow: ellipsis;" class="btn btn-link collapsed"
+                                                data-toggle="collapse" data-target="#collapseThree"
+                                                aria-expanded="false" aria-controls="collapseThree">
+
+                                                <%= res.nama %>   
+                                                
+                                            </div>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <%  i++; }) %>
+                                <% } else { %>
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                        <h5 class="mb-0">
+                                            <button class="btn btn-link collapsed" data-toggle="collapse"
+                                                data-target="#collapseThree" aria-expanded="false"
+                                                aria-controls="collapseThree">
+                                                Belum ada resources
+                                            </button>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper -->
+    <!-- ============================================================== -->
+
+    <%- include('./partials/footerlink'); %>
+
+    <script>
+        function showLoading() {
+            let loading = document.getElementById('loading-submit')
+            let form = document.getElementById('form')
+
+            loading.style.visibility = 'visible'
+            form.submit()
+        }
+
+        window.addEventListener('load', function () {
+            let inputs = document.querySelectorAll('input')
+            inputs.forEach(input => {
+                input.disabled = false
+            })
+        })
+
+        
+        function showListIcon() {
+            iconList.style.visibility = 'visible'
+        }
+
+        function getGroupId(el) {
+            let id = el.id.replaceAll("-"," ") || el.id 
+           document.getElementById('kategori').value = id
+        }
+
+    </script>
+
+</body>
+
+</html>

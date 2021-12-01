@@ -117,6 +117,87 @@ exports.update_target = async (req, res) => {
     }
 }
 
+exports.edit_resources = async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            fs.readFile('public/icon_list/fontawesome_list.txt', 'utf8' , (err, data) => {
+                if (err) {
+                  console.error(err)
+                  return
+                }
+                let id = req.params.id_res
+                db.query('SELECT * FROM 9_resources', (err, all_target) => {
+                    db.query('SELECT * FROM 9_resources WHERE id_res = ?', id, (err, target_edit) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            res.render('admin/edit_resources', {
+                                title: 'Edit Resources',
+                                current_link: '/admin/edit_resources',
+                                message: '',
+                                res: all_target,
+                                res_edit: target_edit[0],
+                                admin: session,
+                                id_region: id_region,
+                            })
+                        }
+                    })
+                })
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+}
+
+exports.update_resources = async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            let newData = req.body
+            let id = req.params.id_res
+            db.query('UPDATE 9_resources SET ? WHERE id_res = ?', [newData, id], async (err, results) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    let newData1 = newData
+
+             
+                    let nama_en = await translate(newData1['nama'],{to: "en"})
+                    let kategori_en = await translate(newData1['kategori'],{to: "en"})
+                   
+                    
+                    newData1['nama'] = nama_en.text
+                    newData1['kategori'] = kategori_en.text
+
+                    db.query('UPDATE 99_resources_en SET ? WHERE id_res = ?', [newData1, id], (err, results) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            console.log(newData1)
+                            req.flash('message', messageContent(`Resources ID:${id} Berhasil di-edit!`, 'alert-success'))
+                            res.redirect(`/admin/add_resources`)
+                        }
+                    })
+                }
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+}
+
 exports.edit_group_data = async (req, res) => {
     let session = await req.session.user
     let confrim = await check(session, req, res)

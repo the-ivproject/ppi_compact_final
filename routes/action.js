@@ -16,6 +16,8 @@ router.post('/admin/add_group_data',insert.insert_group_data)
 router.post('/admin/sign_up', insert.insert_account)
 
 router.post('/admin/add_data',insert.insert_data)
+router.post('/admin/add_resources',insert.insert_resources)
+
 
 // edit
 router.get('/admin/edit_target/:id_target', update.edit_target)
@@ -36,6 +38,9 @@ router.post('/admin/edit_group_data/:id_group_data', update.update_group_data)
 
 router.get('/admin/edit_data/:id_data', update.edit_data)
 router.post('/admin/edit_data/:id_data', update.update_data)
+
+router.get('/admin/edit_resources/:id_res', update.edit_resources)
+router.post('/admin/edit_resources/:id_res', update.update_resources)
 // delete
 router.get('/admin/delete_target/:id_target', delete1.delete_target)
 router.get('/admin/delete_rincian_target/:id_rincian_target', delete1.delete_rincian_target)

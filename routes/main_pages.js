@@ -24,6 +24,25 @@ router.get('/main/about/:id_region', (req, res) => {
     })
 })
 
+router.get('/main/resources/:id_region', (req, res) => {
+    let id_region = req.params.id_region
+    db.query('SELECT * FROM 9_resources WHERE id_region = ?', [id_region], (err, resources) => {
+        db.query('SELECT * FROM 1_region WHERE id_region = ?', [id_region], (err, region) => {
+            if (err) {
+                res.status(404)
+            } else {
+                res.render('main/resources', {
+                    title: 'Resources',
+                    lang: 'eng',
+                    resources:resources,
+                    id_region: id_region,
+                    region: region
+                })
+            }
+        })
+    })
+})
+
 router.get('/main/contact/:id_region', (req, res) => {
     let id_region = req.params.id_region
     db.query('SELECT * FROM 1_region WHERE id_region = ?', [id_region], (err, region) => {
@@ -343,6 +362,7 @@ router.get('/main/map_data_active/:id_region/:id_active/:id_data', (req, res) =>
         })
     })
 })
+
 
 router.get('/main/prevent_mobile', (req, res) => {
     res.render('main/prevent_mobile')

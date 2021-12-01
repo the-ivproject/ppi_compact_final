@@ -154,6 +154,37 @@ router.get('/admin/add_target', async (req, res) => {
     }
 })
 
+router.get('/admin/add_resources', async (req, res) => {
+    let session = await req.session.user
+    let confrim = await check(session, req, res)
+    let query = () => {
+        let id_region = session[0].id_region
+        if (id_region === null) {
+            return;
+        } else {
+            db.query('SELECT * FROM 9_resources WHERE id_region = ?', [id_region], (err, results) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    res.render('admin/add_resources', {
+                        title: 'Tambah Resources',
+                        menu: 'active',
+                        page_name: 'add resources',
+                        current_link: '/admin/add_resources',
+                        message: req.flash('message'),
+                        res: results,
+                        admin: session,
+                        id_region: id_region,
+                    })
+                }
+            })
+        }
+    }
+    if (confrim === true) {
+        query();
+    }
+})
+
 router.get('/admin/add_group_data', async (req, res) => {
     let session = await req.session.user
     let confrim = await check(session, req, res)
