@@ -421,7 +421,13 @@ exports.update_style_data = async (req, res) => {
                 if (err) {
                     console.log(err)
                 } else {
-                    res.redirect('/admin/list_data')
+                    db.query('UPDATE 88_list_data_en SET tipe_style = ?, style = ?, properti = ? WHERE id_data = ?', [kat, val, properti, id], (err, results) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            res.redirect('/admin/list_data')
+                        }
+                    })
                 }
             })
         }

@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-lg navbar-light navbar-float">
+    <div class="container">
+        <%- include('../partials/navbar-brand'); %>
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarContent">
+
+            <div class="ml-auto" style="display: flex;align-items: center;">
+                <a href="/main/dataset_en/<%= region[0].id_region %>/en" class="btn ent"><span style="margin:0 15px">Dashboard Monitoring </span><i class="fas fa-caret-right"
+                        style="font-size: 18px;vertical-align: middle;float: right;margin-top: 3px;"></i></a>
+                <a href="">
+                    <div class="vl" style="border-left: 1px solid #ced4da;height: 38px;margin: 0 20px;"></div>
+                </a>
+                <a href="<%= link %>" style="padding-right:15px;font-weight: bold;font-size: 14px;"><%= lang.toUpperCase() %></a>
+            </div>
+        </div>
+    </div>
+</nav>

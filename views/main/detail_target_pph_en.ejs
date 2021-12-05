@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="copyright" content="MACode ID, https://macodeid.com">
+  <link rel="shortcut icon" href="/main/icon/sc-icon.svg">
+  <title><%= title %></title>
+
+  <link rel="stylesheet" href="/main/about_css/animate/animate.css">
+
+  <link rel="stylesheet" href="/main/about_css/bootstrap.css">
+
+  <link rel="stylesheet" href="/main/about_css/maicons.css">
+
+  <link rel="stylesheet" href="/main/about_css/owl-carousel/css/owl.carousel.css">
+
+  <link rel="stylesheet" href="/main/blog_css/blog.css">
+  <link rel="stylesheet" href="/main/about_css/theme.css">
+
+  <link rel="stylesheet" href="/admin/assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+
+</head>
+
+<body>
+
+  <!-- Back to top button -->
+  <div class="back-to-top"></div>
+
+  <header>
+    <%- include('./partials/normal_navbar'); %>
+
+    <div class="page-banner" style="margin-top: 0;border-radius: 0 !important;">
+      <div class="back-img" style="width: 100%;height: 100%;position: absolute;background-color: #ffffffe3 ;"></div>
+      <div class="row justify-content-center align-items-center h-100" style="width: 100%;">
+        <div class="col-md-6" style="margin-top: 50px">
+          <nav aria-label="Breadcrumb">
+            <ul class="breadcrumb justify-content-center py-0 bg-transparent">
+              <li class="breadcrumb-item"><a href="/">Entative</a></li>
+              <li class="breadcrumb-item active">Green Growth Target Detail</li>
+            </ul>
+          </nav>
+          <h1 class="text-center" style="color: #000;font-weight: 800;"><%= title %></h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="blog-list px-3 py-5 p-md-5" style="padding-top: 80px !important;padding-bottom: 80px !important;">
+      <div class="container">
+       
+        <table class="table cus-table">
+            <thead style="background-color: #142940;border: none;">
+              <tr style="color: white;">
+                <th scope="col">Description</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Baseline</th>
+                <th scope="col">Yearly Target</th>
+                <!-- <th scope="col">Lihat Kinerja</th> -->
+              </tr>
+            </thead>
+            <tbody style="border-bottom: 1px solid;">
+              <tr>
+                <td>Target #1. Deforestation and forest degradation decreases</td>
+                <td>Forest cover</td>
+                <td>260.548 hectares/year</td>
+                <td>10.422 hectares/year </td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Deforestation</td>
+                <td>8.780 hectares/year</td>
+                <td>351 hectares/year</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Forest degradation</td>
+                <td>20 hectares/yearv</td>
+                <td>1 hectares/year </td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #2. Carbon emission decreases</td>
+                <td>Emission from deforestation</td>
+                <td>2.770.668 tCO2eq/year</td>
+                <td>110.827 tCO2eq/year</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Emission from forest degradation</td>
+                <td>3.347 tCO2eq/year</td>
+                <td>134 tCO2eq/year</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td>/ -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Emission from peat decomposition</td>
+                <td>2.634.664 tCO2eq/year</td>
+                <td>105.387 tCO2eq/year</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #3. Forest and land fire decreases</td>
+                <td>Hotspot</td>
+                <td>311 hotspot/year</td>
+                <td>13 hotspot/year</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Land fire</td>
+                <td>11.149 hectares/year</td>
+                <td>446 hectares/year</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #4. Conservation and legal status on forest estate and other land-use increases</td>
+                <td>Forest with conservation and manangement permit (forest estate)</td>
+                <td>141.621 hectares</td>
+                <td>5.665 hectares</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Forest twith conservation and management permit (other land-use)</td>
+                <td>118.927 hectares</td>
+                <td>5.665 hectares</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #5. Key commodity production increases</td>
+                <td>Private Sector CPO Production</td>
+                <td>118.576 ton</td>
+                <td>9.486 ton/year</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Small holder CPU production</td>
+                <td>29.311 ton</td>
+                <td>1.759 ton/year</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Forestry production</td>
+                <td>0 ton</td>
+                <td>2.000 ton/year</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #6. Pekebun 
+                    yang memperoleh 
+                    pelayanan dalam 
+                    mengaplikasikan 
+                    Good Agriculture 
+                    Practice (GAP)</td>
+                <td>Target #6. Smallholder achieve Good Agriculture Practice (GAP) service</td>
+                <td>0 person</td>
+                <td>200 person</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #7. Sustainable commodity certification increases</td>
+                <td>Management unit certification </td>
+                <td>4 palm oil management unit - ISPO, 1 palm oil management unit - RSPO</td>
+                <td>6 palm oil management unit - ISPO, 4 palm oil management unit - RSPO</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Certified land</td>
+                <td>4.847 hectares</td>
+                <td>6.000 hectares</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Certified smallholder</td>
+                <td>0 person</td>
+                <td>200 person</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Certified smallholder land</td>
+                <td>0 hectares</td>
+                <td>1.400 hectares</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #8. Community cultivation legality increases</td>
+                <td>STDB 
+                    </td>
+                <td>0 STDB</td>
+                <td>400 STDB</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Area of STDB 
+                    </td>
+                <td>2.433 hectares</td>
+                <td>1.400  hectares</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #9. Strengthening Supply Chain</td>
+                <td>Supply chain aggrement
+                    </td>
+                <td>0 aggrement</td>
+                <td>2 aggrement</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #10. Village Development Index</td>
+                <td>Developed village
+                    </td>
+                <td>21 villages</td>
+                <td>2 villages</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Independent village
+                    </td>
+                <td>10 village</td>
+                <td>1 village</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #11. Green growth acceleration institution formed</td>
+                <td>Institution 
+                    </td>
+                <td>0 institution</td>
+                <td> - </td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #12. Key stakeholder involvement increases
+                </td>
+                <td>Private sector
+                    </td>
+                <td>0 private sector</td>
+                <td> 4 private sector </td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td>Union/Community
+                    </td>
+                <td>0 Union/Community</td>
+                <td>6 Union/Community </td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #13. Monitoring and Evalutation (M&E) Implemented</td>
+                <td>M&E implemented
+                    </td>
+                <td>0 times</td>
+                <td>1 times </td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #14. 
+                  Law frame of Kubu Raya SRAK PPH formed
+                     </td>
+                <td>Total of policy
+                    </td>
+                <td>0 policies</td>
+                <td>2 policies</td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #15. 
+                  Inovative grant in forestry, plantation and agriculture sector increases
+                </td>
+                <td>Forest and land investment
+                    </td>
+                <td>Rp 5,1 trillion</td>
+                <td>Rp 0,2 trillion </td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+              <tr>
+                <td>Target #16.  
+                  Investable and bankable sustainable business case
+                  </td>
+                <td>Sustainable business model
+                    </td>
+                <td>3 businesses</td>
+                <td>2 inovative businesses model </td>
+                <!-- <td><a href="">Lihat Kinerja</a></td> -->
+              </tr>
+            </tbody>
+          </table>
+          
+          <div class="col-12 mt-5">
+            <div class="text-center">
+                <a href="/main/map_en/1/en" class="btn ent"><span style="margin:0 15px">Green Growth Platfrom </span><i class="fas fa-caret-right" style="font-size: 18px;vertical-align: middle;float: right;margin-top: 2px;"></i></a>
+              </div>
+          </div>
+      </div>
+    </section>
+  </main>
+
+  <%- include('./partials/normal_footer_en'); %>
+
+
+  <script src="../assets/js/jquery-3.5.1.min.js"></script>
+
+  <script src="../assets/js/bootstrap.bundle.min.js"></script>
+
+  <script src="../assets/vendor/wow/wow.min.js"></script>
+
+  <script src="../assets/vendor/owl-carousel/js/owl.carousel.min.js"></script>
+
+  <script src="../assets/vendor/waypoints/jquery.waypoints.min.js"></script>
+
+  <script src="../assets/vendor/animateNumber/jquery.animateNumber.min.js"></script>
+
+  <script src="../assets/js/google-maps.js"></script>
+
+  <script src="../assets/js/theme.js"></script>
+
+
+</body>
+
+</html>

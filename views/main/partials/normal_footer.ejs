@@ -21,7 +21,7 @@
           <ul class="footer-menu" style="margin-top: 1rem;">
             <li><a href="/main/about/<%= region[0].id_region %>">About</a></li>
             <li><a href="/main/contact/<%= region[0].id_region %>">Contact Us</a></li>
-            <li><a href="https://pmudev.org/kkr/blog">Blog</a></li>
+            <li><a onclick="alert('Under data migration process!')">Blog</a></li>
             <li><a href="/">Dashboard Monitoring</a></li>
             <li><a href="/main/resources/<%= region[0].id_region %>">Resources</a></li>
             <!-- <li><a>Pengaduan</a></li> -->
@@ -39,17 +39,17 @@
         <div class="col-4">
           <h5 style="font-weight: bold;color: #142940;">Desclaimer</h5>
           <!-- <div class="divider" style="margin: 0 !important;"></div> -->
-          <p style="color: #142940;margin-top: 1rem;">Data dalam platform ini ditujukan sebatas untuk kebutuhan
-            monitoring capaian pertumbuhan hijau dan tidak dapat dijadikan rujukan resmi penggunaan dalam bentuk apapun
+          <p style="color: #142940;margin-top: 1rem;"><%= desclaimer %>
           </p>
         </div>
         <div class="col-4" style="padding-bottom: 20px;">
           <h5 style="font-weight: bold;color: #142940;">Get in Touch</h5>
           <!-- <div class="divider" style="margin: 0 !important;"></div> -->
-          <p style="color: #142940;margin-top: 1rem;">Kantor BAPPEDA,
-            Jl. Supadio, Sungai Raya, Kubu Raya District</p>
+          <p style="color: #142940;margin-top: 1rem;"><%= alamat %></p>
           <p><a href="#" style="color: #367BF5;">pokjapertumbuhanhijaukkr@gmail.com</a></p>
           <p><a href="#" style="color: #367BF5;">+62 815729257</a></p>
+          <p><a onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScmPXBeIxB_PdnHsOHqChq62JuNYifpoKnKJlb2uakWCqCbRg/viewform?usp=sf_link', '_blank').focus();" class="btn ent"><span style="margin:0 15px;color: white;">Menjadi Anggota Pokja </span><i class="fas fa-caret-right" style="font-size: 18px;vertical-align: middle;float: right;margin-top: 3px;color: white;"></i></a></p>
+          <!-- https://docs.google.com/forms/d/e/1FAIpQLScmPXBeIxB_PdnHsOHqChq62JuNYifpoKnKJlb2uakWCqCbRg/viewform?usp=sf_link -->
         </div>
       </div>
       <p style="text-align: center;padding: 20px;" id="copyright">&copy; 2021 <a href="/main/about"

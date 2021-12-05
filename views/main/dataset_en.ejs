@@ -241,10 +241,10 @@
             </select>
             <button onclick="filterByRegion()" class="btn btn-success cs-btn"
                 style="font-size: 12px;font-weight: 600;">Submit </button> -->
-            <%- include('./partials/new-navbar'); %>
+                <%- include('./partials/new-navbar_en'); %>
             <div class="vl"></div>
             <div class="language-selection">
-                <a id="lang-selection" onclick="window.location.href = '/main/dataset/1'">IND</a>
+                <a id="lang-selection" onclick="window.location.href = `/main/dataset/<%= region.id_region %>`">IND</a>
             </div>
         </div>
     </header>
@@ -263,10 +263,9 @@
                         style="font-size: 20px;color: #142940;font-weight: 800;margin: 0 10px;"><%= group_data.length %></span></a>
                 <a class="floating">Total Data <span
                         style="font-size: 20px;color: #142940;font-weight: 800;margin: 0 10px;"><%= list_data.length %></span></a>
-                        <a class="floating">Target Pertumbuhan Hijau <span
+                        <a class="floating">Green Growth Target <span
                             style="font-size: 20px;color: #142940;font-weight: 800;margin: 0 10px;"><%= list_target.length %></span></a>
-    
-                    </div>
+                </div>
         </div>
     </div>
 

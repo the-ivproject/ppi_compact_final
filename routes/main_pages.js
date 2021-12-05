@@ -15,9 +15,34 @@ router.get('/main/about/:id_region', (req, res) => {
                 console.log(region.id_region)
                 res.render('main/about', {
                     title: 'About',
+                    link: `/main/about_en/${id_region}`,
                     lang: 'eng',
                     list_target:list_target,
-                    region: region
+                    region: region,
+                    desclaimer: 'Data dalam platform ini ditujukan sebatas untuk kebutuhan monitoring capaian pertumbuhan hijau dan tidak dapat dijadikan rujukan resmi penggunaan dalam bentuk apapun.',
+                    alamat: 'Kantor BAPPEDA, Jl. Supadio, Sungai Raya, Kubu Raya District',
+                })
+            }
+        })
+    })
+})
+
+router.get('/main/about_en/:id_region', (req, res) => {
+    let id_region = req.params.id_region
+    db.query('SELECT 22_target_en.*, COUNT(33_rincian_target_en.id_target) AS "total_rincian" FROM 22_target_en LEFT JOIN 33_rincian_target_en USING(id_target) WHERE 22_target_en.id_region = ? GROUP BY 22_target_en.id_target',[id_region], (err, list_target) => {
+        db.query('SELECT * FROM 1_region WHERE id_region = ?', [id_region], (err, region) => {
+            if (err) {
+                res.status(404)
+            } else {
+                console.log(region.id_region)
+                res.render('main/about_en', {
+                    title: 'About',
+                    lang: 'ind',
+                    list_target:list_target,
+                    region: region,
+                    link: `/main/about/${id_region}`,
+                    desclaimer: 'Data on this platform is purposed for overseeing the green growth achievement progress only and can’t be used as an official reference in any form of usage.',
+                    alamat: 'BAPPEDA Office, Supadio Street, Sungai Raya, Kubu Raya District'
                 })
             }
         })
@@ -35,8 +60,33 @@ router.get('/main/resources/:id_region', (req, res) => {
                     title: 'Resources',
                     lang: 'eng',
                     resources:resources,
+                    link: `/main/resources_en/${id_region}`,
                     id_region: id_region,
-                    region: region
+                    region: region,
+                    desclaimer: 'Data dalam platform ini ditujukan sebatas untuk kebutuhan monitoring capaian pertumbuhan hijau dan tidak dapat dijadikan rujukan resmi penggunaan dalam bentuk apapun.',
+                    alamat: 'Kantor BAPPEDA, Jl. Supadio, Sungai Raya, Kubu Raya District'
+                })
+            }
+        })
+    })
+})
+
+router.get('/main/resources_en/:id_region', (req, res) => {
+    let id_region = req.params.id_region
+    db.query('SELECT * FROM 99_resources_en WHERE id_region = ?', [id_region], (err, resources) => {
+        db.query('SELECT * FROM 1_region WHERE id_region = ?', [id_region], (err, region) => {
+            if (err) {
+                res.status(404)
+            } else {
+                res.render('main/resources_en', {
+                    title: 'Resources',
+                    lang: 'ind',
+                    resources:resources,
+                    link: `/main/resources/${id_region}`,
+                    id_region: id_region,
+                    region: region,
+                    desclaimer: 'Data on this platform is purposed for overseeing the green growth achievement progress only and can’t be used as an official reference in any form of usage.',
+                    alamat: 'BAPPEDA Office, Supadio Street, Sungai Raya, Kubu Raya District'
                 })
             }
         })
@@ -49,7 +99,24 @@ router.get('/main/contact/:id_region', (req, res) => {
         res.render('main/contact', {
             title: 'Contact',
             lang: 'eng',
-            region:region
+            region:region,
+            link: `/main/contact_en/${id_region}`,
+            desclaimer: 'Data dalam platform ini ditujukan sebatas untuk kebutuhan monitoring capaian pertumbuhan hijau dan tidak dapat dijadikan rujukan resmi penggunaan dalam bentuk apapun.',
+            alamat: 'Kantor BAPPEDA, Jl. Supadio, Sungai Raya, Kubu Raya District'
+        })
+    })
+})
+
+router.get('/main/contact_en/:id_region', (req, res) => {
+    let id_region = req.params.id_region
+    db.query('SELECT * FROM 1_region WHERE id_region = ?', [id_region], (err, region) => {
+        res.render('main/contact_en', {
+            title: 'Contact',
+            lang: 'ind',
+            region:region,
+            link: `/main/contact/${id_region}`,
+            desclaimer: 'Data on this platform is purposed for overseeing the green growth achievement progress only and can’t be used as an official reference in any form of usage.',
+            alamat: 'BAPPEDA Office, Supadio Street, Sungai Raya, Kubu Raya.'
         })
     })
 })
@@ -82,7 +149,25 @@ router.get('/main/detail_target_pph/:id_region', (req, res) => {
         res.render('main/detail_target_pph', {
             title: 'Target Pertumbuhan Hijau Kubu Raya 2019 - 2025',
             lang: 'eng',
-            region:region
+            region:region,
+            link: `/main/detail_target_pph_en/${id_region}`,
+            desclaimer: 'Data dalam platform ini ditujukan sebatas untuk kebutuhan monitoring capaian pertumbuhan hijau dan tidak dapat dijadikan rujukan resmi penggunaan dalam bentuk apapun.',
+            alamat: 'Kantor BAPPEDA, Jl. Supadio, Sungai Raya, Kubu Raya District'
+
+        })
+    })
+})
+
+router.get('/main/detail_target_pph_en/:id_region', (req, res) => {
+    let id_region = req.params.id_region
+    db.query('SELECT * FROM 1_region WHERE id_region = ?', [id_region], (err, region) => {
+        res.render('main/detail_target_pph_en', {
+            title: 'Kubu Raya Green Growth Target 2019 - 2025',
+            region:region,
+            lang: 'ind',
+            link: `/main/detail_target_pph/${id_region}`,
+            desclaimer: 'Data on this platform is purposed for overseeing the green growth achievement progress only and can’t be used as an official reference in any form of usage.',
+            alamat: 'BAPPEDA Office, Supadio Street, Sungai Raya, Kubu Raya.'
         })
     })
 })
