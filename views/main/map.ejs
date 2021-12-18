@@ -507,20 +507,20 @@
                     let leg = grouped.map(g => {
                         let p_kinerja;
                         if (g.rule === 'under baseline') {
-                            if (parseInt(g.aktual) < parseInt(g.target_tahunan)) {
+                            if (parseInt(g.target_tahunan) >= parseInt(g.aktual)) {
                                 p_kinerja =
-                                    `<p class="kinerja-text mbc-2" style="margin:0;color:#53C351"> ${g.kinerja} </p>`
+                                    `<p class="kinerja-text mbc-2" style="margin:0;color:green"> ${g.kinerja} </p>`
                             } else {
                                 p_kinerja =
-                                    `<p class="kinerja-text mbc-2" style="margin:0;color:#EA3D2F"> ${g.kinerja} </p>`
+                                    `<p class="kinerja-text mbc-2" style="margin:0;color:red"> ${g.kinerja} </p>`
                             }
                         } else {
-                            if (parseInt(g.aktual) < parseInt(g.target_tahunan)) {
+                            if (parseInt(g.target_tahunan) <= parseInt(g.aktual)) {
                                 p_kinerja =
-                                    `<p class="kinerja-text mbc-2" style="margin:0;color:#EA3D2F"> ${g.kinerja} </p>`
+                                `<p class="kinerja-text mbc-2" style="margin:0;color:green"> ${g.kinerja} </p>`
                             } else {
                                 p_kinerja =
-                                    `<p class="kinerja-text mbc-2" style="margin:0;color:#53C351"> ${g.kinerja} </p>`
+                                `<p class="kinerja-text mbc-2" style="margin:0;color:red"> ${g.kinerja} </p>`
                             }
                         }
                         let veryfied_icon;
@@ -553,7 +553,7 @@
                                             </div>
                                             <div class="bx-2">
                                                ${p_kinerja}
-                                               <span>hektare</span>
+                                               <span style="line-height:1.6">${g.satuan}</span>
                                             </div>
                                             <div class="bx-2">
                                                 
@@ -869,9 +869,9 @@
             let kinerja = cal.toString()
 
             if(rule === 'under baseline') {
-                return target >= aktual ?  `${up}<h2 style="color:green"> ${Math.abs(cal)}</h2>` :  `${down}<h2 style="color:red">${ cal}</h2>` 
+                return parseInt(target) >= parseInt(aktual) ?  `${up}<h2 style="color:green"> ${Math.abs(cal)}</h2>` :  `${down}<h2 style="color:red">${ cal}</h2>` 
             } else {
-                return target <= aktual ? `${up}<h2 style="color:green"> ${cal}</h2>` : `${down}<h2 style="color:red">${cal}</h2>` 
+                return parseInt(target) <= parseInt(aktual) ? `${up}<h2 style="color:green"> ${cal}</h2>` : `${down}<h2 style="color:red">${cal}</h2>` 
             }
         }
         // <i class="fas fa-arrow-down" style="font-size: 22px;color:red;margin-top:5px"></i> 
