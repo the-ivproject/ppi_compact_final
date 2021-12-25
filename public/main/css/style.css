@@ -134,7 +134,7 @@
     border: 1px solid #E1E1E1;
     border-radius: 5px;
     padding: 10px;
-    max-height: 67vh;
+    /* max-height: 67vh; */
     overflow: auto;
 /* ackground-color: #FAFAFA; */
 }
