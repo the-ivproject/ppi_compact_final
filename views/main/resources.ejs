@@ -53,37 +53,37 @@
   <main>
     <section class="blog-list px-3 py-5 p-md-5" style="padding-top: 80px !important;padding-bottom: 80px !important;">
       <div class="container">
-       
+
         <table class="table cus-table">
-            <thead style="background-color: #142940;border: none;">
-              <tr style="color: white;">
-                <th scope="col">Resouces</th>
-                <th scope="col">Preview</th>
-                <th scope="col">Download</th>
-              </tr>
-            </thead>
-            <tbody id="res-table">
-              
-            </tbody>
-          </table>
-        
-          <div class="col-12 mt-5">
-            <nav aria-label="Page Navigation">
-              <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <!-- <li class="page-item" aria-current="page">
+          <thead style="background-color: #142940;border: none;">
+            <tr style="color: white;">
+              <th scope="col">Resouces</th>
+              <th scope="col">Preview</th>
+              <th scope="col">Download</th>
+            </tr>
+          </thead>
+          <tbody id="res-table">
+
+          </tbody>
+        </table>
+
+        <div class="col-12 mt-5">
+          <nav aria-label="Page Navigation">
+            <ul class="pagination justify-content-center">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+              </li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <!-- <li class="page-item" aria-current="page">
                   <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
                 </li> -->
-          
-                <li class="page-item">
-                  <a class="page-link" href="#">Next</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </section>
   </main>
@@ -109,9 +109,8 @@
 
 
   <script>
-
     let data = JSON.parse('<%- JSON.stringify(resources) %>')
-    
+
     let toTable = data.map(a => {
       delete a.id_res
       delete a.tanggal_upload
@@ -122,15 +121,14 @@
 
       let td = []
 
-
       k.forEach((k, i) => {
-       if(k !== 'link_gd') {
-         td.push(`<td>${a[k]}</td>`)
-       } else if(i === k.length - 1) {
+        if (k !== 'link_gd') {
+          td.push(`<td>${a[k]}</td>`)
+        } else if (i === k.length - 1) {
           return;
-       } else {
-        td.push(`<td><a href="${a[k]}">Preview</a></td>`)
-       }
+        } else {
+          td.push(`<td><a href="${a[k]}">Preview</a></td>`)
+        }
       })
 
       td.push(`<td><a href="${a['link_gd']}">Download</a></td>`)
@@ -140,7 +138,6 @@
 
     let table = document.getElementById("res-table")
     table.innerHTML = toTable.join("")
-  
   </script>
 </body>
 
